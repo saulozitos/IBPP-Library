@@ -177,9 +177,9 @@ bool IBPP::dtoi (int date, int *y, int *m, int *d)
     day = C - (153*month - 457) / 5;
     if (month > 12) { year += 1; month -= 12; }
 
-	if (y != 0) *y = (int)year;
-	if (m != 0) *m = (int)month;
-	if (d != 0) *d = (int)day;
+    if (y != 0) *y = static_cast<int>(year);
+    if (m != 0) *m = static_cast<int>(month);
+    if (d != 0) *d = static_cast<int>(day);
 
 	return true;
 }

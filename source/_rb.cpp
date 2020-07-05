@@ -96,7 +96,7 @@ int RB::GetValue(char token)
 
 	len = (*gds.Call()->m_vax_integer)(p+1, 2);
 	if (len == 0) value = 0;
-	else value = (*gds.Call()->m_vax_integer)(p+3, (short)len);
+    else value = (*gds.Call()->m_vax_integer)(p+3, static_cast<short>(len));
 
 	return value;
 }
@@ -140,7 +140,7 @@ int RB::GetValue(char token, char subtoken)
 
 	len = (*gds.Call()->m_vax_integer)(p+1, 2);
 	if (len == 0) value = 0;
-	else value = (*gds.Call()->m_vax_integer)(p+3, (short)len);
+    else value = (*gds.Call()->m_vax_integer)(p+3, static_cast<short>(len));
 
 	return value;
 }

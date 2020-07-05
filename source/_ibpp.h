@@ -32,6 +32,7 @@
 #define __INTERNAL_IBPP_H__
 
 #include "ibpp.h"
+#include <cstring>
 
 #if defined(__BCPLUSPLUS__) || defined(_MSC_VER) || defined(__DMC__)
 #define HAS_HDRSTOP
@@ -491,7 +492,7 @@ public:
 	void InsertQuad(char type, int32_t data);
 	void Reset();			// Clears the SPB
 	char* Self() { return mBuffer; }
-	short Size() { return (short)mSize; }
+    short Size() { return static_cast<short>(mSize); }
 
 	SPB() : mBuffer(0), mSize(0), mAlloc(0) { }
 	~SPB() { Reset(); }
@@ -519,7 +520,7 @@ public:
 	void Insert(char, char);   		// Insert a new byte 'cluster'
 	void Reset();				// Clears the DPB
 	char* Self() { return mBuffer; }
-	short Size() { return (short)mSize; }
+    short Size() { return static_cast<short>(mSize); }
 
 	DPB() : mBuffer(0), mSize(0), mAlloc(0) { }
 	~DPB() { Reset(); }
@@ -571,7 +572,7 @@ public:
 	int GetString(char token, std::string& data);
 
 	char* Self() { return mBuffer; }
-	short Size() { return (short)mSize; }
+    short Size() { return static_cast<short>(mSize); }
 
 	RB();
 	RB(int Size);
@@ -592,7 +593,7 @@ public:
 	bool Errors() { return (mVector[0] == 1 && mVector[1] > 0) ? true : false; }
 	const char* ErrorMessage() const;
 	int SqlCode() const;
-	int EngineCode() const { return (mVector[0] == 1) ? (int)mVector[1] : 0; }
+    int EngineCode() const { return (mVector[0] == 1) ? static_cast<int>(mVector[1]) : 0; }
 	void Reset();
 
 	IBS();
@@ -1065,11 +1066,11 @@ private:
 	DatabaseImpl* mDatabase;		// Attached database
 	TransactionImpl* mTransaction;	// Attached transaction
 	RowImpl* mInRow;
-	//bool* mInMissing;			// Quels paramètres n'ont pas été spécifiés
+	//bool* mInMissing;			// Quels paramï¿½tres n'ont pas ï¿½tï¿½ spï¿½cifiï¿½s
 	RowImpl* mOutRow;
 	bool mResultSetAvailable;	// Executed and result set is available
 	bool mCursorOpened;			// dsql_set_cursor_name was called
-	IBPP::STT mType;			// Type de requète
+	IBPP::STT mType;			// Type de requï¿½te
 	std::string mSql;			// Last SQL statement prepared or executed
 
 	// Internal Methods
@@ -1254,8 +1255,8 @@ private:
 	ISC_QUAD			mId;
 	bool				mDescribed;
 	ISC_ARRAY_DESC		mDesc;
-	DatabaseImpl*  		mDatabase;		// Database attachée
-	TransactionImpl*	mTransaction;	// Transaction attachée
+	DatabaseImpl*  		mDatabase;		// Database attachï¿½e
+	TransactionImpl*	mTransaction;	// Transaction attachï¿½e
 	void*				mBuffer;		// Buffer for native data
 	int					mBufferSize;	// Size of this buffer in bytes
 	int					mElemCount;		// Count of elements in this array

@@ -33,6 +33,7 @@
 #endif
 
 #include "_ibpp.h"
+#include <cstring>
 
 #ifdef HAS_HDRSTOP
 #pragma hdrstop
@@ -68,14 +69,14 @@ void SPB::Insert(char opcode)
 
 void SPB::InsertString(char type, int lenwidth, const char* data)
 {
-	int16_t len = (int16_t)strlen(data);
+    int16_t len = static_cast<int16_t>(strlen(data));
 
 	Grow(1 + lenwidth + len);
 	mBuffer[mSize++] = type;
 	switch (lenwidth)
 	{
 		case 1 :	mBuffer[mSize] = char(len); mSize++; break;
-		case 2 :	*(int16_t*)&mBuffer[mSize] = int16_t((*gds.Call()->m_vax_integer)((char*)&len, 2));
+        case 2 :	*reinterpret_cast<int16_t*>(&mBuffer[mSize]) = int16_t((*gds.Call()->m_vax_integer)(reinterpret_cast<char*>(&len), 2));
 					mSize += 2; break;
 		default :	throw LogicExceptionImpl("IISPB::IISPB", _("Invalid length parameter"));
 	}
@@ -94,7 +95,7 @@ void SPB::InsertQuad(char type, int32_t data)
 {
 	Grow(1 + 4);
 	mBuffer[mSize++] = type;
-	*(int32_t*)&mBuffer[mSize] = int32_t((*gds.Call()->m_vax_integer)((char*)&data, 4));
+    *reinterpret_cast<int32_t*>(&mBuffer[mSize]) = int32_t((*gds.Call()->m_vax_integer)(reinterpret_cast<char*>(&data), 4));
 	mSize += 4;
 }
 

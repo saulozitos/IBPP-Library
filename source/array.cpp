@@ -214,8 +214,8 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 
 	// Now, convert the types and copy values to the user array...
 	int len;
-	char* src = (char*)mBuffer;
-	char* dst = (char*)data;
+    char* src = reinterpret_cast<char*>(mBuffer);
+    char* dst = reinterpret_cast<char*>(data);
 
 	switch (mDesc.array_desc_dtype)
 	{
@@ -235,8 +235,8 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				for (int i = 0; i < mElemCount; i++)
 				{
 					if (*src == 't' || *src == 'T' || *src == 'y' || *src == 'Y' ||	*src == '1')
-						*(bool*)dst = true;
-					else *(bool*)dst = false;
+                        *reinterpret_cast<bool*>(dst) = true;
+                    else *reinterpret_cast<bool*>(dst) = false;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}
@@ -249,7 +249,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					len = (int)strlen(src);
+                    len = static_cast<int>(strlen(src));
 					if (len > mElemSize-2) len = mElemSize-2;
 					strncpy(dst, src, len);
 					dst[len] = '\0';
@@ -262,8 +262,8 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				for (int i = 0; i < mElemCount; i++)
 				{
 					if (*src == 't' || *src == 'T' || *src == 'y' || *src == 'Y' ||	*src == '1')
-						*(bool*)dst = true;
-					else *(bool*)dst = false;
+                        *reinterpret_cast<bool*>(dst) = true;
+                    else *reinterpret_cast<bool*>(dst) = false;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}
@@ -276,7 +276,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(bool*)dst = (*(short*)src != 0) ? true : false;
+                    *reinterpret_cast<bool*>(dst) = (*reinterpret_cast<short*>(src) != 0) ? true : false;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}
@@ -285,7 +285,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(short*)dst = *(short*)src;
+                    *reinterpret_cast<short*>(dst) = *reinterpret_cast<short*>(src);
 					src += mElemSize;
 					dst += sizeof(short);
 				}
@@ -294,7 +294,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int*)dst = (int)*(short*)src;
+                    *reinterpret_cast<int*>(dst) = static_cast<int>(*reinterpret_cast<short*>(src));
 					src += mElemSize;
 					dst += sizeof(int);
 				}
@@ -303,7 +303,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst = (int64_t)*(short*)src;
+                    *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(*reinterpret_cast<short*>(src));
 					src += mElemSize;
 					dst += sizeof(int64_t);
 				}
@@ -314,7 +314,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				double divisor = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(float*)dst = (float)(*(short*)src / divisor);
+                    *reinterpret_cast<float*>(dst) = static_cast<float>(*reinterpret_cast<short*>(src) / divisor);
 					src += mElemSize;
 					dst += sizeof(float);
 				}
@@ -325,7 +325,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				double divisor = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(double*)dst = (double)(*(short*)src / divisor);
+                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<short*>(src) / divisor);
 					src += mElemSize;
 					dst += sizeof(double);
 				}
@@ -338,7 +338,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(bool*)dst = (*(long*)src != 0) ? true : false;
+                    *reinterpret_cast<bool*>(dst) = (*reinterpret_cast<long*>(src) != 0) ? true : false;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}
@@ -347,10 +347,10 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					if (*(long*)src < consts::min16 || *(long*)src > consts::max16)
+                    if (*reinterpret_cast<long*>(src) < consts::min16 || *reinterpret_cast<long*>(src) > consts::max16)
 						throw LogicExceptionImpl("Array::ReadTo",
 							_("Out of range numeric conversion !"));
-					*(short*)dst = short(*(long*)src);
+                    *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<long*>(src));
 					src += mElemSize;
 					dst += sizeof(short);
 				}
@@ -359,7 +359,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(long*)dst = *(long*)src;
+                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<long*>(src);
 					src += mElemSize;
 					dst += sizeof(long);
 				}
@@ -368,7 +368,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst = (int64_t)*(long*)src;
+                    *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(*reinterpret_cast<long*>(src));
 					src += mElemSize;
 					dst += sizeof(int64_t);
 				}
@@ -379,7 +379,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				double divisor = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(float*)dst = (float)(*(long*)src / divisor);
+                    *reinterpret_cast<float*>(dst) = static_cast<float>((*reinterpret_cast<long*>(src) / divisor));
 					src += mElemSize;
 					dst += sizeof(float);
 				}
@@ -390,7 +390,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				double divisor = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(double*)dst = (double)(*(long*)src / divisor);
+                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<long*>(src) / divisor);
 					src += mElemSize;
 					dst += sizeof(double);
 				}
@@ -403,7 +403,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(bool*)dst = (*(int64_t*)src != 0) ? true : false;
+                    *reinterpret_cast<bool*>(dst) = (*reinterpret_cast<int64_t*>(src) != 0) ? true : false;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}
@@ -412,10 +412,10 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					if (*(int64_t*)src < consts::min16 || *(int64_t*)src > consts::max16)
+                    if (*reinterpret_cast<int64_t*>(src) < consts::min16 || *reinterpret_cast<int64_t*>(src) > consts::max16)
 						throw LogicExceptionImpl("Array::ReadTo",
 							_("Out of range numeric conversion !"));
-					*(short*)dst = short(*(int64_t*)src);
+                    *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<int64_t*>(src));
 					src += mElemSize;
 					dst += sizeof(short);
 				}
@@ -424,10 +424,10 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					if (*(int64_t*)src < consts::min32 || *(int64_t*)src > consts::max32)
+                    if (*reinterpret_cast<int64_t*>(src) < consts::min32 || *reinterpret_cast<int64_t*>(src) > consts::max32)
 						throw LogicExceptionImpl("Array::ReadTo",
 							_("Out of range numeric conversion !"));
-					*(long*)dst = (long)*(int64_t*)src;
+                    *reinterpret_cast<long*>(dst) = static_cast<long>(*reinterpret_cast<int64_t*>(src));
 					src += mElemSize;
 					dst += sizeof(long);
 				}
@@ -436,7 +436,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst = *(int64_t*)src;
+                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<int64_t*>(src);
 					src += mElemSize;
 					dst += sizeof(int64_t);
 				}
@@ -447,7 +447,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				double divisor = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(float*)dst = (float)(*(int64_t*)src / divisor);
+                    *reinterpret_cast<float*>(dst) = static_cast<float>(*reinterpret_cast<int64_t*>(src) / divisor);
 					src += mElemSize;
 					dst += sizeof(float);
 				}
@@ -458,7 +458,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				double divisor = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(double*)dst = (double)(*(int64_t*)src / divisor);
+                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<int64_t*>(src) / divisor);
 					src += mElemSize;
 					dst += sizeof(double);
 				}
@@ -471,7 +471,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				*(float*)dst = *(float*)src;
+                *reinterpret_cast<float*>(dst) = *reinterpret_cast<float*>(src);
 				src += mElemSize;
 				dst += sizeof(float);
 			}
@@ -486,7 +486,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 				double divisor = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(double*)dst =	(double)(*(double*)src / divisor);
+                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<double*>(src) / divisor);
 					src += mElemSize;
 					dst += sizeof(double);
 				}
@@ -495,7 +495,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(double*)dst = *(double*)src;
+                    *reinterpret_cast<double*>(dst) = *reinterpret_cast<double*>(src);
 					src += mElemSize;
 					dst += sizeof(double);
 				}
@@ -507,7 +507,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 												_("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				decodeTimestamp(*(IBPP::Timestamp*)dst, *(ISC_TIMESTAMP*)src);
+                decodeTimestamp(*reinterpret_cast<IBPP::Timestamp*>(dst), *reinterpret_cast<ISC_TIMESTAMP*>(src));
 				src += mElemSize;
 				dst += sizeof(IBPP::Timestamp);
 			}
@@ -518,7 +518,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 												_("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				decodeDate(*(IBPP::Date*)dst, *(ISC_DATE*)src);
+                decodeDate(*reinterpret_cast<IBPP::Date*>(dst), *reinterpret_cast<ISC_DATE*>(src));
 				src += mElemSize;
 				dst += sizeof(IBPP::Date);
 			}
@@ -529,7 +529,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 												_("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				decodeTime(*(IBPP::Time*)dst, *(ISC_TIME*)src);
+                decodeTime(*reinterpret_cast<IBPP::Time*>(dst), *reinterpret_cast<ISC_TIME*>(src));
 				src += mElemSize;
 				dst += sizeof(IBPP::Time);
 			}
@@ -553,17 +553,17 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 
 	// Read user data and convert types to the mBuffer
 	int len;
-	char* src = (char*)data;
-	char* dst = (char*)mBuffer;
+    char* src = reinterpret_cast<char*>(malloc(sizeof(data)));
+    char* dst = reinterpret_cast<char*>(mBuffer);
 
-	switch (mDesc.array_desc_dtype)
+    switch (mDesc.array_desc_dtype)
 	{
 		case blr_text :
 			if (adtype == IBPP::adString)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					len = (int)strlen(src);
+                    len = static_cast<int>(strlen(src));
 					if (len > mElemSize) len = mElemSize;
 					strncpy(dst, src, len);
 					while (len < mElemSize) dst[len++] = ' ';
@@ -575,7 +575,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*dst = *(bool*)src ? 'T' : 'F';
+                    *dst = *reinterpret_cast<bool*>(src) ? 'T' : 'F';
 					len = 1;
 					while (len < mElemSize) dst[len++] = ' ';
 					src += sizeof(bool);
@@ -590,7 +590,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					len = (int)strlen(src);
+                    len = static_cast<int>(strlen(src));
 					if (len > mElemSize-2) len = mElemSize-2;
 					strncpy(dst, src, len);
 					dst[len] = '\0';
@@ -602,8 +602,8 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(short*)dst = (short)1;
-					dst[2] = *(bool*)src ? 'T' : 'F';
+                    *reinterpret_cast<short*>(dst) = static_cast<short>(1);
+                    dst[2] = *reinterpret_cast<bool*>(src) ? 'T' : 'F';
 					src += sizeof(bool);
 					dst += mElemSize;
 				}
@@ -616,7 +616,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(short*)dst = short(*(bool*)src ? 1 : 0);
+                    *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<bool*>(src) ? 1 : 0);
 					src += sizeof(bool);
 					dst += mElemSize;
 				}
@@ -625,7 +625,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(short*)dst = *(short*)src;
+                    *reinterpret_cast<short*>(dst) = *reinterpret_cast<short*>(src);
 					src += sizeof(short);
 					dst += mElemSize;
 				}
@@ -634,10 +634,10 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					if (*(long*)src < consts::min16 || *(long*)src > consts::max16)
+                    if (*reinterpret_cast<long*>(src) < consts::min16 || *reinterpret_cast<long*>(src) > consts::max16)
 						throw LogicExceptionImpl("Array::WriteFrom",
 							_("Out of range numeric conversion !"));
-					*(short*)dst = (short)*(int*)src;
+                    *reinterpret_cast<short*>(dst) = static_cast<short>(*reinterpret_cast<int*>(src));
 					src += sizeof(int);
 					dst += mElemSize;
 				}
@@ -646,10 +646,10 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					if (*(int64_t*)src < consts::min16 || *(int64_t*)src > consts::max16)
+                    if (*reinterpret_cast<int64_t*>(src) < consts::min16 || *reinterpret_cast<int64_t*>(src) > consts::max16)
 						throw LogicExceptionImpl("Array::WriteFrom",
 							_("Out of range numeric conversion !"));
-					*(short*)dst = (short)*(int64_t*)src;
+                    *reinterpret_cast<short*>(dst) = static_cast<short>(*reinterpret_cast<int64_t*>(src));
 					src += sizeof(int64_t);
 					dst += mElemSize;
 				}
@@ -660,8 +660,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				double multiplier = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(short*)dst =
-						(short)floor(*(float*)src * multiplier + 0.5);
+                    *reinterpret_cast<short*>(dst) = static_cast<short>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
 					src += sizeof(float);
 					dst += mElemSize;
 				}
@@ -672,8 +671,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				double multiplier = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(short*)dst =
-						(short)floor(*(double*)src * multiplier + 0.5);
+                    *reinterpret_cast<short*>(dst) = static_cast<short>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
 					src += sizeof(double);
 					dst += mElemSize;
 				}
@@ -686,7 +684,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(long*)dst = *(bool*)src ? 1 : 0;
+                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<bool*>(src) ? 1 : 0;
 					src += sizeof(bool);
 					dst += mElemSize;
 				}
@@ -695,7 +693,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(long*)dst = *(short*)src;
+                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<short*>(src);
 					src += sizeof(short);
 					dst += mElemSize;
 				}
@@ -704,7 +702,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(long*)dst = *(long*)src;
+                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<long*>(src);
 					src += sizeof(long);
 					dst += mElemSize;
 				}
@@ -713,10 +711,10 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					if (*(int64_t*)src < consts::min32 || *(int64_t*)src > consts::max32)
+                    if (*reinterpret_cast<int64_t*>(src) < consts::min32 || *reinterpret_cast<int64_t*>(src) > consts::max32)
 						throw LogicExceptionImpl("Array::WriteFrom",
 							_("Out of range numeric conversion !"));
-					*(long*)dst = (long)*(int64_t*)src;
+                    *reinterpret_cast<long*>(dst) = static_cast<long>(*reinterpret_cast<int64_t*>(src));
 					src += sizeof(int64_t);
 					dst += mElemSize;
 				}
@@ -727,8 +725,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				double multiplier = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(long*)dst =
-						(long)floor(*(float*)src * multiplier + 0.5);
+                    *reinterpret_cast<long*>(dst) = static_cast<long>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
 					src += sizeof(float);
 					dst += mElemSize;
 				}
@@ -739,8 +736,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				double multiplier = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(long*)dst =
-						(long)floor(*(double*)src * multiplier + 0.5);
+                    *reinterpret_cast<long*>(dst) = static_cast<long>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
 					src += sizeof(double);
 					dst += mElemSize;
 				}
@@ -753,7 +749,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst = *(bool*)src ? 1 : 0;
+                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<bool*>(src) ? 1 : 0;
 					src += sizeof(bool);
 					dst += mElemSize;
 				}
@@ -762,7 +758,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst = *(short*)src;
+                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<short*>(src);
 					src += sizeof(short);
 					dst += mElemSize;
 				}
@@ -771,7 +767,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst = *(long*)src;
+                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<long*>(src);
 					src += sizeof(long);
 					dst += mElemSize;
 				}
@@ -780,7 +776,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst = *(int64_t*)src;
+                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<int64_t*>(src);
 					src += sizeof(int64_t);
 					dst += mElemSize;
 				}
@@ -791,8 +787,8 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				double multiplier = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst =
-						(int64_t)floor(*(float*)src * multiplier + 0.5);
+                    *reinterpret_cast<int64_t*>(dst) =
+                        static_cast<int64_t>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
 					src += sizeof(float);
 					dst += mElemSize;
 				}
@@ -803,15 +799,14 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				double multiplier = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(int64_t*)dst =
-						(int64_t)floor(*(double*)src * multiplier + 0.5);
+                    *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
 					src += sizeof(double);
 					dst += mElemSize;
 				}
 			}
 			else
 				throw LogicExceptionImpl("Array::WriteFrom",
-					_("Incompatible types (blr_int64 and ADT %d)."), (int)adtype);
+                    _("Incompatible types (blr_int64 and ADT %d)."), static_cast<int>(adtype));
 			break;
 
 		case blr_float :
@@ -819,7 +814,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				*(float*)dst = *(float*)src;
+                *reinterpret_cast<float*>(dst) = *reinterpret_cast<float*>(src);
 				src += sizeof(float);
 				dst += mElemSize;
 			}
@@ -834,8 +829,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 				double multiplier = consts::dscales[-mDesc.array_desc_scale];
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(double*)dst =
-						floor(*(double*)src * multiplier + 0.5) / multiplier;
+                    *reinterpret_cast<double*>(dst) = floor(*reinterpret_cast<double*>(src) * multiplier + 0.5) / multiplier;
 					src += sizeof(double);
 					dst += mElemSize;
 				}
@@ -844,7 +838,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-					*(double*)dst = *(double*)src;
+                    *reinterpret_cast<double*>(dst) = *reinterpret_cast<double*>(src);
 					src += sizeof(double);
 					dst += mElemSize;
 				}
@@ -856,7 +850,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 												_("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				encodeTimestamp(*(ISC_TIMESTAMP*)dst, *(IBPP::Timestamp*)src);
+                encodeTimestamp(*reinterpret_cast<ISC_TIMESTAMP*>(dst), *reinterpret_cast<IBPP::Timestamp*>(src));
 				src += sizeof(IBPP::Timestamp);
 				dst += mElemSize;
 			}
@@ -867,7 +861,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 												_("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				encodeDate(*(ISC_DATE*)dst, *(IBPP::Date*)src); 
+                encodeDate(*reinterpret_cast<ISC_DATE*>(dst), *reinterpret_cast<IBPP::Date*>(src));
 				src += sizeof(IBPP::Date);
 				dst += mElemSize;
 			}
@@ -878,7 +872,7 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 												_("Incompatible types."));
 			for (int i = 0; i < mElemCount; i++)
 			{
-				encodeTime(*(ISC_TIME*)dst, *(IBPP::Time*)src);
+                encodeTime(*reinterpret_cast<ISC_TIME*>(dst), *reinterpret_cast<IBPP::Time*>(src));
 				src += sizeof(IBPP::Time);
 				dst += mElemSize;
 			}
@@ -966,7 +960,7 @@ void ArrayImpl::ResetId()
 void ArrayImpl::AllocArrayBuffer()
 {
 	// Clean previous buffer if any
-	if (mBuffer != 0) delete [] (char*)mBuffer;
+    if (mBuffer != 0) delete [] reinterpret_cast<char*>(mBuffer);
 	mBuffer = 0;
 
 	// Computes total number of elements in the array or slice
@@ -983,7 +977,7 @@ void ArrayImpl::AllocArrayBuffer()
 	if (mDesc.array_desc_dtype == blr_varying) mElemSize += 2;
 	else if (mDesc.array_desc_dtype == blr_cstring) mElemSize += 1;
 	mBufferSize = mElemSize * mElemCount;
-	mBuffer = (void*) new char[mBufferSize];
+    mBuffer = reinterpret_cast<void*>(new char[mBufferSize]);
 }
 
 void ArrayImpl::AttachDatabaseImpl(DatabaseImpl* database)
@@ -1036,7 +1030,7 @@ ArrayImpl::~ArrayImpl()
 		catch (...) {}
 	try { if (mDatabase != 0) mDatabase->DetachArrayImpl(this); }
 		catch (...) {}
-	try { if (mBuffer != 0) delete [] (char*)mBuffer; }
+    try { if (mBuffer != 0) delete [] reinterpret_cast<char*>(mBuffer); }
 		catch (...) {}
 }
 

@@ -75,9 +75,9 @@ void TPB::Insert(char item)
 
 void TPB::Insert(const std::string& data)
 {
-	int len = (int)data.length();
+    int len = static_cast<int>(data.length());
 	Grow(1 + len);
-	mBuffer[mSize++] = (char)len;
+    mBuffer[mSize++] = static_cast<char>(len);
 	strncpy(&mBuffer[mSize], data.c_str(), len);
 	mSize += len;
 }

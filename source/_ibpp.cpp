@@ -225,7 +225,7 @@ GDS* GDS::Call()
 #endif
 #ifdef IBPP_UNIX
 /* TODO : perform a late-bind on unix --- not so important, well I think (OM) */
-#define IB_ENTRYPOINT(X) m_##X = (proto_##X*)isc_##X
+#define IB_ENTRYPOINT(X) m_##X = reinterpret_cast<proto_##X*>(isc_##X)
 #endif
 
 		IB_ENTRYPOINT(create_database);

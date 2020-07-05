@@ -60,7 +60,7 @@ void IBPP::DBKey::SetKey(const void* key, int size)
 	if (size <= 0 || ((size >> 3) << 3) != size)
 		throw LogicExceptionImpl("IBPP::DBKey::SetKey", _("Invalid DBKey size."));
 
-	mDBKey.assign((const char*)key, (size_t)size);
+    mDBKey.assign(reinterpret_cast<char*>(malloc(sizeof(key))), static_cast<size_t>(size));
 	mString.erase();
 }
 
@@ -70,10 +70,10 @@ void IBPP::DBKey::GetKey(void* key, int size) const
 		throw LogicExceptionImpl("IBPP::DBKey::GetKey", _("DBKey not assigned."));
 	if (key == 0)
 		throw LogicExceptionImpl("IBPP::DBKey::GetKey", _("Null DBKey reference detected."));
-	if (size != (int)mDBKey.size())
+    if (size != static_cast<int>(mDBKey.size()))
 		throw LogicExceptionImpl("IBPP::DBKey::GetKey", _("Incompatible DBKey size detected."));
 
-	mDBKey.copy((char*)key, mDBKey.size());
+    mDBKey.copy(reinterpret_cast<char*>(malloc(sizeof(key))), mDBKey.size());
 }
 
 const char* IBPP::DBKey::AsString() const
@@ -88,7 +88,7 @@ const char* IBPP::DBKey::AsString() const
 		hexkey.setf(std::ios::uppercase);
 
 		const uint32_t* key = reinterpret_cast<const uint32_t*>(mDBKey.data());
-		int n = (int)mDBKey.size() / 8;
+        int n = static_cast<int>(mDBKey.size()) / 8;
 		for (int i = 0; i < n; i++)
 		{
 			if (i != 0) hexkey<< "-";

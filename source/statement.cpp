@@ -93,7 +93,7 @@ void StatementImpl::Prepare(const std::string& sql)
 
 	status.Reset();
 	(*gds.Call()->m_dsql_prepare)(status.Self(), mTransaction->GetHandlePtr(),
-		&mHandle, (short)sql.length(), const_cast<char*>(sql.c_str()),
+        &mHandle, static_cast<short>(sql.length()), const_cast<char*>(sql.c_str()),
 			short(mDatabase->Dialect()), mOutRow->Self());
 	if (status.Errors())
 	{

@@ -99,7 +99,7 @@ void DatabaseImpl::Connect()
 	connect.append(mDatabaseName);
 
 	IBS status;
-	(*gds.Call()->m_attach_database)(status.Self(), (short)connect.size(),
+    (*gds.Call()->m_attach_database)(status.Self(), static_cast<short>(connect.size()),
 		const_cast<char*>(connect.c_str()), &mHandle, dpb.Size(), dpb.Self());
     if (status.Errors())
     {
@@ -341,7 +341,7 @@ void DatabaseImpl::Users(std::vector<std::string>& users)
 	while (*p == isc_info_user_names)
 	{
 		p += 3;		// Get to the length byte (there are two undocumented bytes which we skip)
-		int len = (int)(*p);
+        int len = static_cast<int>(*p);
 		++p;		// Get to the first char of username
     	if (len != 0) users.push_back(std::string().append(p, len));
    		p += len;	// Skip username

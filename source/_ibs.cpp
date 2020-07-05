@@ -41,7 +41,7 @@ using namespace ibpp_internals;
 
 int IBS::SqlCode() const
 {
-	return (int)(*gds.Call()->m_sqlcode)(&mVector[0]);
+    return static_cast<int>((*gds.Call()->m_sqlcode)(&mVector[0]));
 }
 
 const char* IBS::ErrorMessage() const
@@ -56,7 +56,7 @@ const char* IBS::ErrorMessage() const
 	sqlcode = (*gds.Call()->m_sqlcode)(mVector);
 	if (sqlcode != -999)
 	{
-		(*gds.Call()->m_sql_interprete)((short)sqlcode, msg, sizeof(msg));
+        (*gds.Call()->m_sql_interprete)(static_cast<short>(sqlcode), msg, sizeof(msg));
 		message<< _("SQL Message : ")<< sqlcode<< "\n"<< msg<< "\n\n";
 	}
 

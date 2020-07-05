@@ -133,10 +133,12 @@ void IBPP::ttoi(int itime, int *h, int *m, int *s, int* t)
 {
 	int hh, mm, ss, tt;
 
-	hh = (int) (itime / 36000000);	itime = itime - hh * 36000000;
-	mm = (int) (itime / 600000);	itime = itime - mm * 600000;
-	ss = (int) (itime / 10000);
-	tt = (int) (itime - ss * 10000);
+    hh = static_cast<int>(itime / 36000000);
+    itime = itime - hh * 36000000;
+    mm = static_cast<int>(itime / 600000);
+    itime = itime - mm * 600000;
+    ss = static_cast<int>(itime / 10000);
+    tt = static_cast<int>(itime - ss * 10000);
 
 	if (h != 0) *h = hh;
 	if (m != 0) *m = mm;
@@ -168,24 +170,24 @@ void encodeDate(ISC_DATE& isc_dt, const IBPP::Date& dt)
 {
 	// There simply has a shift of 15019 between the native Firebird
 	// date model and the IBPP model.
-	isc_dt = (ISC_DATE)(dt.GetDate() + 15019);
+    isc_dt = static_cast<ISC_DATE>(dt.GetDate() + 15019);
 }
 
 void decodeDate(IBPP::Date& dt, const ISC_DATE& isc_dt)
 {
 	// There simply has a shift of 15019 between the native Firebird
 	// date model and the IBPP model.
-	dt.SetDate((int)isc_dt - 15019);
+    dt.SetDate(static_cast<int>(isc_dt) - 15019);
 }
 
 void encodeTime(ISC_TIME& isc_tm, const IBPP::Time& tm)
 {
-	isc_tm = (ISC_TIME)tm.GetTime();
+    isc_tm = static_cast<ISC_TIME>(tm.GetTime());
 }
 
 void decodeTime(IBPP::Time& tm, const ISC_TIME& isc_tm)
 {
-	tm.SetTime((int)isc_tm);
+    tm.SetTime(static_cast<int>(isc_tm));
 }
 
 void encodeTimestamp(ISC_TIMESTAMP& isc_ts, const IBPP::Timestamp& ts)

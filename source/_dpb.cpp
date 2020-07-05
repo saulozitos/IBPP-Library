@@ -33,6 +33,7 @@
 #endif
 
 #include "_ibpp.h"
+#include <cstring>
 
 #ifdef HAS_HDRSTOP
 #pragma hdrstop
@@ -69,7 +70,7 @@ void DPB::Grow(int needed)
 
 void DPB::Insert(char type, const char* data)
 {
-	int len = (int)strlen(data);
+    int len = static_cast<int>(strlen(data));
 	Grow(len + 2);
     mBuffer[mSize++] = type;
 	mBuffer[mSize++] = char(len);
@@ -82,7 +83,7 @@ void DPB::Insert(char type, int16_t data)
 	Grow(2 + 2);
     mBuffer[mSize++] = type;
 	mBuffer[mSize++] = char(2);
-    *(int16_t*)&mBuffer[mSize] = int16_t((*gds.Call()->m_vax_integer)((char*)&data, 2));
+    *reinterpret_cast<int16_t*>(&mBuffer[mSize]) = int16_t((*gds.Call()->m_vax_integer)(reinterpret_cast<char*>(&data), 2));
     mSize += 2;
 }
 

@@ -36,11 +36,11 @@
 #ifndef JRD_IBASE_H
 #define JRD_IBASE_H
 
-#define FB_API_VER 20
-#define isc_version4
+constexpr int FB_API_VER  = 20;
+constexpr int isc_Version = 4;
 
-#define  ISC_TRUE	1
-#define  ISC_FALSE	0
+constexpr int  ISC_TRUE	 = 1;
+constexpr int  ISC_FALSE = 0;
 #if !(defined __cplusplus)
 #define  ISC__TRUE	ISC_TRUE
 #define  ISC__FALSE	ISC_FALSE
@@ -68,7 +68,7 @@ typedef void*           FB_API_HANDLE;
 
 typedef long ISC_STATUS;
 
-#define ISC_STATUS_LENGTH       20
+constexpr int ISC_STATUS_LENGTH = 20;
 typedef ISC_STATUS ISC_STATUS_ARRAY[ISC_STATUS_LENGTH];
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
@@ -288,33 +288,33 @@ typedef struct paramvary {
 #ifndef JRD_DSC_PUB_H
 #define JRD_DSC_PUB_H
 
-#define DSC_null                1
-#define DSC_no_subtype          2       
-#define DSC_nullable            4       
+constexpr int DSC_null        = 1;
+constexpr int DSC_no_subtype  = 2;
+constexpr int DSC_nullable    = 4;
 
-#define dtype_unknown   0
-#define dtype_text      1
-#define dtype_cstring   2
-#define dtype_varying   3
+constexpr int dtype_unknown   = 0;
+constexpr int dtype_text      = 1;
+constexpr int dtype_cstring   = 2;
+constexpr int dtype_varying   = 3;
 
-#define dtype_packed    6
-#define dtype_byte      7
-#define dtype_short     8
-#define dtype_long      9
-#define dtype_quad      10
-#define dtype_real      11
-#define dtype_double    12
-#define dtype_d_float   13
-#define dtype_sql_date  14
-#define dtype_sql_time  15
-#define dtype_timestamp 16
-#define dtype_blob      17
-#define dtype_array     18
-#define dtype_int64     19
-#define DTYPE_TYPE_MAX  20
+constexpr int dtype_packed    = 6;
+constexpr int dtype_byte      = 7;
+constexpr int dtype_short     = 8;
+constexpr int dtype_long      = 9;
+constexpr int dtype_quad      = 10;
+constexpr int dtype_real      = 11;
+constexpr int dtype_double    = 12;
+constexpr int dtype_d_float   = 13;
+constexpr int dtype_sql_date  = 14;
+constexpr int dtype_sql_time  = 15;
+constexpr int dtype_timestamp = 16;
+constexpr int dtype_blob      = 17;
+constexpr int dtype_array     = 18;
+constexpr int dtype_int64     = 19;
+constexpr int DTYPE_TYPE_MAX  = 20;
 
-#define ISC_TIME_SECONDS_PRECISION              10000
-#define ISC_TIME_SECONDS_PRECISION_SCALE        (-4)
+constexpr int ISC_TIME_SECONDS_PRECISION       = 10000;
+constexpr int ISC_TIME_SECONDS_PRECISION_SCALE = -4;
 
 #endif 
 
@@ -329,8 +329,8 @@ typedef struct paramvary {
 #ifndef DSQL_SQLDA_PUB_H
 #define DSQL_SQLDA_PUB_H
 
-#define DSQL_close      1
-#define DSQL_drop       2
+constexpr int DSQL_close = 1;
+constexpr int DSQL_drop  = 2;
 
 typedef struct
 {
@@ -350,7 +350,7 @@ typedef struct
         ISC_SCHAR       aliasname[32];          
 } XSQLVAR;
 
-#define SQLDA_VERSION1          1
+constexpr int SQLDA_VERSION = 1;
 
 typedef struct
 {
@@ -362,29 +362,30 @@ typedef struct
         XSQLVAR sqlvar[1];                      
 } XSQLDA;
 
-#define XSQLDA_LENGTH(n)        (sizeof (XSQLDA) + (n - 1) * sizeof (XSQLVAR))
+template<typename T1>
+constexpr int XSQLDA_LENGTH(T1 n){return (sizeof (XSQLDA) + (n - 1) * sizeof (XSQLVAR));}
 
-#define SQL_TEXT                           452
-#define SQL_VARYING                        448
-#define SQL_SHORT                          500
-#define SQL_LONG                           496
-#define SQL_FLOAT                          482
-#define SQL_DOUBLE                         480
-#define SQL_D_FLOAT                        530
-#define SQL_TIMESTAMP                      510
-#define SQL_BLOB                           520
-#define SQL_ARRAY                          540
-#define SQL_QUAD                           550
-#define SQL_TYPE_TIME                      560
-#define SQL_TYPE_DATE                      570
-#define SQL_INT64                          580
+constexpr int SQL_TEXT      = 452;
+constexpr int SQL_VARYING   = 448;
+constexpr int SQL_SHORT     = 500;
+constexpr int SQL_LONG      = 496;
+constexpr int SQL_FLOAT     = 482;
+constexpr int SQL_DOUBLE    = 480;
+constexpr int SQL_D_FLOAT   = 530;
+constexpr int SQL_TIMESTAMP = 510;
+constexpr int SQL_BLOB      = 520;
+constexpr int SQL_ARRAY     = 540;
+constexpr int SQL_QUAD      = 550;
+constexpr int SQL_TYPE_TIME = 560;
+constexpr int SQL_TYPE_DATE = 570;
+constexpr int SQL_INT64     = 580;
 
-#define SQL_DATE                           SQL_TIMESTAMP
+constexpr int SQL_DATE = SQL_TIMESTAMP;
 
-#define SQL_DIALECT_V5                          1       
-#define SQL_DIALECT_V6_TRANSITION       2       
-#define SQL_DIALECT_V6                          3       
-#define SQL_DIALECT_CURRENT             SQL_DIALECT_V6  
+constexpr int SQL_DIALECT_V5            = 1;
+constexpr int SQL_DIALECT_V6_TRANSITION = 2;
+constexpr int SQL_DIALECT_V6            = 3;
+constexpr int SQL_DIALECT_CURRENT       = SQL_DIALECT_V6;
 
 #endif 
 
@@ -785,21 +786,21 @@ ISC_INT64 ISC_EXPORT isc_portable_integer(const ISC_UCHAR*,
 /* Security Functions and structures */
 /*************************************/
 
-#define sec_uid_spec		    0x01
-#define sec_gid_spec		    0x02
-#define sec_server_spec		    0x04
-#define sec_password_spec	    0x08
-#define sec_group_name_spec	    0x10
-#define sec_first_name_spec	    0x20
-#define sec_middle_name_spec        0x40
-#define sec_last_name_spec	    0x80
-#define sec_dba_user_name_spec      0x100
-#define sec_dba_password_spec       0x200
+constexpr int sec_uid_spec		     = 0x01;
+constexpr int sec_gid_spec		     = 0x02;
+constexpr int sec_server_spec		 = 0x04;
+constexpr int sec_password_spec	     = 0x08;
+constexpr int sec_group_name_spec	 = 0x10;
+constexpr int sec_first_name_spec	 = 0x20;
+constexpr int sec_middle_name_spec   = 0x40;
+constexpr int sec_last_name_spec	 = 0x80;
+constexpr int sec_dba_user_name_spec = 0x100;
+constexpr int sec_dba_password_spec  = 0x200;
 
-#define sec_protocol_tcpip            1
-#define sec_protocol_netbeui          2
-#define sec_protocol_spx              3 /* -- Deprecated Protocol. Declaration retained for compatibility   */
-#define sec_protocol_local            4
+constexpr int sec_protocol_tcpip   = 1;
+constexpr int sec_protocol_netbeui = 2;
+constexpr int sec_protocol_spx     = 3; /* -- Deprecated Protocol. Declaration retained for compatibility   */
+constexpr int sec_protocol_local   = 4;
 
 typedef struct {
 	short sec_flags;			/* which fields are specified */
@@ -1215,6 +1216,7 @@ ISC_LONG ISC_EXPORT isc_reset_fpe(ISC_USHORT);
 /* Service manager functions             */
 /*****************************************/
 
+
 #define ADD_SPB_LENGTH(p, length)	{*(p)++ = (length); \
     					 *(p)++ = (length) >> 8;}
 
@@ -1267,14 +1269,14 @@ int  ISC_EXPORT isc_get_client_minor_version ();
 /* Actions to pass to the blob filter (ctl_source) */
 /***************************************************/
 
-#define isc_blob_filter_open             0
-#define isc_blob_filter_get_segment      1
-#define isc_blob_filter_close            2
-#define isc_blob_filter_create           3
-#define isc_blob_filter_put_segment      4
-#define isc_blob_filter_alloc            5
-#define isc_blob_filter_free             6
-#define isc_blob_filter_seek             7
+constexpr int isc_blob_filter_open        = 0;
+constexpr int isc_blob_filter_get_segment = 1;
+constexpr int isc_blob_filter_close       = 2;
+constexpr int isc_blob_filter_create      = 3;
+constexpr int isc_blob_filter_put_segment = 4;
+constexpr int isc_blob_filter_alloc       = 5;
+constexpr int isc_blob_filter_free        = 6;
+constexpr int isc_blob_filter_seek        = 7;
 
 /*******************/
 /* Blr definitions */
@@ -1284,252 +1286,252 @@ int  ISC_EXPORT isc_get_client_minor_version ();
 #ifndef JRD_BLR_H
 #define JRD_BLR_H
 
-#define blr_text                (unsigned char)14
-#define blr_text2               (unsigned char)15       
-#define blr_short               (unsigned char)7
-#define blr_long                (unsigned char)8
-#define blr_quad                (unsigned char)9
-#define blr_float               (unsigned char)10
-#define blr_double              (unsigned char)27
-#define blr_d_float             (unsigned char)11
-#define blr_timestamp           (unsigned char)35
-#define blr_varying             (unsigned char)37
-#define blr_varying2            (unsigned char)38       
-#define blr_blob                (unsigned short)261
-#define blr_cstring             (unsigned char)40       
-#define blr_cstring2            (unsigned char)41       
-#define blr_blob_id             (unsigned char)45       
-#define blr_sql_date            (unsigned char)12
-#define blr_sql_time            (unsigned char)13
-#define blr_int64               (unsigned char)16
-#define blr_blob2               (unsigned char)17
+constexpr unsigned char blr_text      = 14;
+constexpr unsigned char blr_text2     = 15;
+constexpr unsigned char blr_short     = 7;
+constexpr unsigned char blr_long      = 8;
+constexpr unsigned char blr_quad      = 9;
+constexpr unsigned char blr_float     = 10;
+constexpr unsigned char blr_double    = 27;
+constexpr unsigned char blr_d_float   = 11;
+constexpr unsigned char blr_timestamp = 35;
+constexpr unsigned char blr_varying   = 37;
+constexpr unsigned char blr_varying2  = 38;
+constexpr unsigned short blr_blob     = 261;
+constexpr unsigned char blr_cstring   = 40;
+constexpr unsigned char blr_cstring2  = 41;
+constexpr unsigned char blr_blob_id   = 45;
+constexpr unsigned char blr_sql_date  = 12;
+constexpr unsigned char blr_sql_time  = 13;
+constexpr unsigned char blr_int64     = 16;
+constexpr unsigned char blr_blob2     = 17;
 
-#define blr_date                blr_timestamp
+constexpr unsigned char blr_date = blr_timestamp;
 
-#define blr_inner               (unsigned char)0
-#define blr_left                (unsigned char)1
-#define blr_right               (unsigned char)2
-#define blr_full                (unsigned char)3
+constexpr unsigned char blr_inner = 0;
+constexpr unsigned char blr_left  = 1;
+constexpr unsigned char blr_right = 2;
+constexpr unsigned char blr_full  = 3;
 
-#define blr_gds_code            (unsigned char)0
-#define blr_sql_code            (unsigned char)1
-#define blr_exception           (unsigned char)2
-#define blr_trigger_code        (unsigned char)3
-#define blr_default_code        (unsigned char)4
-#define blr_raise                       (unsigned char)5
-#define blr_exception_msg       (unsigned char)6
+constexpr unsigned char blr_gds_code      = 0;
+constexpr unsigned char blr_sql_code      = 1;
+constexpr unsigned char blr_exception     = 2;
+constexpr unsigned char blr_trigger_code  = 3;
+constexpr unsigned char blr_default_code  = 4;
+constexpr unsigned char blr_raise         = 5;
+constexpr unsigned char blr_exception_msg = 6;
 
-#define blr_version4            (unsigned char)4
-#define blr_version5            (unsigned char)5
-#define blr_eoc                 (unsigned char)76
-#define blr_end                 (unsigned char)255      
+constexpr unsigned char blr_version4 = 4;
+constexpr unsigned char blr_version5 = 5;
+constexpr unsigned char blr_eoc      = 76;
+constexpr unsigned char blr_end      = 255;
 
-#define blr_assignment          (unsigned char)1
-#define blr_begin               (unsigned char)2
-#define blr_dcl_variable        (unsigned char)3        
-#define blr_message             (unsigned char)4
-#define blr_erase               (unsigned char)5
-#define blr_fetch               (unsigned char)6
-#define blr_for                 (unsigned char)7
-#define blr_if                  (unsigned char)8
-#define blr_loop                (unsigned char)9
-#define blr_modify              (unsigned char)10
-#define blr_handler             (unsigned char)11
-#define blr_receive             (unsigned char)12
-#define blr_select              (unsigned char)13
-#define blr_send                (unsigned char)14
-#define blr_store               (unsigned char)15
-#define blr_label               (unsigned char)17
-#define blr_leave               (unsigned char)18
-#define blr_store2              (unsigned char)19
-#define blr_post                (unsigned char)20
-#define blr_literal             (unsigned char)21
-#define blr_dbkey               (unsigned char)22
-#define blr_field               (unsigned char)23
-#define blr_fid                 (unsigned char)24
-#define blr_parameter           (unsigned char)25
-#define blr_variable            (unsigned char)26
-#define blr_average             (unsigned char)27
-#define blr_count               (unsigned char)28
-#define blr_maximum             (unsigned char)29
-#define blr_minimum             (unsigned char)30
-#define blr_total               (unsigned char)31
+constexpr unsigned char blr_assignment     = 1;
+constexpr unsigned char blr_begin          = 2;
+constexpr unsigned char blr_dcl_variable   = 3;
+constexpr unsigned char blr_message        = 4;
+constexpr unsigned char blr_erase          = 5;
+constexpr unsigned char blr_fetch          = 6;
+constexpr unsigned char blr_for            = 7;
+constexpr unsigned char blr_if             = 8;
+constexpr unsigned char blr_loop           = 9;
+constexpr unsigned char blr_modify         = 10;
+constexpr unsigned char blr_handler        = 11;
+constexpr unsigned char blr_receive        = 12;
+constexpr unsigned char blr_select         = 13;
+constexpr unsigned char blr_send           = 14;
+constexpr unsigned char blr_store          = 15;
+constexpr unsigned char blr_label          = 17;
+constexpr unsigned char blr_leave          = 18;
+constexpr unsigned char blr_store2         = 19;
+constexpr unsigned char blr_post           = 20;
+constexpr unsigned char blr_literal        = 21;
+constexpr unsigned char blr_dbkey          = 22;
+constexpr unsigned char blr_field          = 23;
+constexpr unsigned char blr_fid            = 24;
+constexpr unsigned char blr_parameter      = 25;
+constexpr unsigned char blr_variable       = 26;
+constexpr unsigned char blr_average        = 27;
+constexpr unsigned char blr_count          = 28;
+constexpr unsigned char blr_maximum        = 29;
+constexpr unsigned char blr_minimum        = 30;
+constexpr unsigned char blr_total          = 31;
 
-#define blr_add                 (unsigned char)34
-#define blr_subtract            (unsigned char)35
-#define blr_multiply            (unsigned char)36
-#define blr_divide              (unsigned char)37
-#define blr_negate              (unsigned char)38
-#define blr_concatenate         (unsigned char)39
-#define blr_substring           (unsigned char)40
-#define blr_parameter2          (unsigned char)41
-#define blr_from                (unsigned char)42
-#define blr_via                 (unsigned char)43
-#define blr_parameter2_old      (unsigned char)44       
-#define blr_user_name           (unsigned char)44       
-#define blr_null                (unsigned char)45
+constexpr unsigned char blr_add            = 34;
+constexpr unsigned char blr_subtract       = 35;
+constexpr unsigned char blr_multiply       = 36;
+constexpr unsigned char blr_divide         = 37;
+constexpr unsigned char blr_negate         = 38;
+constexpr unsigned char blr_concatenate    = 39;
+constexpr unsigned char blr_substring      = 40;
+constexpr unsigned char blr_parameter2     = 41;
+constexpr unsigned char blr_from           = 42;
+constexpr unsigned char blr_via            = 43;
+constexpr unsigned char blr_parameter2_old = 44;
+constexpr unsigned char blr_user_name      = 44;
+constexpr unsigned char blr_null           = 45;
 
-#define blr_equiv                       (unsigned char)46
-#define blr_eql                 (unsigned char)47
-#define blr_neq                 (unsigned char)48
-#define blr_gtr                 (unsigned char)49
-#define blr_geq                 (unsigned char)50
-#define blr_lss                 (unsigned char)51
-#define blr_leq                 (unsigned char)52
-#define blr_containing          (unsigned char)53
-#define blr_matching            (unsigned char)54
-#define blr_starting            (unsigned char)55
-#define blr_between             (unsigned char)56
-#define blr_or                  (unsigned char)57
-#define blr_and                 (unsigned char)58
-#define blr_not                 (unsigned char)59
-#define blr_any                 (unsigned char)60
-#define blr_missing             (unsigned char)61
-#define blr_unique              (unsigned char)62
-#define blr_like                (unsigned char)63
+constexpr unsigned char blr_equiv          = 46;
+constexpr unsigned char blr_eql            = 47;
+constexpr unsigned char blr_neq            = 48;
+constexpr unsigned char blr_gtr            = 49;
+constexpr unsigned char blr_geq            = 50;
+constexpr unsigned char blr_lss            = 51;
+constexpr unsigned char blr_leq            = 52;
+constexpr unsigned char blr_containing     = 53;
+constexpr unsigned char blr_matching       = 54;
+constexpr unsigned char blr_starting       = 55;
+constexpr unsigned char blr_between        = 56;
+constexpr unsigned char blr_or             = 57;
+constexpr unsigned char blr_and            = 58;
+constexpr unsigned char blr_not            = 59;
+constexpr unsigned char blr_any            = 60;
+constexpr unsigned char blr_missing        = 61;
+constexpr unsigned char blr_unique         = 62;
+constexpr unsigned char blr_like           = 63;
 
-#define blr_rse                 (unsigned char)67
-#define blr_first               (unsigned char)68
-#define blr_project             (unsigned char)69
-#define blr_sort                (unsigned char)70
-#define blr_boolean             (unsigned char)71
-#define blr_ascending           (unsigned char)72
-#define blr_descending          (unsigned char)73
-#define blr_relation            (unsigned char)74
-#define blr_rid                 (unsigned char)75
-#define blr_union               (unsigned char)76
-#define blr_map                 (unsigned char)77
-#define blr_group_by            (unsigned char)78
-#define blr_aggregate           (unsigned char)79
-#define blr_join_type           (unsigned char)80
+constexpr unsigned char blr_rse            = 67;
+constexpr unsigned char blr_first          = 68;
+constexpr unsigned char blr_project        = 69;
+constexpr unsigned char blr_sort           = 70;
+constexpr unsigned char blr_boolean        = 71;
+constexpr unsigned char blr_ascending      = 72;
+constexpr unsigned char blr_descending     = 73;
+constexpr unsigned char blr_relation       = 74;
+constexpr unsigned char blr_rid            = 75;
+constexpr unsigned char blr_union          = 76;
+constexpr unsigned char blr_map            = 77;
+constexpr unsigned char blr_group_by       = 78;
+constexpr unsigned char blr_aggregate      = 79;
+constexpr unsigned char blr_join_type      = 80;
 
-#define blr_agg_count           (unsigned char)83
-#define blr_agg_max             (unsigned char)84
-#define blr_agg_min             (unsigned char)85
-#define blr_agg_total           (unsigned char)86
-#define blr_agg_average         (unsigned char)87
-#define blr_parameter3          (unsigned char)88       
-#define blr_run_max             (unsigned char)89
-#define blr_run_min             (unsigned char)90
-#define blr_run_total           (unsigned char)91
-#define blr_run_average         (unsigned char)92
-#define blr_agg_count2          (unsigned char)93
-#define blr_agg_count_distinct  (unsigned char)94
-#define blr_agg_total_distinct  (unsigned char)95
-#define blr_agg_average_distinct (unsigned char)96
+constexpr unsigned char blr_agg_count            = 83;
+constexpr unsigned char blr_agg_max              = 84;
+constexpr unsigned char blr_agg_min              = 85;
+constexpr unsigned char blr_agg_total            = 86;
+constexpr unsigned char blr_agg_average          = 87;
+constexpr unsigned char blr_parameter3           = 88;
+constexpr unsigned char blr_run_max              = 89;
+constexpr unsigned char blr_run_min              = 90;
+constexpr unsigned char blr_run_total            = 91;
+constexpr unsigned char blr_run_average          = 92;
+constexpr unsigned char blr_agg_count2           = 93;
+constexpr unsigned char blr_agg_count_distinct   = 94;
+constexpr unsigned char blr_agg_total_distinct   = 95;
+constexpr unsigned char blr_agg_average_distinct = 96;
 
-#define blr_function            (unsigned char)100
-#define blr_gen_id              (unsigned char)101
-#define blr_prot_mask           (unsigned char)102
-#define blr_upcase              (unsigned char)103
-#define blr_lock_state          (unsigned char)104
-#define blr_value_if            (unsigned char)105
-#define blr_matching2           (unsigned char)106
-#define blr_index               (unsigned char)107
-#define blr_ansi_like           (unsigned char)108
+constexpr unsigned char blr_function   = 100;
+constexpr unsigned char blr_gen_id     = 101;
+constexpr unsigned char blr_prot_mask  = 102;
+constexpr unsigned char blr_upcase     = 103;
+constexpr unsigned char blr_lock_state = 104;
+constexpr unsigned char blr_value_if   = 105;
+constexpr unsigned char blr_matching2  = 106;
+constexpr unsigned char blr_index      = 107;
+constexpr unsigned char blr_ansi_like  = 108;
 
-#define blr_seek                (unsigned char)112
+constexpr unsigned char blr_seek = 112;
 
-#define blr_continue            (unsigned char)0
-#define blr_forward             (unsigned char)1
-#define blr_backward            (unsigned char)2
-#define blr_bof_forward         (unsigned char)3
-#define blr_eof_backward        (unsigned char)4
+constexpr unsigned char blr_continue     = 0;
+constexpr unsigned char blr_forward      = 1;
+constexpr unsigned char blr_backward     = 2;
+constexpr unsigned char blr_bof_forward  = 3;
+constexpr unsigned char blr_eof_backward = 4;
 
-#define blr_run_count           (unsigned char)118      
-#define blr_rs_stream           (unsigned char)119
-#define blr_exec_proc           (unsigned char)120
+constexpr unsigned char blr_run_count = 118;
+constexpr unsigned char blr_rs_stream = 119;
+constexpr unsigned char blr_exec_proc = 120;
 
-#define blr_procedure           (unsigned char)124
-#define blr_pid                 (unsigned char)125
-#define blr_exec_pid            (unsigned char)126
-#define blr_singular            (unsigned char)127
-#define blr_abort               (unsigned char)128
-#define blr_block               (unsigned char)129
-#define blr_error_handler       (unsigned char)130
+constexpr unsigned char blr_procedure       = 124;
+constexpr unsigned char blr_pid             = 125;
+constexpr unsigned char blr_exec_pid        = 126;
+constexpr unsigned char blr_singular        = 127;
+constexpr unsigned char blr_abort           = 128;
+constexpr unsigned char blr_block           = 129;
+constexpr unsigned char blr_error_handler   = 130;
 
-#define blr_cast                (unsigned char)131
+constexpr unsigned char blr_cast            = 131;
 
-#define blr_start_savepoint     (unsigned char)134
-#define blr_end_savepoint       (unsigned char)135
+constexpr unsigned char blr_start_savepoint = 134;
+constexpr unsigned char blr_end_savepoint   = 135;
 
-#define blr_plan                (unsigned char)139      
-#define blr_merge               (unsigned char)140
-#define blr_join                (unsigned char)141
-#define blr_sequential          (unsigned char)142
-#define blr_navigational        (unsigned char)143
-#define blr_indices             (unsigned char)144
-#define blr_retrieve            (unsigned char)145
+constexpr unsigned char blr_plan            = 139;
+constexpr unsigned char blr_merge           = 140;
+constexpr unsigned char blr_join            = 141;
+constexpr unsigned char blr_sequential      = 142;
+constexpr unsigned char blr_navigational    = 143;
+constexpr unsigned char blr_indices         = 144;
+constexpr unsigned char blr_retrieve        = 145;
 
-#define blr_relation2           (unsigned char)146
-#define blr_rid2                (unsigned char)147
+constexpr unsigned char blr_relation2       = 146;
+constexpr unsigned char blr_rid2            = 147;
 
-#define blr_set_generator       (unsigned char)150
+constexpr unsigned char blr_set_generator   = 150;
 
-#define blr_ansi_any            (unsigned char)151   
-#define blr_exists              (unsigned char)152   
+constexpr unsigned char blr_ansi_any        = 151;
+constexpr unsigned char blr_exists          = 152;
 
-#define blr_record_version      (unsigned char)154      
-#define blr_stall               (unsigned char)155      
+constexpr unsigned char blr_record_version  = 154;
+constexpr unsigned char blr_stall           = 155;
 
-#define blr_ansi_all            (unsigned char)158   
+constexpr unsigned char blr_ansi_all        = 158;
 
-#define blr_extract             (unsigned char)159
+constexpr unsigned char blr_extract         = 159;
 
-#define blr_extract_year        (unsigned char)0
-#define blr_extract_month       (unsigned char)1
-#define blr_extract_day         (unsigned char)2
-#define blr_extract_hour        (unsigned char)3
-#define blr_extract_minute      (unsigned char)4
-#define blr_extract_second      (unsigned char)5
-#define blr_extract_weekday     (unsigned char)6
-#define blr_extract_yearday     (unsigned char)7
+constexpr unsigned char blr_extract_year      = 0;
+constexpr unsigned char blr_extract_month     = 1;
+constexpr unsigned char blr_extract_day       = 2;
+constexpr unsigned char blr_extract_hour      = 3;
+constexpr unsigned char blr_extract_minute    = 4;
+constexpr unsigned char blr_extract_second    = 5;
+constexpr unsigned char blr_extract_weekday   = 6;
+constexpr unsigned char blr_extract_yearday   = 7;
 
-#define blr_current_date        (unsigned char)160
-#define blr_current_timestamp   (unsigned char)161
-#define blr_current_time        (unsigned char)162
+constexpr unsigned char blr_current_date      = 160;
+constexpr unsigned char blr_current_timestamp = 161;
+constexpr unsigned char blr_current_time      = 162;
 
-#define blr_current_role        (unsigned char)174
-#define blr_skip                (unsigned char)175
+constexpr unsigned char blr_current_role      = 174;
+constexpr unsigned char blr_skip              = 175;
 
-#define blr_exec_sql            (unsigned char)176
-#define blr_internal_info       (unsigned char)177
-#define blr_nullsfirst          (unsigned char)178
-#define blr_writelock           (unsigned char)179
-#define blr_nullslast       (unsigned char)180
+constexpr unsigned char blr_exec_sql          = 176;
+constexpr unsigned char blr_internal_info     = 177;
+constexpr unsigned char blr_nullsfirst        = 178;
+constexpr unsigned char blr_writelock         = 179;
+constexpr unsigned char blr_nullslast         = 180;
 
-#define blr_lowcase                     (unsigned char)181
-#define blr_strlen                      (unsigned char)182
+constexpr unsigned char blr_lowcase           = 181;
+constexpr unsigned char blr_strlen            = 182;
 
-#define blr_strlen_bit          (unsigned char)0
-#define blr_strlen_char         (unsigned char)1
-#define blr_strlen_octet        (unsigned char)2
+constexpr unsigned char blr_strlen_bit        = 0;
+constexpr unsigned char blr_strlen_char       = 1;
+constexpr unsigned char blr_strlen_octet      = 2;
 
-#define blr_trim                        (unsigned char)183
+constexpr unsigned char blr_trim                     = 183;
 
-#define blr_trim_both           (unsigned char)0
-#define blr_trim_leading        (unsigned char)1
-#define blr_trim_trailing       (unsigned char)2
+constexpr unsigned char blr_trim_both                = 0;
+constexpr unsigned char blr_trim_leading             = 1;
+constexpr unsigned char blr_trim_trailing            = 2;
 
-#define blr_trim_spaces         (unsigned char)0
-#define blr_trim_characters     (unsigned char)1
+constexpr unsigned char blr_trim_spaces              = 0;
+constexpr unsigned char blr_trim_characters          = 1;
 
-#define blr_post_arg            (unsigned char)163
-#define blr_exec_into           (unsigned char)164
-#define blr_user_savepoint      (unsigned char)165
-#define blr_dcl_cursor          (unsigned char)166
-#define blr_cursor_stmt         (unsigned char)167
-#define blr_current_timestamp2  (unsigned char)168
-#define blr_current_time2       (unsigned char)169
+constexpr unsigned char blr_post_arg                 = 163;
+constexpr unsigned char blr_exec_into                = 164;
+constexpr unsigned char blr_user_savepoint           = 165;
+constexpr unsigned char blr_dcl_cursor               = 166;
+constexpr unsigned char blr_cursor_stmt              = 167;
+constexpr unsigned char blr_current_timestamp2       = 168;
+constexpr unsigned char blr_current_time2            = 169;
 
-#define blr_savepoint_set       (unsigned char)0
-#define blr_savepoint_release   (unsigned char)1
-#define blr_savepoint_undo      (unsigned char)2
-#define blr_savepoint_release_single    (unsigned char)3
+constexpr unsigned char blr_savepoint_set            = 0;
+constexpr unsigned char blr_savepoint_release        = 1;
+constexpr unsigned char blr_savepoint_undo           = 2;
+constexpr unsigned char blr_savepoint_release_single = 3;
 
-#define blr_cursor_open                 (unsigned char)0
-#define blr_cursor_close                (unsigned char)1
-#define blr_cursor_fetch                (unsigned char)2
+constexpr unsigned char blr_cursor_open              = 0;
+constexpr unsigned char blr_cursor_close             = 1;
+constexpr unsigned char blr_cursor_fetch             = 2;
 
 #endif 
 
@@ -1538,77 +1540,77 @@ int  ISC_EXPORT isc_get_client_minor_version ();
 /* Database parameter block stuff */
 /**********************************/
 
-#define isc_dpb_version1                  1
-#define isc_dpb_cdd_pathname              1
-#define isc_dpb_allocation                2
-#define isc_dpb_journal                   3
-#define isc_dpb_page_size                 4
-#define isc_dpb_num_buffers               5
-#define isc_dpb_buffer_length             6
-#define isc_dpb_debug                     7
-#define isc_dpb_garbage_collect           8
-#define isc_dpb_verify                    9
-#define isc_dpb_sweep                     10
-#define isc_dpb_enable_journal            11
-#define isc_dpb_disable_journal           12
-#define isc_dpb_dbkey_scope               13
-#define isc_dpb_number_of_users           14
-#define isc_dpb_trace                     15
-#define isc_dpb_no_garbage_collect        16
-#define isc_dpb_damaged                   17
-#define isc_dpb_license                   18
-#define isc_dpb_sys_user_name             19
-#define isc_dpb_encrypt_key               20
-#define isc_dpb_activate_shadow           21
-#define isc_dpb_sweep_interval            22
-#define isc_dpb_delete_shadow             23
-#define isc_dpb_force_write               24
-#define isc_dpb_begin_log                 25
-#define isc_dpb_quit_log                  26
-#define isc_dpb_no_reserve                27
-#define isc_dpb_user_name                 28
-#define isc_dpb_password                  29
-#define isc_dpb_password_enc              30
-#define isc_dpb_sys_user_name_enc         31
-#define isc_dpb_interp                    32
-#define isc_dpb_online_dump               33
-#define isc_dpb_old_file_size             34
-#define isc_dpb_old_num_files             35
-#define isc_dpb_old_file                  36
-#define isc_dpb_old_start_page            37
-#define isc_dpb_old_start_seqno           38
-#define isc_dpb_old_start_file            39
-#define isc_dpb_drop_walfile              40
-#define isc_dpb_old_dump_id               41
-#define isc_dpb_wal_backup_dir            42
-#define isc_dpb_wal_chkptlen              43
-#define isc_dpb_wal_numbufs               44
-#define isc_dpb_wal_bufsize               45
-#define isc_dpb_wal_grp_cmt_wait          46
-#define isc_dpb_lc_messages               47
-#define isc_dpb_lc_ctype                  48
-#define isc_dpb_cache_manager             49
-#define isc_dpb_shutdown                  50
-#define isc_dpb_online                    51
-#define isc_dpb_shutdown_delay            52
-#define isc_dpb_reserved                  53
-#define isc_dpb_overwrite                 54
-#define isc_dpb_sec_attach                55
-#define isc_dpb_disable_wal               56
-#define isc_dpb_connect_timeout           57
-#define isc_dpb_dummy_packet_interval     58
-#define isc_dpb_gbak_attach               59
-#define isc_dpb_sql_role_name             60
-#define isc_dpb_set_page_buffers          61
-#define isc_dpb_working_directory         62
-#define isc_dpb_sql_dialect               63
-#define isc_dpb_set_db_readonly           64
-#define isc_dpb_set_db_sql_dialect        65
-#define isc_dpb_gfix_attach               66
-#define isc_dpb_gstat_attach              67
-#define isc_dpb_set_db_charset            68
-#define isc_dpb_gsec_attach               69
-#define isc_dpb_address_path              70
+constexpr int isc_dpb_version1                 = 1;
+constexpr int isc_dpb_cdd_pathname             = 1;
+constexpr int isc_dpb_allocation               = 2;
+constexpr int isc_dpb_journal                  = 3;
+constexpr int isc_dpb_page_size                = 4;
+constexpr int isc_dpb_num_buffers              = 5;
+constexpr int isc_dpb_buffer_length            = 6;
+constexpr int isc_dpb_debug                    = 7;
+constexpr int isc_dpb_garbage_collect          = 8;
+constexpr int isc_dpb_verify                   = 9;
+constexpr int isc_dpb_sweep                    = 10;
+constexpr int isc_dpb_enable_journal           = 11;
+constexpr int isc_dpb_disable_journal          = 12;
+constexpr int isc_dpb_dbkey_scope              = 13;
+constexpr int isc_dpb_number_of_users          = 14;
+constexpr int isc_dpb_trace                    = 15;
+constexpr int isc_dpb_no_garbage_collect       = 16;
+constexpr int isc_dpb_damaged                  = 17;
+constexpr int isc_dpb_license                  = 18;
+constexpr int isc_dpb_sys_user_name            = 19;
+constexpr int isc_dpb_encrypt_key              = 20;
+constexpr int isc_dpb_activate_shadow          = 21;
+constexpr int isc_dpb_sweep_interval           = 22;
+constexpr int isc_dpb_delete_shadow            = 23;
+constexpr int isc_dpb_force_write              = 24;
+constexpr int isc_dpb_begin_log                = 25;
+constexpr int isc_dpb_quit_log                 = 26;
+constexpr int isc_dpb_no_reserve               = 27;
+constexpr int isc_dpb_user_name                = 28;
+constexpr int isc_dpb_password                 = 29;
+constexpr int isc_dpb_password_enc             = 30;
+constexpr int isc_dpb_sys_user_name_enc        = 31;
+constexpr int isc_dpb_interp                   = 32;
+constexpr int isc_dpb_online_dump              = 33;
+constexpr int isc_dpb_old_file_size            = 34;
+constexpr int isc_dpb_old_num_files            = 35;
+constexpr int isc_dpb_old_file                 = 36;
+constexpr int isc_dpb_old_start_page           = 37;
+constexpr int isc_dpb_old_start_seqno          = 38;
+constexpr int isc_dpb_old_start_file           = 39;
+constexpr int isc_dpb_drop_walfile             = 40;
+constexpr int isc_dpb_old_dump_id              = 41;
+constexpr int isc_dpb_wal_backup_dir           = 42;
+constexpr int isc_dpb_wal_chkptlen             = 43;
+constexpr int isc_dpb_wal_numbufs              = 44;
+constexpr int isc_dpb_wal_bufsize              = 45;
+constexpr int isc_dpb_wal_grp_cmt_wait         = 46;
+constexpr int isc_dpb_lc_messages              = 47;
+constexpr int isc_dpb_lc_ctype                 = 48;
+constexpr int isc_dpb_cache_manager            = 49;
+constexpr int isc_dpb_shutdown                 = 50;
+constexpr int isc_dpb_online                   = 51;
+constexpr int isc_dpb_shutdown_delay           = 52;
+constexpr int isc_dpb_reserved                 = 53;
+constexpr int isc_dpb_overwrite                = 54;
+constexpr int isc_dpb_sec_attach               = 55;
+constexpr int isc_dpb_disable_wal              = 56;
+constexpr int isc_dpb_connect_timeout          = 57;
+constexpr int isc_dpb_dummy_packet_interval    = 58;
+constexpr int isc_dpb_gbak_attach              = 59;
+constexpr int isc_dpb_sql_role_name            = 60;
+constexpr int isc_dpb_set_page_buffers         = 61;
+constexpr int isc_dpb_working_directory        = 62;
+constexpr int isc_dpb_sql_dialect              = 63;
+constexpr int isc_dpb_set_db_readonly          = 64;
+constexpr int isc_dpb_set_db_sql_dialect       = 65;
+constexpr int isc_dpb_gfix_attach              = 66;
+constexpr int isc_dpb_gstat_attach             = 67;
+constexpr int isc_dpb_set_db_charset           = 68;
+constexpr int isc_dpb_gsec_attach              = 69;
+constexpr int isc_dpb_address_path             = 70;
 
 /**************************************************/
 /* clumplet tags used inside isc_dpb_address_path */
@@ -1649,45 +1651,44 @@ int  ISC_EXPORT isc_get_client_minor_version ();
 	...
 */
 
-#define isc_dpb_address 1
+constexpr int isc_dpb_address       = 1;
 
-#define isc_dpb_addr_protocol 1
-#define isc_dpb_addr_endpoint 2
+constexpr int isc_dpb_addr_protocol = 1;
+constexpr int isc_dpb_addr_endpoint = 2;
 
 /*********************************/
 /* isc_dpb_verify specific flags */
 /*********************************/
 
-#define isc_dpb_pages                     1
-#define isc_dpb_records                   2
-#define isc_dpb_indices                   4
-#define isc_dpb_transactions              8
-#define isc_dpb_no_update                 16
-#define isc_dpb_repair                    32
-#define isc_dpb_ignore                    64
+constexpr int isc_dpb_pages        = 1;
+constexpr int isc_dpb_records      = 2;
+constexpr int isc_dpb_indices      = 4;
+constexpr int isc_dpb_transactions = 8;
+constexpr int isc_dpb_no_update    = 16;
+constexpr int isc_dpb_repair       = 32;
+constexpr int isc_dpb_ignore       = 64;
 
 /***********************************/
 /* isc_dpb_shutdown specific flags */
 /***********************************/
 
-#define isc_dpb_shut_cache               0x1
-#define isc_dpb_shut_attachment          0x2
-#define isc_dpb_shut_transaction         0x4
-#define isc_dpb_shut_force               0x8
-#define isc_dpb_shut_mode_mask          0x70
-
-#define isc_dpb_shut_default             0x0
-#define isc_dpb_shut_normal             0x10
-#define isc_dpb_shut_multi              0x20
-#define isc_dpb_shut_single             0x30
-#define isc_dpb_shut_full               0x40
+constexpr int isc_dpb_shut_cache       = 0x01;
+constexpr int isc_dpb_shut_attachment  = 0x02;
+constexpr int isc_dpb_shut_transaction = 0x04;
+constexpr int isc_dpb_shut_force       = 0x08;
+constexpr int isc_dpb_shut_mode_mask   = 0x70;
+constexpr int isc_dpb_shut_default     = 0x00;
+constexpr int isc_dpb_shut_normal      = 0x10;
+constexpr int isc_dpb_shut_multi       = 0x20;
+constexpr int isc_dpb_shut_single      = 0x30;
+constexpr int isc_dpb_shut_full        = 0x40;
 
 /**************************************/
 /* Bit assignments in RDB$SYSTEM_FLAG */
 /**************************************/
 
-#define RDB_system                         1
-#define RDB_id_assigned                    2
+constexpr int RDB_system      = 1;
+constexpr int RDB_id_assigned = 2;
 /* 2 is for QLI. See jrd/constants.h for more Firebird-specific values. */
 
 
@@ -1695,69 +1696,68 @@ int  ISC_EXPORT isc_get_client_minor_version ();
 /* Transaction parameter block stuff */
 /*************************************/
 
-#define isc_tpb_version1                  1
-#define isc_tpb_version3                  3
-#define isc_tpb_consistency               1
-#define isc_tpb_concurrency               2
-#define isc_tpb_shared                    3
-#define isc_tpb_protected                 4
-#define isc_tpb_exclusive                 5
-#define isc_tpb_wait                      6
-#define isc_tpb_nowait                    7
-#define isc_tpb_read                      8
-#define isc_tpb_write                     9
-#define isc_tpb_lock_read                 10
-#define isc_tpb_lock_write                11
-#define isc_tpb_verb_time                 12
-#define isc_tpb_commit_time               13
-#define isc_tpb_ignore_limbo              14
-#define isc_tpb_read_committed	          15
-#define isc_tpb_autocommit                16
-#define isc_tpb_rec_version               17
-#define isc_tpb_no_rec_version            18
-#define isc_tpb_restart_requests          19
-#define isc_tpb_no_auto_undo              20
-#define isc_tpb_lock_timeout              21
+constexpr int isc_tpb_version1         = 1;
+constexpr int isc_tpb_version3         = 3;
+constexpr int isc_tpb_consistency      = 1;
+constexpr int isc_tpb_concurrency      = 2;
+constexpr int isc_tpb_shared           = 3;
+constexpr int isc_tpb_protected        = 4;
+constexpr int isc_tpb_exclusive        = 5;
+constexpr int isc_tpb_wait             = 6;
+constexpr int isc_tpb_nowait           = 7;
+constexpr int isc_tpb_read             = 8;
+constexpr int isc_tpb_write            = 9;
+constexpr int isc_tpb_lock_read        = 10;
+constexpr int isc_tpb_lock_write       = 11;
+constexpr int isc_tpb_verb_time        = 12;
+constexpr int isc_tpb_commit_time      = 13;
+constexpr int isc_tpb_ignore_limbo     = 14;
+constexpr int isc_tpb_read_committed   = 15;
+constexpr int isc_tpb_autocommit       = 16;
+constexpr int isc_tpb_rec_version      = 17;
+constexpr int isc_tpb_no_rec_version   = 18;
+constexpr int isc_tpb_restart_requests = 19;
+constexpr int isc_tpb_no_auto_undo     = 20;
+constexpr int isc_tpb_lock_timeout     = 21;
 
 
 /************************/
 /* Blob Parameter Block */
 /************************/
 
-#define isc_bpb_version1                  1
-#define isc_bpb_source_type               1
-#define isc_bpb_target_type               2
-#define isc_bpb_type                      3
-#define isc_bpb_source_interp             4
-#define isc_bpb_target_interp             5
-#define isc_bpb_filter_parameter          6
-
-#define isc_bpb_type_segmented            0
-#define isc_bpb_type_stream               1
+constexpr int isc_bpb_version1         = 1;
+constexpr int isc_bpb_source_type      = 1;
+constexpr int isc_bpb_target_type      = 2;
+constexpr int isc_bpb_type             = 3;
+constexpr int isc_bpb_source_interp    = 4;
+constexpr int isc_bpb_target_interp    = 5;
+constexpr int isc_bpb_filter_parameter = 6;
+constexpr int isc_bpb_type_segmented   = 0;
+constexpr int isc_bpb_type_stream      = 1;
 
 
 /*********************************/
 /* Service parameter block stuff */
 /*********************************/
 
-#define isc_spb_version1                  1
-#define isc_spb_current_version           2
-#define isc_spb_version			  isc_spb_current_version
-#define isc_spb_user_name                 isc_dpb_user_name
-#define isc_spb_sys_user_name             isc_dpb_sys_user_name
-#define isc_spb_sys_user_name_enc         isc_dpb_sys_user_name_enc
-#define isc_spb_password                  isc_dpb_password
-#define isc_spb_password_enc              isc_dpb_password_enc
-#define isc_spb_command_line              105
-#define isc_spb_dbname                    106
-#define isc_spb_verbose                   107
-#define isc_spb_options                   108
-#define isc_spb_address_path              109
+constexpr int isc_spb_version1          = 1;
+constexpr int isc_spb_current_version   = 2;
+constexpr int isc_spb_version		    = isc_spb_current_version;
+constexpr int isc_spb_user_name         = isc_dpb_user_name;
+constexpr int isc_spb_sys_user_name     = isc_dpb_sys_user_name;
+constexpr int isc_spb_sys_user_name_enc = isc_dpb_sys_user_name_enc;
+constexpr int isc_spb_password          = isc_dpb_password;
+constexpr int isc_spb_password_enc      = isc_dpb_password_enc;
+constexpr int isc_spb_command_line      = 105;
+constexpr int isc_spb_dbname            = 106;
+constexpr int isc_spb_verbose           = 107;
+constexpr int isc_spb_options           = 108;
+constexpr int isc_spb_address_path      = 109;
 
 
-#define isc_spb_connect_timeout           isc_dpb_connect_timeout
-#define isc_spb_dummy_packet_interval     isc_dpb_dummy_packet_interval
-#define isc_spb_sql_role_name             isc_dpb_sql_role_name
+constexpr int isc_spb_connect_timeout       = isc_dpb_connect_timeout;
+constexpr int isc_spb_dummy_packet_interval = isc_dpb_dummy_packet_interval;
+constexpr int isc_spb_sql_role_name         = isc_dpb_sql_role_name;
 
 
 /*********************************/
@@ -1768,35 +1768,35 @@ int  ISC_EXPORT isc_get_client_minor_version ();
 #ifndef JRD_INF_PUB_H
 #define JRD_INF_PUB_H
 
-#define isc_info_end                    1
-#define isc_info_truncated              2
-#define isc_info_error                  3
-#define isc_info_data_not_ready           4
-#define isc_info_flag_end                 127
+constexpr int isc_info_end            = 1;
+constexpr int isc_info_truncated      = 2;
+constexpr int isc_info_error          = 3;
+constexpr int isc_info_data_not_ready = 4;
+constexpr int isc_info_flag_end       = 127;
 
 enum db_info_types
 {
         isc_info_db_id                  = 4,
         isc_info_reads                  = 5,
-        isc_info_writes             = 6,
+        isc_info_writes                 = 6,
         isc_info_fetches                = 7,
         isc_info_marks                  = 8,
 
-        isc_info_implementation = 11,
+        isc_info_implementation         = 11,
         isc_info_isc_version            = 12,
         isc_info_base_level             = 13,
         isc_info_page_size              = 14,
-        isc_info_num_buffers    = 15,
+        isc_info_num_buffers            = 15,
         isc_info_limbo                  = 16,
-        isc_info_current_memory = 17,
+        isc_info_current_memory         = 17,
         isc_info_max_memory             = 18,
-        isc_info_window_turns   = 19,
+        isc_info_window_turns           = 19,
         isc_info_license                = 20,
 
         isc_info_allocation             = 21,
-        isc_info_attachment_id   = 22,
-        isc_info_read_seq_count = 23,
-        isc_info_read_idx_count = 24,
+        isc_info_attachment_id          = 22,
+        isc_info_read_seq_count         = 23,
+        isc_info_read_idx_count         = 24,
         isc_info_insert_count           = 25,
         isc_info_update_count           = 26,
         isc_info_delete_count           = 27,
@@ -1804,7 +1804,7 @@ enum db_info_types
         isc_info_purge_count            = 29,
         isc_info_expunge_count          = 30,
 
-        isc_info_sweep_interval = 31,
+        isc_info_sweep_interval         = 31,
         isc_info_ods_version            = 32,
         isc_info_ods_minor_version      = 33,
         isc_info_no_reserve             = 34,
@@ -1816,11 +1816,11 @@ enum db_info_types
         isc_info_wal_buffer_size        = 39,
         isc_info_wal_ckpt_length        = 40,
 
-        isc_info_wal_cur_ckpt_interval = 41,
+        isc_info_wal_cur_ckpt_interval  = 41,
         isc_info_wal_prv_ckpt_fname     = 42,
         isc_info_wal_prv_ckpt_poffset   = 43,
         isc_info_wal_recv_ckpt_fname    = 44,
-        isc_info_wal_recv_ckpt_poffset = 45,
+        isc_info_wal_recv_ckpt_poffset  = 45,
         isc_info_wal_grpc_wait_usecs    = 47,
         isc_info_wal_num_io             = 48,
         isc_info_wal_avg_io_size        = 49,
@@ -1828,36 +1828,36 @@ enum db_info_types
         isc_info_wal_avg_grpc_size      = 51,
 
         isc_info_forced_writes          = 52,
-        isc_info_user_names = 53,
-        isc_info_page_errors = 54,
-        isc_info_record_errors = 55,
-        isc_info_bpage_errors = 56,
-        isc_info_dpage_errors = 57,
-        isc_info_ipage_errors = 58,
-        isc_info_ppage_errors = 59,
-        isc_info_tpage_errors = 60,
+        isc_info_user_names             = 53,
+        isc_info_page_errors            = 54,
+        isc_info_record_errors          = 55,
+        isc_info_bpage_errors           = 56,
+        isc_info_dpage_errors           = 57,
+        isc_info_ipage_errors           = 58,
+        isc_info_ppage_errors           = 59,
+        isc_info_tpage_errors           = 60,
 
-        isc_info_set_page_buffers = 61,
-        isc_info_db_sql_dialect = 62,   
-        isc_info_db_read_only = 63,
-        isc_info_db_size_in_pages = 64,
+        isc_info_set_page_buffers       = 61,
+        isc_info_db_sql_dialect         = 62,
+        isc_info_db_read_only           = 63,
+        isc_info_db_size_in_pages       = 64,
 
-        frb_info_att_charset = 101,
-        isc_info_db_class = 102,
-        isc_info_firebird_version = 103,
-        isc_info_oldest_transaction = 104,
-        isc_info_oldest_active = 105,
-        isc_info_oldest_snapshot = 106,
-        isc_info_next_transaction = 107,
-        isc_info_db_provider = 108,
-        isc_info_active_transactions = 109,
-        isc_info_active_tran_count = 110,
-        isc_info_creation_date = 111,
+        frb_info_att_charset            = 101,
+        isc_info_db_class               = 102,
+        isc_info_firebird_version       = 103,
+        isc_info_oldest_transaction     = 104,
+        isc_info_oldest_active          = 105,
+        isc_info_oldest_snapshot        = 106,
+        isc_info_next_transaction       = 107,
+        isc_info_db_provider            = 108,
+        isc_info_active_transactions    = 109,
+        isc_info_active_tran_count      = 110,
+        isc_info_creation_date          = 111,
 
         isc_info_db_last_value   
 };
 
-#define isc_info_version isc_info_isc_version
+constexpr int isc_info_version = isc_info_isc_version;
 
 enum  info_db_implementations
 {
@@ -1922,10 +1922,10 @@ enum  info_db_implementations
         isc_info_db_impl_last_value   
 };
 
-#define isc_info_db_impl_isc_a            isc_info_db_impl_isc_apl_68K
-#define isc_info_db_impl_isc_u            isc_info_db_impl_isc_vax_ultr
-#define isc_info_db_impl_isc_v            isc_info_db_impl_isc_vms
-#define isc_info_db_impl_isc_s            isc_info_db_impl_isc_sun_68k
+constexpr int isc_info_db_impl_isc_a = isc_info_db_impl_isc_apl_68K;
+constexpr int isc_info_db_impl_isc_u = isc_info_db_impl_isc_vax_ultr;
+constexpr int isc_info_db_impl_isc_v = isc_info_db_impl_isc_vms;
+constexpr int isc_info_db_impl_isc_s = isc_info_db_impl_isc_sun_68k;
 
 enum info_db_class
 {
@@ -1955,121 +1955,121 @@ enum info_db_provider
         isc_info_db_code_last_value   
 };
 
-#define isc_info_number_messages        4
-#define isc_info_max_message            5
-#define isc_info_max_send               6
-#define isc_info_max_receive            7
-#define isc_info_state                  8
-#define isc_info_message_number 9
-#define isc_info_message_size           10
-#define isc_info_request_cost           11
-#define isc_info_access_path            12
-#define isc_info_req_select_count       13
-#define isc_info_req_insert_count       14
-#define isc_info_req_update_count       15
-#define isc_info_req_delete_count       16
+constexpr int isc_info_number_messages        = 4;
+constexpr int isc_info_max_message            = 5;
+constexpr int isc_info_max_send               = 6;
+constexpr int isc_info_max_receive            = 7;
+constexpr int isc_info_state                  = 8;
+constexpr int isc_info_message_number         = 9;
+constexpr int isc_info_message_size           = 10 ;
+constexpr int isc_info_request_cost           = 11 ;
+constexpr int isc_info_access_path            = 12 ;
+constexpr int isc_info_req_select_count       = 13 ;
+constexpr int isc_info_req_insert_count       = 14 ;
+constexpr int isc_info_req_update_count       = 15 ;
+constexpr int isc_info_req_delete_count       = 16 ;
 
-#define isc_info_rsb_end                0
-#define isc_info_rsb_begin              1
-#define isc_info_rsb_type               2
-#define isc_info_rsb_relation           3
-#define isc_info_rsb_plan                       4
+constexpr int isc_info_rsb_end                = 0;
+constexpr int isc_info_rsb_begin              = 1;
+constexpr int isc_info_rsb_type               = 2;
+constexpr int isc_info_rsb_relation           = 3;
+constexpr int isc_info_rsb_plan               = 4;
 
-#define isc_info_rsb_unknown            1
-#define isc_info_rsb_indexed            2
-#define isc_info_rsb_navigate           3
-#define isc_info_rsb_sequential 4
-#define isc_info_rsb_cross              5
-#define isc_info_rsb_sort               6
-#define isc_info_rsb_first              7
-#define isc_info_rsb_boolean            8
-#define isc_info_rsb_union              9
-#define isc_info_rsb_aggregate          10
-#define isc_info_rsb_merge              11
-#define isc_info_rsb_ext_sequential     12
-#define isc_info_rsb_ext_indexed        13
-#define isc_info_rsb_ext_dbkey          14
-#define isc_info_rsb_left_cross 15
-#define isc_info_rsb_select             16
-#define isc_info_rsb_sql_join           17
-#define isc_info_rsb_simulate           18
-#define isc_info_rsb_sim_cross          19
-#define isc_info_rsb_once               20
-#define isc_info_rsb_procedure          21
-#define isc_info_rsb_skip               22
+constexpr int isc_info_rsb_unknown            = 1;
+constexpr int isc_info_rsb_indexed            = 2;
+constexpr int isc_info_rsb_navigate           = 3;
+constexpr int isc_info_rsb_sequential         = 4;
+constexpr int isc_info_rsb_cross              = 5;
+constexpr int isc_info_rsb_sort               = 6;
+constexpr int isc_info_rsb_first              = 7;
+constexpr int isc_info_rsb_boolean            = 8;
+constexpr int isc_info_rsb_union              = 9;
+constexpr int isc_info_rsb_aggregate          = 10;
+constexpr int isc_info_rsb_merge              = 11;
+constexpr int isc_info_rsb_ext_sequential     = 12;
+constexpr int isc_info_rsb_ext_indexed        = 13;
+constexpr int isc_info_rsb_ext_dbkey          = 14;
+constexpr int isc_info_rsb_left_cross         = 15;
+constexpr int isc_info_rsb_select             = 16;
+constexpr int isc_info_rsb_sql_join           = 17;
+constexpr int isc_info_rsb_simulate           = 18;
+constexpr int isc_info_rsb_sim_cross          = 19;
+constexpr int isc_info_rsb_once               = 20;
+constexpr int isc_info_rsb_procedure          = 21;
+constexpr int isc_info_rsb_skip               = 22;
 
-#define isc_info_rsb_and                1
-#define isc_info_rsb_or         2
-#define isc_info_rsb_dbkey              3
-#define isc_info_rsb_index              4
+constexpr int isc_info_rsb_and                = 1;
+constexpr int isc_info_rsb_or                 = 2;
+constexpr int isc_info_rsb_dbkey              = 3;
+constexpr int isc_info_rsb_index              = 4;
 
-#define isc_info_req_active             2
-#define isc_info_req_inactive           3
-#define isc_info_req_send               4
-#define isc_info_req_receive            5
-#define isc_info_req_select             6
-#define isc_info_req_sql_stall          7
+constexpr int isc_info_req_active             = 2;
+constexpr int isc_info_req_inactive           = 3;
+constexpr int isc_info_req_send               = 4;
+constexpr int isc_info_req_receive            = 5;
+constexpr int isc_info_req_select             = 6;
+constexpr int isc_info_req_sql_stall          = 7;
 
-#define isc_info_blob_num_segments      4
-#define isc_info_blob_max_segment       5
-#define isc_info_blob_total_length      6
-#define isc_info_blob_type              7
+constexpr int isc_info_blob_num_segments      = 4;
+constexpr int isc_info_blob_max_segment       = 5;
+constexpr int isc_info_blob_total_length      = 6;
+constexpr int isc_info_blob_type              = 7;
 
-#define isc_info_tra_id                                         4
-#define isc_info_tra_oldest_interesting         5
-#define isc_info_tra_oldest_snapshot            6
-#define isc_info_tra_oldest_active                      7
-#define isc_info_tra_isolation                          8
-#define isc_info_tra_access                                     9
-#define isc_info_tra_lock_timeout                       10
+constexpr int isc_info_tra_id                  = 4;
+constexpr int isc_info_tra_oldest_interesting  = 5;
+constexpr int isc_info_tra_oldest_snapshot     = 6;
+constexpr int isc_info_tra_oldest_active       = 7;
+constexpr int isc_info_tra_isolation           = 8;
+constexpr int isc_info_tra_access              = 9;
+constexpr int isc_info_tra_lock_timeout        = 10;
 
-#define isc_info_tra_consistency                1
-#define isc_info_tra_concurrency                2
-#define isc_info_tra_read_committed             3
+constexpr int isc_info_tra_consistency         = 1;
+constexpr int isc_info_tra_concurrency         = 2;
+constexpr int isc_info_tra_read_committed      = 3;
 
-#define isc_info_tra_no_rec_version             0
-#define isc_info_tra_rec_version                1
+constexpr int isc_info_tra_no_rec_version      = 0;
+constexpr int isc_info_tra_rec_version         = 1;
 
-#define isc_info_tra_readonly   0
-#define isc_info_tra_readwrite  1
+constexpr int isc_info_tra_readonly       = 0;
+constexpr int isc_info_tra_readwrite      = 1;
 
-#define isc_info_sql_select             4
-#define isc_info_sql_bind               5
-#define isc_info_sql_num_variables      6
-#define isc_info_sql_describe_vars      7
-#define isc_info_sql_describe_end       8
-#define isc_info_sql_sqlda_seq          9
-#define isc_info_sql_message_seq        10
-#define isc_info_sql_type               11
-#define isc_info_sql_sub_type           12
-#define isc_info_sql_scale              13
-#define isc_info_sql_length             14
-#define isc_info_sql_null_ind           15
-#define isc_info_sql_field              16
-#define isc_info_sql_relation           17
-#define isc_info_sql_owner              18
-#define isc_info_sql_alias              19
-#define isc_info_sql_sqlda_start        20
-#define isc_info_sql_stmt_type          21
-#define isc_info_sql_get_plan             22
-#define isc_info_sql_records              23
-#define isc_info_sql_batch_fetch          24
-#define isc_info_sql_relation_alias             25
+constexpr int isc_info_sql_select         = 4;
+constexpr int isc_info_sql_bind           = 5;
+constexpr int isc_info_sql_num_variables  = 6;
+constexpr int isc_info_sql_describe_vars  = 7;
+constexpr int isc_info_sql_describe_end   = 8;
+constexpr int isc_info_sql_sqlda_seq      = 9;
+constexpr int isc_info_sql_message_seq    = 10;
+constexpr int isc_info_sql_type           = 11;
+constexpr int isc_info_sql_sub_type       = 12;
+constexpr int isc_info_sql_scale          = 13;
+constexpr int isc_info_sql_length         = 14;
+constexpr int isc_info_sql_null_ind       = 15;
+constexpr int isc_info_sql_field          = 16;
+constexpr int isc_info_sql_relation       = 17;
+constexpr int isc_info_sql_owner          = 18;
+constexpr int isc_info_sql_alias          = 19;
+constexpr int isc_info_sql_sqlda_start    = 20;
+constexpr int isc_info_sql_stmt_type      = 21;
+constexpr int isc_info_sql_get_plan       = 22;
+constexpr int isc_info_sql_records        = 23;
+constexpr int isc_info_sql_batch_fetch    = 24;
+constexpr int isc_info_sql_relation_alias = 25;
 
-#define isc_info_sql_stmt_select          1
-#define isc_info_sql_stmt_insert          2
-#define isc_info_sql_stmt_update          3
-#define isc_info_sql_stmt_delete          4
-#define isc_info_sql_stmt_ddl             5
-#define isc_info_sql_stmt_get_segment     6
-#define isc_info_sql_stmt_put_segment     7
-#define isc_info_sql_stmt_exec_procedure  8
-#define isc_info_sql_stmt_start_trans     9
-#define isc_info_sql_stmt_commit          10
-#define isc_info_sql_stmt_rollback        11
-#define isc_info_sql_stmt_select_for_upd  12
-#define isc_info_sql_stmt_set_generator   13
-#define isc_info_sql_stmt_savepoint       14
+constexpr int isc_info_sql_stmt_select          = 1;
+constexpr int isc_info_sql_stmt_insert          = 2;
+constexpr int isc_info_sql_stmt_update          = 3;
+constexpr int isc_info_sql_stmt_delete          = 4;
+constexpr int isc_info_sql_stmt_ddl             = 5;
+constexpr int isc_info_sql_stmt_get_segment     = 6;
+constexpr int isc_info_sql_stmt_put_segment     = 7;
+constexpr int isc_info_sql_stmt_exec_procedure  = 8;
+constexpr int isc_info_sql_stmt_start_trans     = 9;
+constexpr int isc_info_sql_stmt_commit          = 10;
+constexpr int isc_info_sql_stmt_rollback        = 11;
+constexpr int isc_info_sql_stmt_select_for_upd  = 12;
+constexpr int isc_info_sql_stmt_set_generator   = 13;
+constexpr int isc_info_sql_stmt_savepoint       = 14;
 
 #endif 
 
@@ -2078,194 +2078,194 @@ enum info_db_provider
  * Service action items      *
  *****************************/
 
-#define isc_action_svc_backup          1	/* Starts database backup process on the server */
-#define isc_action_svc_restore         2	/* Starts database restore process on the server */
-#define isc_action_svc_repair          3	/* Starts database repair process on the server */
-#define isc_action_svc_add_user        4	/* Adds a new user to the security database */
-#define isc_action_svc_delete_user     5	/* Deletes a user record from the security database */
-#define isc_action_svc_modify_user     6	/* Modifies a user record in the security database */
-#define isc_action_svc_display_user    7	/* Displays a user record from the security database */
-#define isc_action_svc_properties      8	/* Sets database properties */
-#define isc_action_svc_add_license     9	/* Adds a license to the license file */
-#define isc_action_svc_remove_license 10	/* Removes a license from the license file */
-#define isc_action_svc_db_stats	      11	/* Retrieves database statistics */
-#define isc_action_svc_get_ib_log     12	/* Retrieves the InterBase log file from the server */
-#define isc_action_svc_get_fb_log     12	/* Retrieves the Firebird log file from the server */
+constexpr int isc_action_svc_backup         = 1;	/* Starts database backup process on the server */
+constexpr int isc_action_svc_restore        = 2;	/* Starts database restore process on the server */
+constexpr int isc_action_svc_repair         = 3;	/* Starts database repair process on the server */
+constexpr int isc_action_svc_add_user       = 4;	/* Adds a new user to the security database */
+constexpr int isc_action_svc_delete_user    = 5;	/* Deletes a user record from the security database */
+constexpr int isc_action_svc_modify_user    = 6;	/* Modifies a user record in the security database */
+constexpr int isc_action_svc_display_user   = 7;	/* Displays a user record from the security database */
+constexpr int isc_action_svc_properties     = 8;	/* Sets database properties */
+constexpr int isc_action_svc_add_license    = 9;	/* Adds a license to the license file */
+constexpr int isc_action_svc_remove_license = 10;	/* Removes a license from the license file */
+constexpr int isc_action_svc_db_stats	    = 11;	/* Retrieves database statistics */
+constexpr int isc_action_svc_get_ib_log     = 12;	/* Retrieves the InterBase log file from the server */
+constexpr int isc_action_svc_get_fb_log     = 12;	/* Retrieves the Firebird log file from the server */
 
 /*****************************
  * Service information items *
  *****************************/
 
-#define isc_info_svc_svr_db_info      50	/* Retrieves the number of attachments and databases */
-#define isc_info_svc_get_license      51	/* Retrieves all license keys and IDs from the license file */
-#define isc_info_svc_get_license_mask 52	/* Retrieves a bitmask representing licensed options on the server */
-#define isc_info_svc_get_config       53	/* Retrieves the parameters and values for IB_CONFIG */
-#define isc_info_svc_version          54	/* Retrieves the version of the services manager */
-#define isc_info_svc_server_version   55	/* Retrieves the version of the InterBase server */
-#define isc_info_svc_implementation   56	/* Retrieves the implementation of the InterBase server */
-#define isc_info_svc_capabilities     57	/* Retrieves a bitmask representing the server's capabilities */
-#define isc_info_svc_user_dbpath      58	/* Retrieves the path to the security database in use by the server */
-#define isc_info_svc_get_env	      59	/* Retrieves the setting of $INTERBASE */
-#define isc_info_svc_get_env_lock     60	/* Retrieves the setting of $INTERBASE_LCK */
-#define isc_info_svc_get_env_msg      61	/* Retrieves the setting of $INTERBASE_MSG */
-#define isc_info_svc_line             62	/* Retrieves 1 line of service output per call */
-#define isc_info_svc_to_eof           63	/* Retrieves as much of the server output as will fit in the supplied buffer */
-#define isc_info_svc_timeout          64	/* Sets / signifies a timeout value for reading service information */
-#define isc_info_svc_get_licensed_users 65	/* Retrieves the number of users licensed for accessing the server */
-#define isc_info_svc_limbo_trans	66	/* Retrieve the limbo transactions */
-#define isc_info_svc_running		67	/* Checks to see if a service is running on an attachment */
-#define isc_info_svc_get_users		68	/* Returns the user information from isc_action_svc_display_users */
+constexpr int isc_info_svc_svr_db_info        = 50;	/* Retrieves the number of attachments and databases */
+constexpr int isc_info_svc_get_license        = 51;	/* Retrieves all license keys and IDs from the license file */
+constexpr int isc_info_svc_get_license_mask   = 52;	/* Retrieves a bitmask representing licensed options on the server */
+constexpr int isc_info_svc_get_config         = 53;	/* Retrieves the parameters and values for IB_CONFIG */
+constexpr int isc_info_svc_version            = 54;	/* Retrieves the version of the services manager */
+constexpr int isc_info_svc_server_version     = 55;	/* Retrieves the version of the InterBase server */
+constexpr int isc_info_svc_implementation     = 56;	/* Retrieves the implementation of the InterBase server */
+constexpr int isc_info_svc_capabilities       = 57;	/* Retrieves a bitmask representing the server's capabilities */
+constexpr int isc_info_svc_user_dbpath        = 58;	/* Retrieves the path to the security database in use by the server */
+constexpr int isc_info_svc_get_env	          = 59;	/* Retrieves the setting of $INTERBASE */
+constexpr int isc_info_svc_get_env_lock       = 60;	/* Retrieves the setting of $INTERBASE_LCK */
+constexpr int isc_info_svc_get_env_msg        = 61;	/* Retrieves the setting of $INTERBASE_MSG */
+constexpr int isc_info_svc_line               = 62;	/* Retrieves 1 line of service output per call */
+constexpr int isc_info_svc_to_eof             = 63;	/* Retrieves as much of the server output as will fit in the supplied buffer */
+constexpr int isc_info_svc_timeout            = 64;	/* Sets / signifies a timeout value for reading service information */
+constexpr int isc_info_svc_get_licensed_users = 65;	/* Retrieves the number of users licensed for accessing the server */
+constexpr int isc_info_svc_limbo_trans	      = 66;	/* Retrieve the limbo transactions */
+constexpr int isc_info_svc_running		      = 67;	/* Checks to see if a service is running on an attachment */
+constexpr int isc_info_svc_get_users		  = 68;	/* Returns the user information from isc_action_svc_display_users */
 
 /******************************************************
  * Parameters for isc_action_{add|del|mod|disp)_user  *
  ******************************************************/
 
-#define isc_spb_sec_userid            5
-#define isc_spb_sec_groupid           6
-#define isc_spb_sec_username          7
-#define isc_spb_sec_password          8
-#define isc_spb_sec_groupname         9
-#define isc_spb_sec_firstname         10
-#define isc_spb_sec_middlename        11
-#define isc_spb_sec_lastname          12
+constexpr int isc_spb_sec_userid     = 5;
+constexpr int isc_spb_sec_groupid    = 6;
+constexpr int isc_spb_sec_username   = 7;
+constexpr int isc_spb_sec_password   = 8;
+constexpr int isc_spb_sec_groupname  = 9;
+constexpr int isc_spb_sec_firstname  = 10;
+constexpr int isc_spb_sec_middlename = 11;
+constexpr int isc_spb_sec_lastname   = 12;
 
 /*******************************************************
  * Parameters for isc_action_svc_(add|remove)_license, *
  * isc_info_svc_get_license                            *
  *******************************************************/
 
-#define isc_spb_lic_key               5
-#define isc_spb_lic_id                6
-#define isc_spb_lic_desc              7
+constexpr int isc_spb_lic_key  = 5;
+constexpr int isc_spb_lic_id   = 6;
+constexpr int isc_spb_lic_desc = 7;
 
 
 /*****************************************
  * Parameters for isc_action_svc_backup  *
  *****************************************/
 
-#define isc_spb_bkp_file                 5
-#define isc_spb_bkp_factor               6
-#define isc_spb_bkp_length               7
-#define isc_spb_bkp_ignore_checksums     0x01
-#define isc_spb_bkp_ignore_limbo         0x02
-#define isc_spb_bkp_metadata_only        0x04
-#define isc_spb_bkp_no_garbage_collect   0x08
-#define isc_spb_bkp_old_descriptions     0x10
-#define isc_spb_bkp_non_transportable    0x20
-#define isc_spb_bkp_convert              0x40
-#define isc_spb_bkp_expand		 0x80
+constexpr int isc_spb_bkp_file               = 5;
+constexpr int isc_spb_bkp_factor             = 6;
+constexpr int isc_spb_bkp_length             = 7;
+constexpr int isc_spb_bkp_ignore_checksums   = 0x01;
+constexpr int isc_spb_bkp_ignore_limbo       = 0x02;
+constexpr int isc_spb_bkp_metadata_only      = 0x04;
+constexpr int isc_spb_bkp_no_garbage_collect = 0x08;
+constexpr int isc_spb_bkp_old_descriptions   = 0x10;
+constexpr int isc_spb_bkp_non_transportable  = 0x20;
+constexpr int isc_spb_bkp_convert            = 0x40;
+constexpr int isc_spb_bkp_expand             = 0x80;
 
 /********************************************
  * Parameters for isc_action_svc_properties *
  ********************************************/
 
-#define isc_spb_prp_page_buffers		5
-#define isc_spb_prp_sweep_interval		6
-#define isc_spb_prp_shutdown_db			7
-#define isc_spb_prp_deny_new_attachments	9
-#define isc_spb_prp_deny_new_transactions	10
-#define isc_spb_prp_reserve_space		11
-#define isc_spb_prp_write_mode			12
-#define isc_spb_prp_access_mode			13
-#define isc_spb_prp_set_sql_dialect		14
-#define isc_spb_prp_activate			0x0100
-#define isc_spb_prp_db_online			0x0200
+constexpr int isc_spb_prp_page_buffers		    = 5;
+constexpr int isc_spb_prp_sweep_interval	    = 6;
+constexpr int isc_spb_prp_shutdown_db		    = 7;
+constexpr int isc_spb_prp_deny_new_attachments  = 9;
+constexpr int isc_spb_prp_deny_new_transactions = 10;
+constexpr int isc_spb_prp_reserve_space		    = 11;
+constexpr int isc_spb_prp_write_mode		    = 12;
+constexpr int isc_spb_prp_access_mode		    = 13;
+constexpr int isc_spb_prp_set_sql_dialect	    = 14;
+constexpr int isc_spb_prp_activate			    = 0x0100;
+constexpr int isc_spb_prp_db_online			    = 0x0200;
 
 /********************************************
  * Parameters for isc_spb_prp_reserve_space *
  ********************************************/
 
-#define isc_spb_prp_res_use_full	35
-#define isc_spb_prp_res			36
+constexpr int isc_spb_prp_res_use_full	= 35;
+constexpr int isc_spb_prp_res			= 36;
 
 /******************************************
  * Parameters for isc_spb_prp_write_mode  *
  ******************************************/
 
-#define isc_spb_prp_wm_async		37
-#define isc_spb_prp_wm_sync			38
+constexpr int isc_spb_prp_wm_async = 37;
+constexpr int isc_spb_prp_wm_sync  = 38;
 
 /******************************************
  * Parameters for isc_spb_prp_access_mode *
  ******************************************/
 
-#define isc_spb_prp_am_readonly		39
-#define isc_spb_prp_am_readwrite	40
+constexpr int isc_spb_prp_am_readonly	= 39;
+constexpr int isc_spb_prp_am_readwrite	= 40;
 
 /*****************************************
  * Parameters for isc_action_svc_repair  *
  *****************************************/
 
-#define isc_spb_rpr_commit_trans		15
-#define isc_spb_rpr_rollback_trans		34
-#define isc_spb_rpr_recover_two_phase	17
-#define isc_spb_tra_id					18
-#define isc_spb_single_tra_id			19
-#define isc_spb_multi_tra_id			20
-#define isc_spb_tra_state				21
-#define isc_spb_tra_state_limbo			22
-#define isc_spb_tra_state_commit		23
-#define isc_spb_tra_state_rollback		24
-#define isc_spb_tra_state_unknown		25
-#define isc_spb_tra_host_site			26
-#define isc_spb_tra_remote_site			27
-#define isc_spb_tra_db_path				28
-#define isc_spb_tra_advise				29
-#define isc_spb_tra_advise_commit		30
-#define isc_spb_tra_advise_rollback		31
-#define isc_spb_tra_advise_unknown		33
+constexpr int isc_spb_rpr_commit_trans		= 15;
+constexpr int isc_spb_rpr_rollback_trans	= 34;
+constexpr int isc_spb_rpr_recover_two_phase	= 17;
+constexpr int isc_spb_tra_id				= 18;
+constexpr int isc_spb_single_tra_id			= 19;
+constexpr int isc_spb_multi_tra_id			= 20;
+constexpr int isc_spb_tra_state				= 21;
+constexpr int isc_spb_tra_state_limbo		= 22;
+constexpr int isc_spb_tra_state_commit		= 23;
+constexpr int isc_spb_tra_state_rollback	= 24;
+constexpr int isc_spb_tra_state_unknown		= 25;
+constexpr int isc_spb_tra_host_site			= 26;
+constexpr int isc_spb_tra_remote_site		= 27;
+constexpr int isc_spb_tra_db_path			= 28;
+constexpr int isc_spb_tra_advise			= 29;
+constexpr int isc_spb_tra_advise_commit		= 30;
+constexpr int isc_spb_tra_advise_rollback	= 31;
+constexpr int isc_spb_tra_advise_unknown	= 33;
 
-#define isc_spb_rpr_validate_db			0x01
-#define isc_spb_rpr_sweep_db			0x02
-#define isc_spb_rpr_mend_db				0x04
-#define isc_spb_rpr_list_limbo_trans	0x08
-#define isc_spb_rpr_check_db			0x10
-#define isc_spb_rpr_ignore_checksum		0x20
-#define isc_spb_rpr_kill_shadows		0x40
-#define isc_spb_rpr_full				0x80
+constexpr int isc_spb_rpr_validate_db		= 0x01;
+constexpr int isc_spb_rpr_sweep_db			= 0x02;
+constexpr int isc_spb_rpr_mend_db			= 0x04;
+constexpr int isc_spb_rpr_list_limbo_trans	= 0x08;
+constexpr int isc_spb_rpr_check_db			= 0x10;
+constexpr int isc_spb_rpr_ignore_checksum	= 0x20;
+constexpr int isc_spb_rpr_kill_shadows		= 0x40;
+constexpr int isc_spb_rpr_full				= 0x80;
 
 /*****************************************
  * Parameters for isc_action_svc_restore *
  *****************************************/
 
-#define isc_spb_res_buffers				9
-#define isc_spb_res_page_size			10
-#define isc_spb_res_length				11
-#define isc_spb_res_access_mode			12
-#define isc_spb_res_deactivate_idx		0x0100
-#define isc_spb_res_no_shadow			0x0200
-#define isc_spb_res_no_validity			0x0400
-#define isc_spb_res_one_at_a_time		0x0800
-#define isc_spb_res_replace				0x1000
-#define isc_spb_res_create				0x2000
-#define isc_spb_res_use_all_space		0x4000
+constexpr int isc_spb_res_buffers		   = 9;
+constexpr int isc_spb_res_page_size        = 10;
+constexpr int isc_spb_res_length		   = 11;
+constexpr int isc_spb_res_access_mode	   = 12;
+constexpr int isc_spb_res_deactivate_idx   = 0x0100;
+constexpr int isc_spb_res_no_shadow	       = 0x0200;
+constexpr int isc_spb_res_no_validity	   = 0x0400;
+constexpr int isc_spb_res_one_at_a_time    = 0x0800;
+constexpr int isc_spb_res_replace		   = 0x1000;
+constexpr int isc_spb_res_create		   = 0x2000;
+constexpr int isc_spb_res_use_all_space    = 0x4000;
 
 /******************************************
  * Parameters for isc_spb_res_access_mode  *
  ******************************************/
 
-#define isc_spb_res_am_readonly			isc_spb_prp_am_readonly
-#define isc_spb_res_am_readwrite		isc_spb_prp_am_readwrite
+constexpr int isc_spb_res_am_readonly  = isc_spb_prp_am_readonly;
+constexpr int isc_spb_res_am_readwrite = isc_spb_prp_am_readwrite;
 
 /*******************************************
  * Parameters for isc_info_svc_svr_db_info *
  *******************************************/
 
-#define isc_spb_num_att			5
-#define isc_spb_num_db			6
+constexpr int isc_spb_num_att = 5;
+constexpr int isc_spb_num_db  = 6;
 
 /*****************************************
  * Parameters for isc_info_svc_db_stats  *
  *****************************************/
 
-#define isc_spb_sts_data_pages		0x01
-#define isc_spb_sts_db_log			0x02
-#define isc_spb_sts_hdr_pages		0x04
-#define isc_spb_sts_idx_pages		0x08
-#define isc_spb_sts_sys_relations	0x10
-#define isc_spb_sts_record_versions	0x20
-#define isc_spb_sts_table			0x40
-#define isc_spb_sts_nocreation		0x80
+constexpr int isc_spb_sts_data_pages		= 0x01;
+constexpr int isc_spb_sts_db_log			= 0x02;
+constexpr int isc_spb_sts_hdr_pages		    = 0x04;
+constexpr int isc_spb_sts_idx_pages		    = 0x08;
+constexpr int isc_spb_sts_sys_relations	    = 0x10;
+constexpr int isc_spb_sts_record_versions	= 0x20;
+constexpr int isc_spb_sts_table			    = 0x40;
+constexpr int isc_spb_sts_nocreation		= 0x80;
 
 /***********************************/
 /* Server configuration key values */
@@ -2282,219 +2282,219 @@ enum info_db_provider
 /* Version number */
 /******************/
 
-#define isc_dyn_version_1                 1
-#define isc_dyn_eoc                       255
+constexpr int isc_dyn_version_1 = 1;
+constexpr int isc_dyn_eoc       = 255;
 
 /******************************/
 /* Operations (may be nested) */
 /******************************/
 
-#define isc_dyn_begin                     2
-#define isc_dyn_end                       3
-#define isc_dyn_if                        4
-#define isc_dyn_def_database              5
-#define isc_dyn_def_global_fld            6
-#define isc_dyn_def_local_fld             7
-#define isc_dyn_def_idx                   8
-#define isc_dyn_def_rel                   9
-#define isc_dyn_def_sql_fld               10
-#define isc_dyn_def_view                  12
-#define isc_dyn_def_trigger               15
-#define isc_dyn_def_security_class        120
-#define isc_dyn_def_dimension             140
-#define isc_dyn_def_generator             24
-#define isc_dyn_def_function              25
-#define isc_dyn_def_filter                26
-#define isc_dyn_def_function_arg          27
-#define isc_dyn_def_shadow                34
-#define isc_dyn_def_trigger_msg           17
-#define isc_dyn_def_file                  36
-#define isc_dyn_mod_database              39
-#define isc_dyn_mod_rel                   11
-#define isc_dyn_mod_global_fld            13
-#define isc_dyn_mod_idx                   102
-#define isc_dyn_mod_local_fld             14
-#define isc_dyn_mod_sql_fld		  216
-#define isc_dyn_mod_view                  16
-#define isc_dyn_mod_security_class        122
-#define isc_dyn_mod_trigger               113
-#define isc_dyn_mod_trigger_msg           28
-#define isc_dyn_delete_database           18
-#define isc_dyn_delete_rel                19
-#define isc_dyn_delete_global_fld         20
-#define isc_dyn_delete_local_fld          21
-#define isc_dyn_delete_idx                22
-#define isc_dyn_delete_security_class     123
-#define isc_dyn_delete_dimensions         143
-#define isc_dyn_delete_trigger            23
-#define isc_dyn_delete_trigger_msg        29
-#define isc_dyn_delete_filter             32
-#define isc_dyn_delete_function           33
-#define isc_dyn_delete_shadow             35
-#define isc_dyn_grant                     30
-#define isc_dyn_revoke                    31
-#define isc_dyn_def_primary_key           37
-#define isc_dyn_def_foreign_key           38
-#define isc_dyn_def_unique                40
-#define isc_dyn_def_procedure             164
-#define isc_dyn_delete_procedure          165
-#define isc_dyn_def_parameter             135
-#define isc_dyn_delete_parameter          136
-#define isc_dyn_mod_procedure             175
+constexpr int isc_dyn_begin                 = 2;
+constexpr int isc_dyn_end                   = 3;
+constexpr int isc_dyn_if                    = 4;
+constexpr int isc_dyn_def_database          = 5;
+constexpr int isc_dyn_def_global_fld        = 6;
+constexpr int isc_dyn_def_local_fld         = 7;
+constexpr int isc_dyn_def_idx               = 8;
+constexpr int isc_dyn_def_rel               = 9;
+constexpr int isc_dyn_def_sql_fld           = 10;
+constexpr int isc_dyn_def_view              = 12;
+constexpr int isc_dyn_def_trigger           = 15;
+constexpr int isc_dyn_def_security_class    = 120;
+constexpr int isc_dyn_def_dimension         = 140;
+constexpr int isc_dyn_def_generator         = 24;
+constexpr int isc_dyn_def_function          = 25;
+constexpr int isc_dyn_def_filter            = 26;
+constexpr int isc_dyn_def_function_arg      = 27;
+constexpr int isc_dyn_def_shadow            = 34;
+constexpr int isc_dyn_def_trigger_msg       = 17;
+constexpr int isc_dyn_def_file              = 36;
+constexpr int isc_dyn_mod_database          = 39;
+constexpr int isc_dyn_mod_rel               = 11;
+constexpr int isc_dyn_mod_global_fld        = 13;
+constexpr int isc_dyn_mod_idx               = 102;
+constexpr int isc_dyn_mod_local_fld         = 14;
+constexpr int isc_dyn_mod_sql_fld		    = 216;
+constexpr int isc_dyn_mod_view              = 16;
+constexpr int isc_dyn_mod_security_class    = 122;
+constexpr int isc_dyn_mod_trigger           = 113;
+constexpr int isc_dyn_mod_trigger_msg       = 28;
+constexpr int isc_dyn_delete_database       = 18;
+constexpr int isc_dyn_delete_rel            = 19;
+constexpr int isc_dyn_delete_global_fld     = 20;
+constexpr int isc_dyn_delete_local_fld      = 21;
+constexpr int isc_dyn_delete_idx            = 22;
+constexpr int isc_dyn_delete_security_class = 123;
+constexpr int isc_dyn_delete_dimensions     = 143;
+constexpr int isc_dyn_delete_trigger        = 23;
+constexpr int isc_dyn_delete_trigger_msg    = 29;
+constexpr int isc_dyn_delete_filter         = 32;
+constexpr int isc_dyn_delete_function       = 33;
+constexpr int isc_dyn_delete_shadow         = 35;
+constexpr int isc_dyn_grant                 = 30;
+constexpr int isc_dyn_revoke                = 31;
+constexpr int isc_dyn_def_primary_key       = 37;
+constexpr int isc_dyn_def_foreign_key       = 38;
+constexpr int isc_dyn_def_unique            = 40;
+constexpr int isc_dyn_def_procedure         = 164;
+constexpr int isc_dyn_delete_procedure      = 165;
+constexpr int isc_dyn_def_parameter         = 135;
+constexpr int isc_dyn_delete_parameter      = 136;
+constexpr int isc_dyn_mod_procedure         = 175;
 /* Deprecated.
 #define isc_dyn_def_log_file              176
 #define isc_dyn_def_cache_file            180
 */
-#define isc_dyn_def_exception             181
-#define isc_dyn_mod_exception             182
-#define isc_dyn_del_exception             183
+constexpr int isc_dyn_def_exception = 181;
+constexpr int isc_dyn_mod_exception = 182;
+constexpr int isc_dyn_del_exception = 183;
 /* Deprecated.
 #define isc_dyn_drop_log                  194
 #define isc_dyn_drop_cache                195
 #define isc_dyn_def_default_log           202
 */
-#define isc_dyn_def_difference            220
-#define isc_dyn_drop_difference           221
-#define isc_dyn_begin_backup              222
-#define isc_dyn_end_backup                223
+constexpr int isc_dyn_def_difference  = 220;
+constexpr int isc_dyn_drop_difference = 221;
+constexpr int isc_dyn_begin_backup    = 222;
+constexpr int isc_dyn_end_backup      = 223;
 
 /***********************/
 /* View specific stuff */
 /***********************/
 
-#define isc_dyn_view_blr                  43
-#define isc_dyn_view_source               44
-#define isc_dyn_view_relation             45
-#define isc_dyn_view_context              46
-#define isc_dyn_view_context_name         47
+constexpr int isc_dyn_view_blr          = 43;
+constexpr int isc_dyn_view_source       = 44;
+constexpr int isc_dyn_view_relation     = 45;
+constexpr int isc_dyn_view_context      = 46;
+constexpr int isc_dyn_view_context_name = 47;
 
 /**********************/
 /* Generic attributes */
 /**********************/
 
-#define isc_dyn_rel_name                  50
-#define isc_dyn_fld_name                  51
-#define isc_dyn_new_fld_name		  215
-#define isc_dyn_idx_name                  52
-#define isc_dyn_description               53
-#define isc_dyn_security_class            54
-#define isc_dyn_system_flag               55
-#define isc_dyn_update_flag               56
-#define isc_dyn_prc_name                  166
-#define isc_dyn_prm_name                  137
-#define isc_dyn_sql_object                196
-#define isc_dyn_fld_character_set_name    174
+constexpr int isc_dyn_rel_name               = 50;
+constexpr int isc_dyn_fld_name               = 51;
+constexpr int isc_dyn_new_fld_name		     = 215;
+constexpr int isc_dyn_idx_name               = 52;
+constexpr int isc_dyn_description            = 53;
+constexpr int isc_dyn_security_class         = 54;
+constexpr int isc_dyn_system_flag            = 55;
+constexpr int isc_dyn_update_flag            = 56;
+constexpr int isc_dyn_prc_name               = 166;
+constexpr int isc_dyn_prm_name               = 137;
+constexpr int isc_dyn_sql_object             = 196;
+constexpr int isc_dyn_fld_character_set_name = 174;
 
 /********************************/
 /* Relation specific attributes */
 /********************************/
 
-#define isc_dyn_rel_dbkey_length          61
-#define isc_dyn_rel_store_trig            62
-#define isc_dyn_rel_modify_trig           63
-#define isc_dyn_rel_erase_trig            64
-#define isc_dyn_rel_store_trig_source     65
-#define isc_dyn_rel_modify_trig_source    66
-#define isc_dyn_rel_erase_trig_source     67
-#define isc_dyn_rel_ext_file              68
-#define isc_dyn_rel_sql_protection        69
-#define isc_dyn_rel_constraint            162
-#define isc_dyn_delete_rel_constraint     163
+constexpr int isc_dyn_rel_dbkey_length       = 61;
+constexpr int isc_dyn_rel_store_trig         = 62;
+constexpr int isc_dyn_rel_modify_trig        = 63;
+constexpr int isc_dyn_rel_erase_trig         = 64;
+constexpr int isc_dyn_rel_store_trig_source  = 65;
+constexpr int isc_dyn_rel_modify_trig_source = 66;
+constexpr int isc_dyn_rel_erase_trig_source  = 67;
+constexpr int isc_dyn_rel_ext_file           = 68;
+constexpr int isc_dyn_rel_sql_protection     = 69;
+constexpr int isc_dyn_rel_constraint         = 162;
+constexpr int isc_dyn_delete_rel_constraint  = 163;
 
 /************************************/
 /* Global field specific attributes */
 /************************************/
 
-#define isc_dyn_fld_type                  70
-#define isc_dyn_fld_length                71
-#define isc_dyn_fld_scale                 72
-#define isc_dyn_fld_sub_type              73
-#define isc_dyn_fld_segment_length        74
-#define isc_dyn_fld_query_header          75
-#define isc_dyn_fld_edit_string           76
-#define isc_dyn_fld_validation_blr        77
-#define isc_dyn_fld_validation_source     78
-#define isc_dyn_fld_computed_blr          79
-#define isc_dyn_fld_computed_source       80
-#define isc_dyn_fld_missing_value         81
-#define isc_dyn_fld_default_value         82
-#define isc_dyn_fld_query_name            83
-#define isc_dyn_fld_dimensions            84
-#define isc_dyn_fld_not_null              85
-#define isc_dyn_fld_precision             86
-#define isc_dyn_fld_char_length           172
-#define isc_dyn_fld_collation             173
-#define isc_dyn_fld_default_source        193
-#define isc_dyn_del_default               197
-#define isc_dyn_del_validation            198
-#define isc_dyn_single_validation         199
-#define isc_dyn_fld_character_set         203
+constexpr int isc_dyn_fld_type              = 70;
+constexpr int isc_dyn_fld_length            = 71;
+constexpr int isc_dyn_fld_scale             = 72;
+constexpr int isc_dyn_fld_sub_type          = 73;
+constexpr int isc_dyn_fld_segment_length    = 74;
+constexpr int isc_dyn_fld_query_header      = 75;
+constexpr int isc_dyn_fld_edit_string       = 76;
+constexpr int isc_dyn_fld_validation_blr    = 77;
+constexpr int isc_dyn_fld_validation_source = 78;
+constexpr int isc_dyn_fld_computed_blr      = 79;
+constexpr int isc_dyn_fld_computed_source   = 80;
+constexpr int isc_dyn_fld_missing_value     = 81;
+constexpr int isc_dyn_fld_default_value     = 82;
+constexpr int isc_dyn_fld_query_name        = 83;
+constexpr int isc_dyn_fld_dimensions        = 84;
+constexpr int isc_dyn_fld_not_null          = 85;
+constexpr int isc_dyn_fld_precision         = 86;
+constexpr int isc_dyn_fld_char_length       = 172;
+constexpr int isc_dyn_fld_collation         = 173;
+constexpr int isc_dyn_fld_default_source    = 193;
+constexpr int isc_dyn_del_default           = 197;
+constexpr int isc_dyn_del_validation        = 198;
+constexpr int isc_dyn_single_validation     = 199;
+constexpr int isc_dyn_fld_character_set     = 203;
 
 /***********************************/
 /* Local field specific attributes */
 /***********************************/
 
-#define isc_dyn_fld_source                90
-#define isc_dyn_fld_base_fld              91
-#define isc_dyn_fld_position              92
-#define isc_dyn_fld_update_flag           93
+constexpr int isc_dyn_fld_source      = 90;
+constexpr int isc_dyn_fld_base_fld    = 91;
+constexpr int isc_dyn_fld_position    = 92;
+constexpr int isc_dyn_fld_update_flag = 93;
 
 /*****************************/
 /* Index specific attributes */
 /*****************************/
 
-#define isc_dyn_idx_unique                100
-#define isc_dyn_idx_inactive              101
-#define isc_dyn_idx_type                  103
-#define isc_dyn_idx_foreign_key           104
-#define isc_dyn_idx_ref_column            105
-#define isc_dyn_idx_statistic		  204
+constexpr int isc_dyn_idx_unique      = 100;
+constexpr int isc_dyn_idx_inactive    = 101;
+constexpr int isc_dyn_idx_type        = 103;
+constexpr int isc_dyn_idx_foreign_key = 104;
+constexpr int isc_dyn_idx_ref_column  = 105;
+constexpr int isc_dyn_idx_statistic	  = 204;
 
 /*******************************/
 /* Trigger specific attributes */
 /*******************************/
 
-#define isc_dyn_trg_type                  110
-#define isc_dyn_trg_blr                   111
-#define isc_dyn_trg_source                112
-#define isc_dyn_trg_name                  114
-#define isc_dyn_trg_sequence              115
-#define isc_dyn_trg_inactive              116
-#define isc_dyn_trg_msg_number            117
-#define isc_dyn_trg_msg                   118
+constexpr int isc_dyn_trg_type       = 110;
+constexpr int isc_dyn_trg_blr        = 111;
+constexpr int isc_dyn_trg_source     = 112;
+constexpr int isc_dyn_trg_name       = 114;
+constexpr int isc_dyn_trg_sequence   = 115;
+constexpr int isc_dyn_trg_inactive   = 116;
+constexpr int isc_dyn_trg_msg_number = 117;
+constexpr int isc_dyn_trg_msg        = 118;
 
 /**************************************/
 /* Security Class specific attributes */
 /**************************************/
 
-#define isc_dyn_scl_acl                   121
-#define isc_dyn_grant_user                130
-#define isc_dyn_grant_user_explicit       219
-#define isc_dyn_grant_proc                186
-#define isc_dyn_grant_trig                187
-#define isc_dyn_grant_view                188
-#define isc_dyn_grant_options             132
-#define isc_dyn_grant_user_group          205
-#define isc_dyn_grant_role                218
+constexpr int isc_dyn_scl_acl             = 121;
+constexpr int isc_dyn_grant_user          = 130;
+constexpr int isc_dyn_grant_user_explicit = 219;
+constexpr int isc_dyn_grant_proc          = 186;
+constexpr int isc_dyn_grant_trig          = 187;
+constexpr int isc_dyn_grant_view          = 188;
+constexpr int isc_dyn_grant_options       = 132;
+constexpr int isc_dyn_grant_user_group    = 205;
+constexpr int isc_dyn_grant_role          = 218;
 
 
 /**********************************/
 /* Dimension specific information */
 /**********************************/
 
-#define isc_dyn_dim_lower                 141
-#define isc_dyn_dim_upper                 142
+constexpr int isc_dyn_dim_lower = 141;
+constexpr int isc_dyn_dim_upper = 142;
 
 /****************************/
 /* File specific attributes */
 /****************************/
 
-#define isc_dyn_file_name                 125
-#define isc_dyn_file_start                126
-#define isc_dyn_file_length               127
-#define isc_dyn_shadow_number             128
-#define isc_dyn_shadow_man_auto           129
-#define isc_dyn_shadow_conditional        130
+constexpr int isc_dyn_file_name          = 125;
+constexpr int isc_dyn_file_start         = 126;
+constexpr int isc_dyn_file_length        = 127;
+constexpr int isc_dyn_shadow_number      = 128;
+constexpr int isc_dyn_shadow_man_auto    = 129;
+constexpr int isc_dyn_shadow_conditional = 130;
 
 /********************************/
 /* Log file specific attributes */
@@ -2521,157 +2521,155 @@ enum info_db_provider
 /* Function specific attributes */
 /********************************/
 
-#define isc_dyn_function_name             145
-#define isc_dyn_function_type             146
-#define isc_dyn_func_module_name          147
-#define isc_dyn_func_entry_point          148
-#define isc_dyn_func_return_argument      149
-#define isc_dyn_func_arg_position         150
-#define isc_dyn_func_mechanism            151
-#define isc_dyn_filter_in_subtype         152
-#define isc_dyn_filter_out_subtype        153
-
-
-#define isc_dyn_description2		  154
-#define isc_dyn_fld_computed_source2	  155
-#define isc_dyn_fld_edit_string2	  156
-#define isc_dyn_fld_query_header2	  157
-#define isc_dyn_fld_validation_source2	  158
-#define isc_dyn_trg_msg2		  159
-#define isc_dyn_trg_source2		  160
-#define isc_dyn_view_source2		  161
-#define isc_dyn_xcp_msg2		  184
+constexpr int isc_dyn_function_name          = 145;
+constexpr int isc_dyn_function_type          = 146;
+constexpr int isc_dyn_func_module_name       = 147;
+constexpr int isc_dyn_func_entry_point       = 148;
+constexpr int isc_dyn_func_return_argument   = 149;
+constexpr int isc_dyn_func_arg_position      = 150;
+constexpr int isc_dyn_func_mechanism         = 151;
+constexpr int isc_dyn_filter_in_subtype      = 152;
+constexpr int isc_dyn_filter_out_subtype     = 153;
+constexpr int isc_dyn_description2		     = 154;
+constexpr int isc_dyn_fld_computed_source2	 = 155;
+constexpr int isc_dyn_fld_edit_string2	     = 156;
+constexpr int isc_dyn_fld_query_header2	     = 157;
+constexpr int isc_dyn_fld_validation_source2 = 158;
+constexpr int isc_dyn_trg_msg2		         = 159;
+constexpr int isc_dyn_trg_source2		     = 160;
+constexpr int isc_dyn_view_source2	         = 161;
+constexpr int isc_dyn_xcp_msg2		         = 184;
 
 /*********************************/
 /* Generator specific attributes */
 /*********************************/
 
-#define isc_dyn_generator_name            95
-#define isc_dyn_generator_id              96
+constexpr int isc_dyn_generator_name = 95;
+constexpr int isc_dyn_generator_id   = 96;
 
 /*********************************/
 /* Procedure specific attributes */
 /*********************************/
 
-#define isc_dyn_prc_inputs                167
-#define isc_dyn_prc_outputs               168
-#define isc_dyn_prc_source                169
-#define isc_dyn_prc_blr                   170
-#define isc_dyn_prc_source2               171
+constexpr int isc_dyn_prc_inputs  = 167;
+constexpr int isc_dyn_prc_outputs = 168;
+constexpr int isc_dyn_prc_source  = 169;
+constexpr int isc_dyn_prc_blr     = 170;
+constexpr int isc_dyn_prc_source2 = 171;
 
 /*********************************/
 /* Parameter specific attributes */
 /*********************************/
 
-#define isc_dyn_prm_number                138
-#define isc_dyn_prm_type                  139
+constexpr int isc_dyn_prm_number = 138;
+constexpr int isc_dyn_prm_type   = 139;
 
 /********************************/
 /* Relation specific attributes */
 /********************************/
 
-#define isc_dyn_xcp_msg                   185
+constexpr int isc_dyn_xcp_msg = 185;
 
 /**********************************************/
 /* Cascading referential integrity values     */
 /**********************************************/
-#define isc_dyn_foreign_key_update        205
-#define isc_dyn_foreign_key_delete        206
-#define isc_dyn_foreign_key_cascade       207
-#define isc_dyn_foreign_key_default       208
-#define isc_dyn_foreign_key_null          209
-#define isc_dyn_foreign_key_none          210
+constexpr int isc_dyn_foreign_key_update  = 205;
+constexpr int isc_dyn_foreign_key_delete  = 206;
+constexpr int isc_dyn_foreign_key_cascade = 207;
+constexpr int isc_dyn_foreign_key_default = 208;
+constexpr int isc_dyn_foreign_key_null    = 209;
+constexpr int isc_dyn_foreign_key_none    = 210;
 
 /***********************/
 /* SQL role values     */
 /***********************/
-#define isc_dyn_def_sql_role              211
-#define isc_dyn_sql_role_name             212
-#define isc_dyn_grant_admin_options       213
-#define isc_dyn_del_sql_role              214
+constexpr int isc_dyn_def_sql_role        = 211;
+constexpr int isc_dyn_sql_role_name       = 212;
+constexpr int isc_dyn_grant_admin_options = 213;
+constexpr int isc_dyn_del_sql_role        = 214;
 /* 215 & 216 are used some lines above. */
 
 /**********************************************/
 /* Generators again                           */
 /**********************************************/
 
-#define isc_dyn_delete_generator          217
+constexpr int isc_dyn_delete_generator  = 217;
 
 // New for comments in objects.
-#define isc_dyn_mod_function              224
-#define isc_dyn_mod_filter                225
-#define isc_dyn_mod_generator             226
-#define isc_dyn_mod_sql_role              227
-#define isc_dyn_mod_charset               228
-#define isc_dyn_mod_collation             229
-#define isc_dyn_mod_prc_parameter         230
+constexpr int isc_dyn_mod_function      = 224;
+constexpr int isc_dyn_mod_filter        = 225;
+constexpr int isc_dyn_mod_generator     = 226;
+constexpr int isc_dyn_mod_sql_role      = 227;
+constexpr int isc_dyn_mod_charset       = 228;
+constexpr int isc_dyn_mod_collation     = 229;
+constexpr int isc_dyn_mod_prc_parameter = 230;
 
 /***********************/
 /* collation values     */
 /***********************/
-#define isc_dyn_def_collation						231
-#define isc_dyn_coll_for_charset					232
-#define isc_dyn_coll_from							233
-#define isc_dyn_coll_attribute						234
-#define isc_dyn_coll_specific_attributes_charset	235
-#define isc_dyn_coll_specific_attributes			236
-#define isc_dyn_del_collation						237
+constexpr int isc_dyn_def_collation						= 231;
+constexpr int isc_dyn_coll_for_charset					= 232;
+constexpr int isc_dyn_coll_from							= 233;
+constexpr int isc_dyn_coll_attribute					= 234;
+constexpr int isc_dyn_coll_specific_attributes_charset	= 235;
+constexpr int isc_dyn_coll_specific_attributes			= 236;
+constexpr int isc_dyn_del_collation						= 237;
 
 /****************************/
 /* Last $dyn value assigned */
 /****************************/
 
-#define isc_dyn_last_dyn_value            237
+constexpr int isc_dyn_last_dyn_value = 237;
 
 /******************************************/
 /* Array slice description language (SDL) */
 /******************************************/
 
-#define isc_sdl_version1                  1
-#define isc_sdl_eoc                       255
-#define isc_sdl_relation                  2
-#define isc_sdl_rid                       3
-#define isc_sdl_field                     4
-#define isc_sdl_fid                       5
-#define isc_sdl_struct                    6
-#define isc_sdl_variable                  7
-#define isc_sdl_scalar                    8
-#define isc_sdl_tiny_integer              9
-#define isc_sdl_short_integer             10
-#define isc_sdl_long_integer              11
-#define isc_sdl_literal                   12
-#define isc_sdl_add                       13
-#define isc_sdl_subtract                  14
-#define isc_sdl_multiply                  15
-#define isc_sdl_divide                    16
-#define isc_sdl_negate                    17
-#define isc_sdl_eql                       18
-#define isc_sdl_neq                       19
-#define isc_sdl_gtr                       20
-#define isc_sdl_geq                       21
-#define isc_sdl_lss                       22
-#define isc_sdl_leq                       23
-#define isc_sdl_and                       24
-#define isc_sdl_or                        25
-#define isc_sdl_not                       26
-#define isc_sdl_while                     27
-#define isc_sdl_assignment                28
-#define isc_sdl_label                     29
-#define isc_sdl_leave                     30
-#define isc_sdl_begin                     31
-#define isc_sdl_end                       32
-#define isc_sdl_do3                       33
-#define isc_sdl_do2                       34
-#define isc_sdl_do1                       35
-#define isc_sdl_element                   36
+constexpr int isc_sdl_version1      = 1;
+constexpr int isc_sdl_eoc           = 255;
+constexpr int isc_sdl_relation      = 2;
+constexpr int isc_sdl_rid           = 3;
+constexpr int isc_sdl_field         = 4;
+constexpr int isc_sdl_fid           = 5;
+constexpr int isc_sdl_struct        = 6;
+constexpr int isc_sdl_variable      = 7;
+constexpr int isc_sdl_scalar        = 8;
+constexpr int isc_sdl_tiny_integer  = 9;
+constexpr int isc_sdl_short_integer = 10;
+constexpr int isc_sdl_long_integer  = 11;
+constexpr int isc_sdl_literal       = 12;
+constexpr int isc_sdl_add           = 13;
+constexpr int isc_sdl_subtract      = 14;
+constexpr int isc_sdl_multiply      = 15;
+constexpr int isc_sdl_divide        = 16;
+constexpr int isc_sdl_negate        = 17;
+constexpr int isc_sdl_eql           = 18;
+constexpr int isc_sdl_neq           = 19;
+constexpr int isc_sdl_gtr           = 20;
+constexpr int isc_sdl_geq           = 21;
+constexpr int isc_sdl_lss           = 22;
+constexpr int isc_sdl_leq           = 23;
+constexpr int isc_sdl_and           = 24;
+constexpr int isc_sdl_or            = 25;
+constexpr int isc_sdl_not           = 26;
+constexpr int isc_sdl_while         = 27;
+constexpr int isc_sdl_assignment    = 28;
+constexpr int isc_sdl_label         = 29;
+constexpr int isc_sdl_leave         = 30;
+constexpr int isc_sdl_begin         = 31;
+constexpr int isc_sdl_end           = 32;
+constexpr int isc_sdl_do3           = 33;
+constexpr int isc_sdl_do2           = 34;
+constexpr int isc_sdl_do1           = 35;
+constexpr int isc_sdl_element       = 36;
 
 /********************************************/
 /* International text interpretation values */
 /********************************************/
 
-#define isc_interp_eng_ascii              0
-#define isc_interp_jpn_sjis               5
-#define isc_interp_jpn_euc                6
+constexpr int isc_interp_eng_ascii = 0;
+constexpr int isc_interp_jpn_sjis  = 5;
+constexpr int isc_interp_jpn_euc   = 6;
 
 /*****************/
 /* Blob Subtypes */
@@ -2679,33 +2677,33 @@ enum info_db_provider
 
 /* types less than zero are reserved for customer use */
 
-#define isc_blob_untyped                   0
+constexpr int isc_blob_untyped = 0;
 
 /* internal subtypes */
 
-#define isc_blob_text                      1
-#define isc_blob_blr                       2
-#define isc_blob_acl                       3
-#define isc_blob_ranges                    4
-#define isc_blob_summary                   5
-#define isc_blob_format                    6
-#define isc_blob_tra                       7
-#define isc_blob_extfile                   8
-#define isc_blob_max_predefined_subtype    9
+constexpr int isc_blob_text                   = 1;
+constexpr int isc_blob_blr                    = 2;
+constexpr int isc_blob_acl                    = 3;
+constexpr int isc_blob_ranges                 = 4;
+constexpr int isc_blob_summary                = 5;
+constexpr int isc_blob_format                 = 6;
+constexpr int isc_blob_tra                    = 7;
+constexpr int isc_blob_extfile                = 8;
+constexpr int isc_blob_max_predefined_subtype = 9;
 
 /* the range 20-30 is reserved for dBASE and Paradox types */
 
-#define isc_blob_formatted_memo            20
-#define isc_blob_paradox_ole               21
-#define isc_blob_graphic                   22
-#define isc_blob_dbase_ole                 23
-#define isc_blob_typed_binary              24
+constexpr int isc_blob_formatted_memo = 20;
+constexpr int isc_blob_paradox_ole    = 21;
+constexpr int isc_blob_graphic        = 22;
+constexpr int isc_blob_dbase_ole      = 23;
+constexpr int isc_blob_typed_binary   = 24;
 
 /* Deprecated definitions maintained for compatibility only */
 
-#define isc_info_db_SQL_dialect           62
-#define isc_dpb_SQL_dialect               63
-#define isc_dpb_set_db_SQL_dialect        65
+constexpr int isc_info_db_SQL_dialect    = 62;
+constexpr int isc_dpb_SQL_dialect        = 63;
+constexpr int isc_dpb_set_db_SQL_dialect = 65;
 
 
 #include "iberror.h"

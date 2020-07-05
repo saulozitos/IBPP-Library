@@ -117,11 +117,11 @@ int BlobImpl::Read(void* buffer, int size)
 	IBS status;
 	unsigned short bytesread;
 	int result = (*gds.Call()->m_get_segment)(status.Self(), &mHandle, &bytesread,
-					(unsigned short)size, (char*)buffer);
+                    static_cast<unsigned short>(size), reinterpret_cast<char*>(buffer));
 	if (result == isc_segstr_eof) return 0;	// Fin du blob
 	if (result != isc_segment && status.Errors())
 		throw SQLExceptionImpl(status, "Blob::Read", _("isc_get_segment failed."));
-	return (int)bytesread;
+    return static_cast<int>(bytesread);
 }
 
 void BlobImpl::Write(const void* buffer, int size)
@@ -134,8 +134,7 @@ void BlobImpl::Write(const void* buffer, int size)
 		throw LogicExceptionImpl("Blob::Write", _("Invalid segment size (max 64Kb-1)"));
 
 	IBS status;
-	(*gds.Call()->m_put_segment)(status.Self(), &mHandle,
-		(unsigned short)size, (char*)buffer);
+    (*gds.Call()->m_put_segment)(status.Self(), &mHandle, static_cast<unsigned short>(size), reinterpret_cast<char*>(malloc(sizeof(buffer))));
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Blob::Write", _("isc_put_segment failed."));
 }
@@ -152,7 +151,7 @@ void BlobImpl::Info(int* Size, int* Largest, int* Segments)
 	IBS status;
 	RB result(100);
 	(*gds.Call()->m_blob_info)(status.Self(), &mHandle, sizeof(items), items,
-		(short)result.Size(), result.Self());
+                               static_cast<short>(result.Size()), result.Self());
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Blob::GetInfo", _("isc_blob_info failed."));
 
@@ -186,7 +185,7 @@ void BlobImpl::Save(const std::string& data)
 		size_t blklen = (len < 32*1024-1) ? len : 32*1024-1;
 		status.Reset();
 		(*gds.Call()->m_put_segment)(status.Self(), &mHandle,
-			(unsigned short)blklen, const_cast<char*>(data.data()+pos));
+                                     static_cast<unsigned short>(blklen), const_cast<char*>(data.data()+pos));
 		if (status.Errors())
 			throw SQLExceptionImpl(status, "Blob::Save",
 					_("isc_put_segment failed."));
@@ -229,7 +228,7 @@ void BlobImpl::Load(std::string& data)
 		status.Reset();
 		unsigned short bytesread;
 		int result = (*gds.Call()->m_get_segment)(status.Self(), &mHandle,
-						&bytesread, (unsigned short)blklen,
+                        &bytesread, static_cast<unsigned short>(blklen),
 							const_cast<char*>(data.data()+pos));
 		if (result == isc_segstr_eof) break;	// End of blob
 		if (result != isc_segment && status.Errors())

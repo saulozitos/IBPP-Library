@@ -218,7 +218,7 @@ void EventsImpl::Queue()
 		mQueued = true;
 		(*gds.Call()->m_que_events)(vector.Self(), mDatabase->GetHandlePtr(), &mId,
 			short(mEventBuffer.size()), &mEventBuffer[0],
-				(isc_callback)EventHandler, (char*)this);
+                reinterpret_cast<isc_callback>(EventHandler), reinterpret_cast<char*>(this));
 
 		if (vector.Errors())
 		{
@@ -280,7 +280,7 @@ void EventsImpl::FireActions()
 				// Fire the action
 				try
 				{
-					(*oit)->ibppEventHandler(this, eit.get_name(), (int)(vnew - vold));
+                    (*oit)->ibppEventHandler(this, eit.get_name(), static_cast<int>(vnew - vold));
 				}
 				catch (...)
 				{
@@ -314,14 +314,14 @@ void EventsImpl::EventHandler(const char* object, short size, const char* tmpbuf
 	// dismiss those calls.
 	if (object == 0 || size == 0 || tmpbuffer == 0) return;
 		
-	EventsImpl* evi = (EventsImpl*)object;	// Ugly, but wanted, c-style cast
+    EventsImpl* evi = reinterpret_cast<EventsImpl*>(malloc(sizeof(object)));	// Ugly, but wanted, c-style cast
 
 	if (evi->mQueued)
 	{
 		try
 		{
 			char* rb = &evi->mResultsBuffer[0];
-			if (evi->mEventBuffer.size() < (unsigned)size) size = (short)evi->mEventBuffer.size();
+            if (evi->mEventBuffer.size() < static_cast<unsigned>(size)) size = static_cast<short>(evi->mEventBuffer.size());
 			for (int i = 0; i < size; i++)
 				rb[i] = tmpbuffer[i];
 			evi->mTrapped = true;

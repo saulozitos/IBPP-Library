@@ -76,9 +76,9 @@ void ServiceImpl::Connect()
 
 	connect += "service_mgr";
 
-	(*gds.Call()->m_service_attach)(status.Self(), (short)connect.size(), (char*)connect.c_str(),
+    (*gds.Call()->m_service_attach)(status.Self(), static_cast<short>(connect.size()), const_cast<char*>(connect.c_str()),
 		&mHandle, spb.Size(), spb.Self());
-	if (status.Errors())
+    if (status.Errors())
 	{
 		mHandle	= 0;		// Should be, but better be	sure...
 		throw SQLExceptionImpl(status, "Service::Connect", _("isc_service_attach failed"));
@@ -148,9 +148,9 @@ void ServiceImpl::AddUser(const IBPP::User& user)
 	if (! user.lastname.empty())
 			spb.InsertString(isc_spb_sec_lastname, 2, user.lastname.c_str());
 	if (user.userid != 0)
-			spb.InsertQuad(isc_spb_sec_userid, (int32_t)user.userid);
+            spb.InsertQuad(isc_spb_sec_userid, static_cast<int32_t>(user.userid));
 	if (user.groupid != 0)
-			spb.InsertQuad(isc_spb_sec_groupid, (int32_t)user.groupid);
+            spb.InsertQuad(isc_spb_sec_groupid, static_cast<int32_t>(user.groupid));
 
 	(*gds.Call()->m_service_start)(status.Self(), &mHandle, 0, spb.Size(), spb.Self());
 	if (status.Errors())
@@ -180,9 +180,9 @@ void ServiceImpl::ModifyUser(const IBPP::User& user)
 	if (! user.lastname.empty())
 			spb.InsertString(isc_spb_sec_lastname, 2, user.lastname.c_str());
 	if (user.userid != 0)
-			spb.InsertQuad(isc_spb_sec_userid, (int32_t)user.userid);
+            spb.InsertQuad(isc_spb_sec_userid, static_cast<int32_t>(user.userid));
 	if (user.groupid != 0)
-			spb.InsertQuad(isc_spb_sec_groupid, (int32_t)user.groupid);
+            spb.InsertQuad(isc_spb_sec_groupid, static_cast<int32_t>(user.groupid));
 
 	(*gds.Call()->m_service_start)(status.Self(), &mHandle, 0, spb.Size(), spb.Self());
 	if (status.Errors())
@@ -248,17 +248,17 @@ void ServiceImpl::GetUser(IBPP::User& user)
 	{
 		if (*p == isc_spb_sec_userid)
 		{
-			user.userid = (uint32_t)(*gds.Call()->m_vax_integer)(p+1, 4);
+            user.userid = static_cast<uint32_t>((*gds.Call()->m_vax_integer)(p+1, 4));
 			p += 5;
 		}
 		else if (*p == isc_spb_sec_groupid)
 		{
-			user.groupid = (uint32_t)(*gds.Call()->m_vax_integer)(p+1, 4);
+            user.groupid = static_cast<uint32_t>((*gds.Call()->m_vax_integer)(p+1, 4));
 			p += 5;
 		}
 		else
 		{
-			unsigned short len = (unsigned short)(*gds.Call()->m_vax_integer)(p+1, 2);
+            unsigned short len = static_cast<unsigned short>((*gds.Call()->m_vax_integer)(p+1, 2));
 			switch (*p)
 			{
 			case isc_spb_sec_username :
@@ -317,17 +317,17 @@ void ServiceImpl::GetUsers(std::vector<IBPP::User>& users)
 	{
 		if (*p == isc_spb_sec_userid)
 		{
-			user.userid = (uint32_t)(*gds.Call()->m_vax_integer)(p+1, 4);
+            user.userid = static_cast<uint32_t>((*gds.Call()->m_vax_integer)(p+1, 4));
 			p += 5;
 		}
 		else if (*p == isc_spb_sec_groupid)
 		{
-			user.groupid = (uint32_t)(*gds.Call()->m_vax_integer)(p+1, 4);
+            user.groupid = static_cast<uint32_t>((*gds.Call()->m_vax_integer)(p+1, 4));
 			p += 5;
 		}
 		else
 		{
-			unsigned short len = (unsigned short)(*gds.Call()->m_vax_integer)(p+1, 2);
+            unsigned short len = static_cast<unsigned short>((*gds.Call()->m_vax_integer)(p+1, 2));
 			switch (*p)
 			{
 			case isc_spb_sec_username :
@@ -415,8 +415,8 @@ void ServiceImpl::SetSyncWrite(const std::string& dbfile, bool sync)
 
 	spb.Insert(isc_action_svc_properties);
 	spb.InsertString(isc_spb_dbname, 2, dbfile.c_str());
-	if (sync) spb.InsertByte(isc_spb_prp_write_mode, (char)isc_spb_prp_wm_sync);
-	else spb.InsertByte(isc_spb_prp_write_mode, (char)isc_spb_prp_wm_async);
+    if (sync) spb.InsertByte(isc_spb_prp_write_mode, static_cast<char>(isc_spb_prp_wm_sync));
+    else spb.InsertByte(isc_spb_prp_write_mode, static_cast<char>(isc_spb_prp_wm_async));
 
 	(*gds.Call()->m_service_start)(status.Self(), &mHandle, 0, spb.Size(), spb.Self());
 	if (status.Errors())
@@ -439,8 +439,8 @@ void ServiceImpl::SetReadOnly(const std::string& dbfile, bool readonly)
 
 	spb.Insert(isc_action_svc_properties);
 	spb.InsertString(isc_spb_dbname, 2, dbfile.c_str());
-	if (readonly) spb.InsertByte(isc_spb_prp_access_mode, (char)isc_spb_prp_am_readonly);
-	else spb.InsertByte(isc_spb_prp_access_mode, (char)isc_spb_prp_am_readwrite);
+    if (readonly) spb.InsertByte(isc_spb_prp_access_mode, static_cast<char>(isc_spb_prp_am_readonly));
+    else spb.InsertByte(isc_spb_prp_access_mode, static_cast<char>(isc_spb_prp_am_readwrite));
 
 	(*gds.Call()->m_service_start)(status.Self(), &mHandle, 0, spb.Size(), spb.Self());
 	if (status.Errors())
@@ -463,8 +463,8 @@ void ServiceImpl::SetReserveSpace(const std::string& dbfile, bool reserve)
 
 	spb.Insert(isc_action_svc_properties);
 	spb.InsertString(isc_spb_dbname, 2, dbfile.c_str());
-	if (reserve) spb.InsertByte(isc_spb_prp_reserve_space, (char)isc_spb_prp_res);
-	else spb.InsertByte(isc_spb_prp_reserve_space, (char)isc_spb_prp_res_use_full);
+    if (reserve) spb.InsertByte(isc_spb_prp_reserve_space, static_cast<char>(isc_spb_prp_res));
+    else spb.InsertByte(isc_spb_prp_reserve_space, static_cast<char>(isc_spb_prp_res_use_full));
 
 	(*gds.Call()->m_service_start)(status.Self(), &mHandle, 0, spb.Size(), spb.Self());
 	if (status.Errors())

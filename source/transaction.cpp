@@ -136,13 +136,13 @@ void TransactionImpl::Start()
 			throw LogicExceptionImpl("Transaction::Start",
 					_("All attached Database should have been connected."));
 		}
-		teb[i].db_ptr = (ISC_LONG*) mDatabases[i]->GetHandlePtr();
+        teb[i].db_ptr = reinterpret_cast<ISC_LONG*>(mDatabases[i]->GetHandlePtr());
 		teb[i].tpb_len = mTPBs[i]->Size();
 		teb[i].tpb_ptr = mTPBs[i]->Self();
 	}
 
 	IBS status;
-	(*gds.Call()->m_start_multiple)(status.Self(), &mHandle, (short)mDatabases.size(), teb);
+    (*gds.Call()->m_start_multiple)(status.Self(), &mHandle, static_cast<short>(mDatabases.size()), teb);
 	delete [] teb;
 	if (status.Errors())
 	{
