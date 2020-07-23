@@ -45,16 +45,16 @@ void BlobImpl::Open()
 {
 	if (mHandle != 0)
 		throw LogicExceptionImpl("Blob::Open", _("Blob already opened."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Blob::Open", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Blob::Open", _("No Transaction is attached."));
 	if (! mIdAssigned)
 		throw LogicExceptionImpl("Blob::Open", _("Blob Id is not assigned."));
 
 	IBS status;
 	(*gds.Call()->m_open_blob2)(status.Self(), mDatabase->GetHandlePtr(),
-		mTransaction->GetHandlePtr(), &mHandle, &mId, 0, 0);
+        mTransaction->GetHandlePtr(), &mHandle, &mId, 0, nullptr);
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Blob::Open", _("isc_open_blob2 failed."));
 	mWriteMode = false;
@@ -64,14 +64,14 @@ void BlobImpl::Create()
 {
 	if (mHandle != 0)
 		throw LogicExceptionImpl("Blob::Create", _("Blob already opened."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Blob::Create", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Blob::Create", _("No Transaction is attached."));
 
 	IBS status;
 	(*gds.Call()->m_create_blob2)(status.Self(), mDatabase->GetHandlePtr(),
-		mTransaction->GetHandlePtr(), &mHandle, &mId, 0, 0);
+        mTransaction->GetHandlePtr(), &mHandle, &mId, 0, nullptr);
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Blob::Create",
 			_("isc_create_blob failed."));
@@ -155,23 +155,23 @@ void BlobImpl::Info(int* Size, int* Largest, int* Segments)
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Blob::GetInfo", _("isc_blob_info failed."));
 
-	if (Size != 0) *Size = result.GetValue(isc_info_blob_total_length);
-	if (Largest != 0) *Largest = result.GetValue(isc_info_blob_max_segment);
-	if (Segments != 0) *Segments = result.GetValue(isc_info_blob_num_segments);
+    if (Size != nullptr) *Size = result.GetValue(isc_info_blob_total_length);
+    if (Largest != nullptr) *Largest = result.GetValue(isc_info_blob_max_segment);
+    if (Segments != nullptr) *Segments = result.GetValue(isc_info_blob_num_segments);
 }
 
 void BlobImpl::Save(const std::string& data)
 {
 	if (mHandle != 0)
 		throw LogicExceptionImpl("Blob::Save", _("Blob already opened."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Blob::Save", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Blob::Save", _("No Transaction is attached."));
 
 	IBS status;
 	(*gds.Call()->m_create_blob2)(status.Self(), mDatabase->GetHandlePtr(),
-		mTransaction->GetHandlePtr(), &mHandle, &mId, 0, 0);
+        mTransaction->GetHandlePtr(), &mHandle, &mId, 0, nullptr);
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Blob::Save",
 			_("isc_create_blob failed."));
@@ -204,16 +204,16 @@ void BlobImpl::Load(std::string& data)
 {
 	if (mHandle != 0)
 		throw LogicExceptionImpl("Blob::Load", _("Blob already opened."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Blob::Load", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Blob::Load", _("No Transaction is attached."));
 	if (! mIdAssigned)
 		throw LogicExceptionImpl("Blob::Load", _("Blob Id is not assigned."));
 
 	IBS status;
 	(*gds.Call()->m_open_blob2)(status.Self(), mDatabase->GetHandlePtr(),
-		mTransaction->GetHandlePtr(), &mHandle, &mId, 0, 0);
+        mTransaction->GetHandlePtr(), &mHandle, &mId, 0, nullptr);
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Blob::Load", _("isc_open_blob2 failed."));
 	mWriteMode = false;
@@ -249,14 +249,14 @@ void BlobImpl::Load(std::string& data)
 
 IBPP::Database BlobImpl::DatabasePtr() const
 {
-	if (mDatabase == 0) throw LogicExceptionImpl("Blob::DatabasePtr",
+    if (mDatabase == nullptr) throw LogicExceptionImpl("Blob::DatabasePtr",
 			_("No Database is attached."));
 	return mDatabase;
 }
 
 IBPP::Transaction BlobImpl::TransactionPtr() const
 {
-	if (mTransaction == 0) throw LogicExceptionImpl("Blob::TransactionPtr",
+    if (mTransaction == nullptr) throw LogicExceptionImpl("Blob::TransactionPtr",
 			_("No Transaction is attached."));
 	return mTransaction;
 }
@@ -284,15 +284,15 @@ void BlobImpl::Init()
 	mIdAssigned = false;
 	mWriteMode = false;
 	mHandle = 0;
-	mDatabase = 0;
-	mTransaction = 0;
+    mDatabase = nullptr;
+    mTransaction = nullptr;
 }
 
 void BlobImpl::SetId(ISC_QUAD* quad)
 {
 	if (mHandle != 0)
 		throw LogicExceptionImpl("BlobImpl::SetId", _("Can't set Id on an opened BlobImpl."));
-	if (quad == 0)
+    if (quad == nullptr)
 		throw LogicExceptionImpl("BlobImpl::SetId", _("Null Id reference detected."));
 
 	memcpy(&mId, quad, sizeof(mId));
@@ -305,7 +305,7 @@ void BlobImpl::GetId(ISC_QUAD* quad)
 		throw LogicExceptionImpl("BlobImpl::GetId", _("Can't get Id on an opened BlobImpl."));
 	if (! mWriteMode)
 		throw LogicExceptionImpl("BlobImpl::GetId", _("Can only get Id of a newly created Blob."));
-	if (quad == 0)
+    if (quad == nullptr)
 		throw LogicExceptionImpl("BlobImpl::GetId", _("Null Id reference detected."));
 
 	memcpy(quad, &mId, sizeof(mId));
@@ -313,38 +313,38 @@ void BlobImpl::GetId(ISC_QUAD* quad)
 
 void BlobImpl::AttachDatabaseImpl(DatabaseImpl* database)
 {
-	if (database == 0) throw LogicExceptionImpl("Blob::AttachDatabase",
+    if (database == nullptr) throw LogicExceptionImpl("Blob::AttachDatabase",
 			_("Can't attach a NULL Database object."));
 
-	if (mDatabase != 0) mDatabase->DetachBlobImpl(this);
+    if (mDatabase != nullptr) mDatabase->DetachBlobImpl(this);
 	mDatabase = database;
 	mDatabase->AttachBlobImpl(this);
 }
 
 void BlobImpl::AttachTransactionImpl(TransactionImpl* transaction)
 {
-	if (transaction == 0) throw LogicExceptionImpl("Blob::AttachTransaction",
+    if (transaction == nullptr) throw LogicExceptionImpl("Blob::AttachTransaction",
 			_("Can't attach a NULL Transaction object."));
 
-	if (mTransaction != 0) mTransaction->DetachBlobImpl(this);
+    if (mTransaction != nullptr) mTransaction->DetachBlobImpl(this);
 	mTransaction = transaction;
 	mTransaction->AttachBlobImpl(this);
 }
 
 void BlobImpl::DetachDatabaseImpl()
 {
-	if (mDatabase == 0) return;
+    if (mDatabase == nullptr) return;
 
 	mDatabase->DetachBlobImpl(this);
-	mDatabase = 0;
+    mDatabase = nullptr;
 }
 
 void BlobImpl::DetachTransactionImpl()
 {
-	if (mTransaction == 0) return;
+    if (mTransaction == nullptr) return;
 
 	mTransaction->DetachBlobImpl(this);
-	mTransaction = 0;
+    mTransaction = nullptr;
 }
 
 BlobImpl::BlobImpl(DatabaseImpl* database, TransactionImpl* transaction)
@@ -352,7 +352,7 @@ BlobImpl::BlobImpl(DatabaseImpl* database, TransactionImpl* transaction)
 {
 	Init();
 	AttachDatabaseImpl(database);
-	if (transaction != 0) AttachTransactionImpl(transaction);
+    if (transaction != nullptr) AttachTransactionImpl(transaction);
 }
 
 BlobImpl::~BlobImpl()
@@ -367,9 +367,9 @@ BlobImpl::~BlobImpl()
 	}
 	catch (...) { }
 	
-	try { if (mTransaction != 0) mTransaction->DetachBlobImpl(this); }
+    try { if (mTransaction != nullptr) mTransaction->DetachBlobImpl(this); }
 		catch (...) { }
-	try { if (mDatabase != 0) mDatabase->DetachBlobImpl(this); }
+    try { if (mDatabase != nullptr) mDatabase->DetachBlobImpl(this); }
 		catch (...) { }
 }
 

@@ -53,7 +53,7 @@ char* RB::FindToken(char token)
 		p += (len + 3);
 	}
 
-	return 0;
+    return nullptr;
 }
 
 char* RB::FindToken(char token, char subtoken)
@@ -76,13 +76,13 @@ char* RB::FindToken(char token, char subtoken)
 				p += (len + 3);
 				inlen -= (len + 3);
 			}
-			return 0;
+            return nullptr;
 		}
 		len = (*gds.Call()->m_vax_integer)(p+1, 2);
 		p += (len + 3);
 	}
 
-	return 0;
+    return nullptr;
 }
 
 int RB::GetValue(char token)
@@ -91,7 +91,7 @@ int RB::GetValue(char token)
 	int len;
 	char* p = FindToken(token);
 
-	if (p == 0)
+    if (p == nullptr)
 		throw LogicExceptionImpl("RB::GetValue", _("Token not found."));
 
 	len = (*gds.Call()->m_vax_integer)(p+1, 2);
@@ -109,7 +109,7 @@ int RB::GetCountValue(char token)
 	int len;
 	char* p = FindToken(token);
 
-	if (p == 0)
+    if (p == nullptr)
 		throw LogicExceptionImpl("RB::GetCountValue", _("Token not found."));
 
 	// len is the number of bytes in the following array
@@ -135,7 +135,7 @@ int RB::GetValue(char token, char subtoken)
 	int len;
 	char* p = FindToken(token, subtoken);
 
-	if (p == 0)
+    if (p == nullptr)
 		throw LogicExceptionImpl("RB::GetValue", _("Token/Subtoken not found."));
 
 	len = (*gds.Call()->m_vax_integer)(p+1, 2);
@@ -150,7 +150,7 @@ bool RB::GetBool(char token)
 	int value;
 	char* p = FindToken(token);
 
-	if (p == 0)
+    if (p == nullptr)
 		throw LogicExceptionImpl("RB::GetBool", _("Token not found."));
 
 	value = (*gds.Call()->m_vax_integer)(p+1, 4);
@@ -163,7 +163,7 @@ int RB::GetString(char token, std::string& data)
 	int len;
 	char* p = FindToken(token);
 
-	if (p == 0)
+    if (p == nullptr)
 		throw LogicExceptionImpl("RB::GetString", _("Token not found."));
 
 	len = (*gds.Call()->m_vax_integer)(p+1, 2);

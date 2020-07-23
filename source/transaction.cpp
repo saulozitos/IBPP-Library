@@ -46,7 +46,7 @@ using namespace ibpp_internals;
 void TransactionImpl::AttachDatabase(IBPP::Database db,
 	IBPP::TAM am, IBPP::TIL il, IBPP::TLR lr, IBPP::TFF flags)
 {
-	if (db.intf() == 0)
+    if (db.intf() == nullptr)
 		throw LogicExceptionImpl("Transaction::AttachDatabase",
 				_("Can't attach an unbound Database."));
 
@@ -55,7 +55,7 @@ void TransactionImpl::AttachDatabase(IBPP::Database db,
 
 void TransactionImpl::DetachDatabase(IBPP::Database db)
 {
-	if (db.intf() == 0)
+    if (db.intf() == nullptr)
 		throw LogicExceptionImpl("Transaction::DetachDatabase",
 				_("Can't detach an unbound Database."));
 
@@ -68,7 +68,7 @@ void TransactionImpl::AddReservation(IBPP::Database db,
 	if (mHandle != 0)
 		throw LogicExceptionImpl("Transaction::AddReservation",
 				_("Can't add table reservation if Transaction started."));
-	if (db.intf() == 0)
+    if (db.intf() == nullptr)
 		throw LogicExceptionImpl("Transaction::AddReservation",
 				_("Can't add table reservation on an unbound Database."));
 
@@ -230,7 +230,7 @@ void TransactionImpl::Init()
 
 void TransactionImpl::AttachStatementImpl(StatementImpl* st)
 {
-	if (st == 0)
+    if (st == nullptr)
 		throw LogicExceptionImpl("Transaction::AttachStatement",
 					_("Can't attach a 0 Statement object."));
 
@@ -239,7 +239,7 @@ void TransactionImpl::AttachStatementImpl(StatementImpl* st)
 
 void TransactionImpl::DetachStatementImpl(StatementImpl* st)
 {
-	if (st == 0)
+    if (st == nullptr)
 		throw LogicExceptionImpl("Transaction::DetachStatement",
 				_("Can't detach a 0 Statement object."));
 
@@ -248,7 +248,7 @@ void TransactionImpl::DetachStatementImpl(StatementImpl* st)
 
 void TransactionImpl::AttachBlobImpl(BlobImpl* bb)
 {
-	if (bb == 0)
+    if (bb == nullptr)
 		throw LogicExceptionImpl("Transaction::AttachBlob",
 					_("Can't attach a 0 BlobImpl object."));
 
@@ -257,7 +257,7 @@ void TransactionImpl::AttachBlobImpl(BlobImpl* bb)
 
 void TransactionImpl::DetachBlobImpl(BlobImpl* bb)
 {
-	if (bb == 0)
+    if (bb == nullptr)
 		throw LogicExceptionImpl("Transaction::DetachBlob",
 				_("Can't detach a 0 BlobImpl object."));
 
@@ -266,7 +266,7 @@ void TransactionImpl::DetachBlobImpl(BlobImpl* bb)
 
 void TransactionImpl::AttachArrayImpl(ArrayImpl* ar)
 {
-	if (ar == 0)
+    if (ar == nullptr)
 		throw LogicExceptionImpl("Transaction::AttachArray",
 					_("Can't attach a 0 ArrayImpl object."));
 
@@ -275,7 +275,7 @@ void TransactionImpl::AttachArrayImpl(ArrayImpl* ar)
 
 void TransactionImpl::DetachArrayImpl(ArrayImpl* ar)
 {
-	if (ar == 0)
+    if (ar == nullptr)
 		throw LogicExceptionImpl("Transaction::DetachArray",
 				_("Can't detach a 0 ArrayImpl object."));
 
@@ -288,7 +288,7 @@ void TransactionImpl::AttachDatabaseImpl(DatabaseImpl* dbi,
 	if (mHandle != 0)
 		throw LogicExceptionImpl("Transaction::AttachDatabase",
 				_("Can't attach a Database if Transaction started."));
-	if (dbi == 0)
+    if (dbi == nullptr)
 		throw LogicExceptionImpl("Transaction::AttachDatabase",
 				_("Can't attach a null Database."));
 
@@ -327,7 +327,7 @@ void TransactionImpl::DetachDatabaseImpl(DatabaseImpl* dbi)
 	if (mHandle != 0)
 		throw LogicExceptionImpl("Transaction::DetachDatabase",
 				_("Can't detach a Database if Transaction started."));
-	if (dbi == 0)
+    if (dbi == nullptr)
 		throw LogicExceptionImpl("Transaction::DetachDatabase",
 				_("Can't detach a null Database."));
 

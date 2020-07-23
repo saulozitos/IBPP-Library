@@ -43,7 +43,7 @@ using namespace ibpp_internals;
 
 void IBPP::Time::Now()
 {
-	time_t systime = time(0);
+    time_t systime = time(nullptr);
 	tm* loctime = localtime(&systime);
 	IBPP::itot(&mTime, loctime->tm_hour, loctime->tm_min, loctime->tm_sec, 0);
 }
@@ -68,7 +68,7 @@ void IBPP::Time::SetTime(int hour, int minute, int second, int tenthousandths)
 
 void IBPP::Time::GetTime(int& hour, int& minute, int& second) const
 {
-	IBPP::ttoi(mTime, &hour, &minute, &second, 0);
+    IBPP::ttoi(mTime, &hour, &minute, &second, nullptr);
 }
 
 void IBPP::Time::GetTime(int& hour, int& minute, int& second, int& tenthousandths) const
@@ -79,28 +79,28 @@ void IBPP::Time::GetTime(int& hour, int& minute, int& second, int& tenthousandth
 int IBPP::Time::Hours() const
 {
 	int hours;
-	IBPP::ttoi(mTime, &hours, 0, 0, 0);
+    IBPP::ttoi(mTime, &hours, nullptr, nullptr, nullptr);
 	return hours;
 }
 
 int IBPP::Time::Minutes() const
 {
 	int minutes;
-	IBPP::ttoi(mTime, 0, &minutes, 0, 0);
+    IBPP::ttoi(mTime, nullptr, &minutes, nullptr, nullptr);
 	return minutes;
 }
 
 int IBPP::Time::Seconds() const
 {
 	int seconds;
-	IBPP::ttoi(mTime, 0, 0, &seconds, 0);
+    IBPP::ttoi(mTime, nullptr, nullptr, &seconds, nullptr);
 	return seconds;
 }
 
 int IBPP::Time::SubSeconds() const	// Actually tenthousandths of seconds
 {
 	int tenthousandths;
-	IBPP::ttoi(mTime, 0, 0, 0, &tenthousandths);
+    IBPP::ttoi(mTime, nullptr, nullptr, nullptr, &tenthousandths);
 	return tenthousandths;
 }
 
@@ -140,10 +140,10 @@ void IBPP::ttoi(int itime, int *h, int *m, int *s, int* t)
     ss = static_cast<int>(itime / 10000);
     tt = static_cast<int>(itime - ss * 10000);
 
-	if (h != 0) *h = hh;
-	if (m != 0) *m = mm;
-	if (s != 0) *s = ss;
-	if (t != 0) *t = tt;
+    if (h != nullptr) *h = hh;
+    if (m != nullptr) *m = mm;
+    if (s != nullptr) *s = ss;
+    if (t != nullptr) *t = tt;
 
 	return;
 }

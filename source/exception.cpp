@@ -73,7 +73,7 @@ void ExceptionBase::buildErrorMessage(const char* message)
 	if (! mContext.empty())
 		mWhat.append(_("Context: ")).append(mContext).append("\n");
 
-	if (message != 0 && *message != 0 )
+    if (message != nullptr && *message != 0 )
 		mWhat.append(_("Message: ")).append(message).append("\n");
 	
 	mWhat.append("\n");
@@ -83,7 +83,7 @@ void ExceptionBase::raise(const std::string& context, const char* message, va_li
 {
 	mContext.assign(context);
 
-	if (message != 0)
+    if (message != nullptr)
 	{
 		char buffer[1024];
 #if defined(_MSC_VER) || defined(__DMC__)
@@ -96,7 +96,7 @@ void ExceptionBase::raise(const std::string& context, const char* message, va_li
 		buildErrorMessage(buffer);
 	}
 	else
-		buildErrorMessage(0);
+        buildErrorMessage(nullptr);
 }
 
 ExceptionBase::ExceptionBase() throw()

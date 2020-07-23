@@ -182,7 +182,7 @@ void EventsImpl::Dispatch()
 
 IBPP::Database EventsImpl::DatabasePtr() const
 {
-	if (mDatabase == 0) throw LogicExceptionImpl("Events::DatabasePtr",
+    if (mDatabase == nullptr) throw LogicExceptionImpl("Events::DatabasePtr",
 			_("No Database is attached."));
 	return mDatabase;
 }
@@ -312,7 +312,7 @@ void EventsImpl::EventHandler(const char* object, short size, const char* tmpbuf
 
 	// There can be spurious calls to EventHandler from FB internal. We must
 	// dismiss those calls.
-	if (object == 0 || size == 0 || tmpbuffer == 0) return;
+    if (object == nullptr || size == 0 || tmpbuffer == nullptr) return;
 		
     EventsImpl* evi = reinterpret_cast<EventsImpl*>(malloc(sizeof(object)));	// Ugly, but wanted, c-style cast
 
@@ -333,26 +333,26 @@ void EventsImpl::EventHandler(const char* object, short size, const char* tmpbuf
 
 void EventsImpl::AttachDatabaseImpl(DatabaseImpl* database)
 {
-	if (database == 0) throw LogicExceptionImpl("EventsImpl::AttachDatabase",
+    if (database == nullptr) throw LogicExceptionImpl("EventsImpl::AttachDatabase",
 			_("Can't attach a null Database object."));
 
-	if (mDatabase != 0) mDatabase->DetachEventsImpl(this);
+    if (mDatabase != nullptr) mDatabase->DetachEventsImpl(this);
 	mDatabase = database;
 	mDatabase->AttachEventsImpl(this);
 }
 
 void EventsImpl::DetachDatabaseImpl()
 {
-	if (mDatabase == 0) return;
+    if (mDatabase == nullptr) return;
 
 	mDatabase->DetachEventsImpl(this);
-	mDatabase = 0;
+    mDatabase = nullptr;
 }
 
 EventsImpl::EventsImpl(DatabaseImpl* database)
 	: mRefCount(0)
 {
-	mDatabase = 0;
+    mDatabase = nullptr;
 	mId = 0;
 	mQueued = mTrapped = false;
 	AttachDatabaseImpl(database);
@@ -363,7 +363,7 @@ EventsImpl::~EventsImpl()
 	try { Clear(); }
 		catch (...) { }
 	
-	try { if (mDatabase != 0) mDatabase->DetachEventsImpl(this); }
+    try { if (mDatabase != nullptr) mDatabase->DetachEventsImpl(this); }
 		catch (...) { }
 }
 

@@ -47,9 +47,9 @@ void ArrayImpl::Describe(const std::string& table, const std::string& column)
 {
 	//if (mIdAssigned)
 	//	throw LogicExceptionImpl("Array::Lookup", _("Array already in use."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Array::Lookup", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Array::Lookup", _("No Transaction is attached."));
 
 	ResetId();	// Re-use this array object if was previously assigned
@@ -71,9 +71,9 @@ void ArrayImpl::SetBounds(int dim, int low, int high)
 {
 	if (! mDescribed)
 		throw LogicExceptionImpl("Array::SetBounds", _("Array description not set."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Array::SetBounds", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Array::SetBounds", _("No Transaction is attached."));
 	if (dim < 0 || dim > mDesc.array_desc_dimensions-1)
 		throw LogicExceptionImpl("Array::SetBounds", _("Invalid dimension."));
@@ -151,7 +151,7 @@ void ArrayImpl::Bounds(int dim, int* low, int* high)
 		throw LogicExceptionImpl("Array::Bounds", _("Array description not set."));
 	if (dim < 0 || dim > mDesc.array_desc_dimensions-1)
 		throw LogicExceptionImpl("Array::Bounds", _("Invalid dimension."));
-	if (low == 0 || high == 0)
+    if (low == nullptr || high == nullptr)
 		throw LogicExceptionImpl("Array::Bounds", _("Null reference detected."));
 
 	*low =  mDesc.array_desc_bounds[dim].array_bound_lower;
@@ -196,9 +196,9 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 		throw LogicExceptionImpl("Array::ReadTo", _("Array Id not read from column."));
 	if (! mDescribed)
 		throw LogicExceptionImpl("Array::ReadTo", _("Array description not set."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Array::ReadTo", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Array::ReadTo", _("No Transaction is attached."));
 	if (datacount != mElemCount)
 		throw LogicExceptionImpl("Array::ReadTo", _("Wrong count of array elements"));
@@ -544,9 +544,9 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 {
 	if (! mDescribed)
 		throw LogicExceptionImpl("Array::WriteFrom", _("Array description not set."));
-	if (mDatabase == 0)
+    if (mDatabase == nullptr)
 		throw LogicExceptionImpl("Array::WriteFrom", _("No Database is attached."));
-	if (mTransaction == 0)
+    if (mTransaction == nullptr)
 		throw LogicExceptionImpl("Array::WriteFrom", _("No Transaction is attached."));
 	if (datacount != mElemCount)
 		throw LogicExceptionImpl("Array::ReadTo", _("Wrong count of array elements"));
@@ -894,14 +894,14 @@ void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 
 IBPP::Database ArrayImpl::DatabasePtr() const
 {
-	if (mDatabase == 0) throw LogicExceptionImpl("Array::DatabasePtr",
+    if (mDatabase == nullptr) throw LogicExceptionImpl("Array::DatabasePtr",
 			_("No Database is attached."));
 	return mDatabase;
 }
 
 IBPP::Transaction ArrayImpl::TransactionPtr() const
 {
-	if (mTransaction == 0) throw LogicExceptionImpl("Array::TransactionPtr",
+    if (mTransaction == nullptr) throw LogicExceptionImpl("Array::TransactionPtr",
 			_("No Transaction is attached."));
 	return mTransaction;
 }
@@ -928,15 +928,15 @@ void ArrayImpl::Init()
 {
 	ResetId();
 	mDescribed = false;
-	mDatabase = 0;
-	mTransaction = 0;
-	mBuffer = 0;
+    mDatabase = nullptr;
+    mTransaction = nullptr;
+    mBuffer = nullptr;
 	mBufferSize = 0;
 }
 
 void ArrayImpl::SetId(ISC_QUAD* quad)
 {
-	if (quad == 0)
+    if (quad == nullptr)
 		throw LogicExceptionImpl("ArrayImpl::SetId", _("Null Id reference detected."));
 
 	memcpy(&mId, quad, sizeof(mId));
@@ -945,7 +945,7 @@ void ArrayImpl::SetId(ISC_QUAD* quad)
 
 void ArrayImpl::GetId(ISC_QUAD* quad)
 {
-	if (quad == 0)
+    if (quad == nullptr)
 		throw LogicExceptionImpl("ArrayImpl::GetId", _("Null Id reference detected."));
 
 	memcpy(quad, &mId, sizeof(mId));
@@ -960,8 +960,8 @@ void ArrayImpl::ResetId()
 void ArrayImpl::AllocArrayBuffer()
 {
 	// Clean previous buffer if any
-    if (mBuffer != 0) delete [] reinterpret_cast<char*>(mBuffer);
-	mBuffer = 0;
+    if (mBuffer != nullptr) delete [] reinterpret_cast<char*>(mBuffer);
+    mBuffer = nullptr;
 
 	// Computes total number of elements in the array or slice
 	mElemCount = 1;
@@ -982,38 +982,38 @@ void ArrayImpl::AllocArrayBuffer()
 
 void ArrayImpl::AttachDatabaseImpl(DatabaseImpl* database)
 {
-	if (database == 0) throw LogicExceptionImpl("Array::AttachDatabase",
+    if (database == nullptr) throw LogicExceptionImpl("Array::AttachDatabase",
 			_("Can't attach a 0 Database object."));
 
-	if (mDatabase != 0) mDatabase->DetachArrayImpl(this);
+    if (mDatabase != nullptr) mDatabase->DetachArrayImpl(this);
 	mDatabase = database;
 	mDatabase->AttachArrayImpl(this);
 }
 
 void ArrayImpl::AttachTransactionImpl(TransactionImpl* transaction)
 {
-	if (transaction == 0) throw LogicExceptionImpl("Array::AttachTransaction",
+    if (transaction == nullptr) throw LogicExceptionImpl("Array::AttachTransaction",
 			_("Can't attach a 0 Transaction object."));
 
-	if (mTransaction != 0) mTransaction->DetachArrayImpl(this);
+    if (mTransaction != nullptr) mTransaction->DetachArrayImpl(this);
 	mTransaction = transaction;
 	mTransaction->AttachArrayImpl(this);
 }
 
 void ArrayImpl::DetachDatabaseImpl()
 {
-	if (mDatabase == 0) return;
+    if (mDatabase == nullptr) return;
 
 	mDatabase->DetachArrayImpl(this);
-	mDatabase = 0;
+    mDatabase = nullptr;
 }
 
 void ArrayImpl::DetachTransactionImpl()
 {
-	if (mTransaction == 0) return;
+    if (mTransaction == nullptr) return;
 
 	mTransaction->DetachArrayImpl(this);
-	mTransaction = 0;
+    mTransaction = nullptr;
 }
 
 ArrayImpl::ArrayImpl(DatabaseImpl* database, TransactionImpl* transaction)
@@ -1021,16 +1021,16 @@ ArrayImpl::ArrayImpl(DatabaseImpl* database, TransactionImpl* transaction)
 {
 	Init();
 	AttachDatabaseImpl(database);
-	if (transaction != 0) AttachTransactionImpl(transaction);
+    if (transaction != nullptr) AttachTransactionImpl(transaction);
 }
 
 ArrayImpl::~ArrayImpl()
 {
-	try { if (mTransaction != 0) mTransaction->DetachArrayImpl(this); }
+    try { if (mTransaction != nullptr) mTransaction->DetachArrayImpl(this); }
 		catch (...) {}
-	try { if (mDatabase != 0) mDatabase->DetachArrayImpl(this); }
+    try { if (mDatabase != nullptr) mDatabase->DetachArrayImpl(this); }
 		catch (...) {}
-    try { if (mBuffer != 0) delete [] reinterpret_cast<char*>(mBuffer); }
+    try { if (mBuffer != nullptr) delete [] reinterpret_cast<char*>(mBuffer); }
 		catch (...) {}
 }
 

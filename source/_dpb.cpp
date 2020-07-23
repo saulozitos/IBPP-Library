@@ -45,13 +45,13 @@ const int DPB::BUFFERINCR = 128;
 
 void DPB::Grow(int needed)
 {
-	if (mBuffer == 0) ++needed;	// Initial alloc will require one more byte
+    if (mBuffer == nullptr) ++needed;	// Initial alloc will require one more byte
 	if ((mSize + needed) > mAlloc)
 	{
 		// We need to grow the buffer. We use increments of BUFFERINCR bytes.
 		needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
 		char* newbuffer = new char[mAlloc + needed];
-		if (mBuffer == 0)
+        if (mBuffer == nullptr)
 		{
 			// Initial allocation, initialize the version tag
 			newbuffer[0] = isc_dpb_version1;
@@ -108,7 +108,7 @@ void DPB::Reset()
 	if (mAlloc != 0)
     {
     	delete [] mBuffer;
-        mBuffer = 0;
+        mBuffer = nullptr;
         mSize = 0;
 		mAlloc = 0;
     }

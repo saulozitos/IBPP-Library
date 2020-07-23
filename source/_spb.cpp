@@ -50,7 +50,7 @@ void SPB::Grow(int needed)
 		// We need to grow the buffer. We use increments of BUFFERINCR bytes.
 		needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
 		char* newbuffer = new char[mAlloc + needed];
-		if (mBuffer != 0)
+        if (mBuffer != nullptr)
 		{
 			// Move the old buffer content to the new one
 			memcpy(newbuffer, mBuffer, mSize);
@@ -101,10 +101,10 @@ void SPB::InsertQuad(char type, int32_t data)
 
 void SPB::Reset()
 {
-	if (mBuffer != 0)
+    if (mBuffer != nullptr)
 	{
 		delete [] mBuffer;
-		mBuffer = 0;
+        mBuffer = nullptr;
 		mSize = 0;
 		mAlloc = 0;
     }

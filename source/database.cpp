@@ -70,7 +70,7 @@ void DatabaseImpl::Create(int dialect)
 	isc_tr_handle tr_handle = 0;
 	IBS status;
     (*gds.Call()->m_dsql_execute_immediate)(status.Self(), &mHandle, &tr_handle,
-    	0, const_cast<char*>(create.c_str()), short(dialect), NULL);
+        0, const_cast<char*>(create.c_str()), short(dialect), nullptr);
     if (status.Errors())
 		throw SQLExceptionImpl(status, "Database::Create", _("isc_dsql_execute_immediate failed"));
 
@@ -252,15 +252,15 @@ void DatabaseImpl::Info(int* ODSMajor, int* ODSMinor,
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Database::Info", _("isc_database_info failed"));
 
-	if (ODSMajor != 0) *ODSMajor = result.GetValue(isc_info_ods_version);
-	if (ODSMinor != 0) *ODSMinor = result.GetValue(isc_info_ods_minor_version);
-	if (PageSize != 0) *PageSize = result.GetValue(isc_info_page_size);
-	if (Pages != 0) *Pages = result.GetValue(isc_info_allocation);
-	if (Buffers != 0) *Buffers = result.GetValue(isc_info_num_buffers);
-	if (Sweep != 0) *Sweep = result.GetValue(isc_info_sweep_interval);
-	if (Sync != 0)
+    if (ODSMajor != nullptr) *ODSMajor = result.GetValue(isc_info_ods_version);
+    if (ODSMinor != nullptr) *ODSMinor = result.GetValue(isc_info_ods_minor_version);
+    if (PageSize != nullptr) *PageSize = result.GetValue(isc_info_page_size);
+    if (Pages != nullptr) *Pages = result.GetValue(isc_info_allocation);
+    if (Buffers != nullptr) *Buffers = result.GetValue(isc_info_num_buffers);
+    if (Sweep != nullptr) *Sweep = result.GetValue(isc_info_sweep_interval);
+    if (Sync != nullptr)
 		*Sync = result.GetValue(isc_info_forced_writes) == 1 ? true : false;
-	if (Reserve != 0)
+    if (Reserve != nullptr)
 		*Reserve = result.GetValue(isc_info_no_reserve) == 1 ? false : true;
 }
 
@@ -283,10 +283,10 @@ void DatabaseImpl::Statistics(int* Fetches, int* Marks, int* Reads, int* Writes)
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Database::Statistics", _("isc_database_info failed"));
 
-	if (Fetches != 0) *Fetches = result.GetValue(isc_info_fetches);
-	if (Marks != 0) *Marks = result.GetValue(isc_info_marks);
-	if (Reads != 0) *Reads = result.GetValue(isc_info_reads);
-	if (Writes != 0) *Writes = result.GetValue(isc_info_writes);
+    if (Fetches != nullptr) *Fetches = result.GetValue(isc_info_fetches);
+    if (Marks != nullptr) *Marks = result.GetValue(isc_info_marks);
+    if (Reads != nullptr) *Reads = result.GetValue(isc_info_reads);
+    if (Writes != nullptr) *Writes = result.GetValue(isc_info_writes);
 }
 
 void DatabaseImpl::Counts(int* Insert, int* Update, int* Delete, 
@@ -310,11 +310,11 @@ void DatabaseImpl::Counts(int* Insert, int* Update, int* Delete,
 	if (status.Errors())
 		throw SQLExceptionImpl(status, "Database::Counts", _("isc_database_info failed"));
 
-	if (Insert != 0) *Insert = result.GetCountValue(isc_info_insert_count);
-	if (Update != 0) *Update = result.GetCountValue(isc_info_update_count);
-	if (Delete != 0) *Delete = result.GetCountValue(isc_info_delete_count);
-	if (ReadIdx != 0) *ReadIdx = result.GetCountValue(isc_info_read_idx_count);
-	if (ReadSeq != 0) *ReadSeq = result.GetCountValue(isc_info_read_seq_count);
+    if (Insert != nullptr) *Insert = result.GetCountValue(isc_info_insert_count);
+    if (Update != nullptr) *Update = result.GetCountValue(isc_info_update_count);
+    if (Delete != nullptr) *Delete = result.GetCountValue(isc_info_delete_count);
+    if (ReadIdx != nullptr) *ReadIdx = result.GetCountValue(isc_info_read_idx_count);
+    if (ReadSeq != nullptr) *ReadSeq = result.GetCountValue(isc_info_read_seq_count);
 }
 
 void DatabaseImpl::Users(std::vector<std::string>& users)
@@ -369,7 +369,7 @@ void DatabaseImpl::Release()
 
 void DatabaseImpl::AttachTransactionImpl(TransactionImpl* tr)
 {
-	if (tr == 0)
+    if (tr == nullptr)
 		throw LogicExceptionImpl("Database::AttachTransaction",
 					_("Transaction object is null."));
 
@@ -378,7 +378,7 @@ void DatabaseImpl::AttachTransactionImpl(TransactionImpl* tr)
 
 void DatabaseImpl::DetachTransactionImpl(TransactionImpl* tr)
 {
-	if (tr == 0)
+    if (tr == nullptr)
 		throw LogicExceptionImpl("Database::DetachTransaction",
 				_("ITransaction object is null."));
 
@@ -387,7 +387,7 @@ void DatabaseImpl::DetachTransactionImpl(TransactionImpl* tr)
 
 void DatabaseImpl::AttachStatementImpl(StatementImpl* st)
 {
-	if (st == 0)
+    if (st == nullptr)
 		throw LogicExceptionImpl("Database::AttachStatement",
 					_("Can't attach a null Statement object."));
 
@@ -396,7 +396,7 @@ void DatabaseImpl::AttachStatementImpl(StatementImpl* st)
 
 void DatabaseImpl::DetachStatementImpl(StatementImpl* st)
 {
-	if (st == 0)
+    if (st == nullptr)
 		throw LogicExceptionImpl("Database::DetachStatement",
 				_("Can't detach a null Statement object."));
 
@@ -405,7 +405,7 @@ void DatabaseImpl::DetachStatementImpl(StatementImpl* st)
 
 void DatabaseImpl::AttachBlobImpl(BlobImpl* bb)
 {
-	if (bb == 0)
+    if (bb == nullptr)
 		throw LogicExceptionImpl("Database::AttachBlob",
 					_("Can't attach a null Blob object."));
 
@@ -414,7 +414,7 @@ void DatabaseImpl::AttachBlobImpl(BlobImpl* bb)
 
 void DatabaseImpl::DetachBlobImpl(BlobImpl* bb)
 {
-	if (bb == 0)
+    if (bb == nullptr)
 		throw LogicExceptionImpl("Database::DetachBlob",
 				_("Can't detach a null Blob object."));
 
@@ -423,7 +423,7 @@ void DatabaseImpl::DetachBlobImpl(BlobImpl* bb)
 
 void DatabaseImpl::AttachArrayImpl(ArrayImpl* ar)
 {
-	if (ar == 0)
+    if (ar == nullptr)
 		throw LogicExceptionImpl("Database::AttachArray",
 					_("Can't attach a null Array object."));
 
@@ -432,7 +432,7 @@ void DatabaseImpl::AttachArrayImpl(ArrayImpl* ar)
 
 void DatabaseImpl::DetachArrayImpl(ArrayImpl* ar)
 {
-	if (ar == 0)
+    if (ar == nullptr)
 		throw LogicExceptionImpl("Database::DetachArray",
 				_("Can't detach a null Array object."));
 
@@ -441,7 +441,7 @@ void DatabaseImpl::DetachArrayImpl(ArrayImpl* ar)
 
 void DatabaseImpl::AttachEventsImpl(EventsImpl* ev)
 {
-	if (ev == 0)
+    if (ev == nullptr)
 		throw LogicExceptionImpl("Database::AttachEventsImpl",
 					_("Can't attach a null Events object."));
 
@@ -450,7 +450,7 @@ void DatabaseImpl::AttachEventsImpl(EventsImpl* ev)
 
 void DatabaseImpl::DetachEventsImpl(EventsImpl* ev)
 {
-	if (ev == 0)
+    if (ev == nullptr)
 		throw LogicExceptionImpl("Database::DetachEventsImpl",
 				_("Can't detach a null Events object."));
 

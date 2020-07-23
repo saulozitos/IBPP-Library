@@ -55,7 +55,7 @@ void IBPP::DBKey::Clear()
 
 void IBPP::DBKey::SetKey(const void* key, int size)
 {
-	if (key == 0)
+    if (key == nullptr)
 		throw LogicExceptionImpl("IBPP::DBKey::SetKey", _("Null DBKey reference detected."));
 	if (size <= 0 || ((size >> 3) << 3) != size)
 		throw LogicExceptionImpl("IBPP::DBKey::SetKey", _("Invalid DBKey size."));
@@ -68,7 +68,7 @@ void IBPP::DBKey::GetKey(void* key, int size) const
 {
 	if (mDBKey.empty())
 		throw LogicExceptionImpl("IBPP::DBKey::GetKey", _("DBKey not assigned."));
-	if (key == 0)
+    if (key == nullptr)
 		throw LogicExceptionImpl("IBPP::DBKey::GetKey", _("Null DBKey reference detected."));
     if (size != static_cast<int>(mDBKey.size()))
 		throw LogicExceptionImpl("IBPP::DBKey::GetKey", _("Incompatible DBKey size detected."));

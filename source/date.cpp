@@ -43,7 +43,7 @@ using namespace ibpp_internals;
 
 void IBPP::Date::Today()
 {
-	time_t systime = time(0);
+    time_t systime = time(nullptr);
 	tm* loctime = localtime(&systime);
 
 	if (! IBPP::itod(&mDate, loctime->tm_year + 1900,
@@ -53,7 +53,7 @@ void IBPP::Date::Today()
 
 void IBPP::Date::SetDate(int dt)
 {
-	if (! IBPP::dtoi(dt, 0, 0, 0))
+    if (! IBPP::dtoi(dt, nullptr, nullptr, nullptr))
 		throw LogicExceptionImpl("Date::SetDate", _("Out of range"));
 	mDate = dt;
 }
@@ -73,7 +73,7 @@ void IBPP::Date::GetDate(int& year, int& month, int& day) const
 int IBPP::Date::Year() const
 {
 	int year;
-	if (! IBPP::dtoi(mDate, &year, 0, 0))
+    if (! IBPP::dtoi(mDate, &year, nullptr, nullptr))
 		throw LogicExceptionImpl("Date::Year", _("Out of range"));
 	return year;
 }
@@ -81,7 +81,7 @@ int IBPP::Date::Year() const
 int IBPP::Date::Month() const
 {
 	int month;
-	if (! IBPP::dtoi(mDate, 0, &month, 0))
+    if (! IBPP::dtoi(mDate, nullptr, &month, nullptr))
 		throw LogicExceptionImpl("Date::Month", _("Out of range"));
 	return month;
 }
@@ -89,7 +89,7 @@ int IBPP::Date::Month() const
 int IBPP::Date::Day() const
 {
 	int day;
-	if (! IBPP::dtoi(mDate, 0, 0, &day))
+    if (! IBPP::dtoi(mDate, nullptr, nullptr, &day))
 		throw LogicExceptionImpl("Date::Day", _("Out of range"));
 	return day;
 }
@@ -97,7 +97,7 @@ int IBPP::Date::Day() const
 void IBPP::Date::Add(int days)
 {
 	int newdate = mDate + days;		// days can be signed
-	if (! IBPP::dtoi(newdate, 0, 0, 0))
+    if (! IBPP::dtoi(newdate, nullptr, nullptr, nullptr))
 		throw LogicExceptionImpl("Date::Add()", _("Out of range"));
 	mDate = newdate;
 }
@@ -105,7 +105,7 @@ void IBPP::Date::Add(int days)
 void IBPP::Date::StartOfMonth()
 {
 	int year, month;
-	if (! IBPP::dtoi(mDate, &year, &month, 0))
+    if (! IBPP::dtoi(mDate, &year, &month, nullptr))
 		throw LogicExceptionImpl("Date::StartOfMonth()", _("Out of range"));
 	if (! IBPP::itod(&mDate, year, month, 1))		// First of same month
 		throw LogicExceptionImpl("Date::StartOfMonth()", _("Out of range"));
@@ -114,7 +114,7 @@ void IBPP::Date::StartOfMonth()
 void IBPP::Date::EndOfMonth()
 {
 	int year, month;
-	if (! IBPP::dtoi(mDate, &year, &month, 0))
+    if (! IBPP::dtoi(mDate, &year, &month, nullptr))
 		throw LogicExceptionImpl("Date::EndOfMonth()", _("Out of range"));
 	if (++month > 12) { month = 1; year++; }
 	if (! IBPP::itod(&mDate, year, month, 1))	// First of next month
@@ -177,9 +177,9 @@ bool IBPP::dtoi (int date, int *y, int *m, int *d)
     day = C - (153*month - 457) / 5;
     if (month > 12) { year += 1; month -= 12; }
 
-    if (y != 0) *y = static_cast<int>(year);
-    if (m != 0) *m = static_cast<int>(month);
-    if (d != 0) *d = static_cast<int>(day);
+    if (y != nullptr) *y = static_cast<int>(year);
+    if (m != nullptr) *m = static_cast<int>(month);
+    if (d != nullptr) *d = static_cast<int>(day);
 
 	return true;
 }

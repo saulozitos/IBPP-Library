@@ -46,7 +46,7 @@ using namespace ibpp_internals;
 
 void RowImpl::SetNull(int param)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::SetNull", _("The row is not initialized."));
 	if (param < 1 || param > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::SetNull", _("Variable index out of range."));
@@ -61,7 +61,7 @@ void RowImpl::SetNull(int param)
 
 void RowImpl::Set(int param, bool value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[bool]", _("The row is not initialized."));
 
 	SetValue(param, ivBool, &value);
@@ -70,9 +70,9 @@ void RowImpl::Set(int param, bool value)
 
 void RowImpl::Set(int param, const char* cstring)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[char*]", _("The row is not initialized."));
-	if (cstring == 0)
+    if (cstring == nullptr)
 		throw LogicExceptionImpl("Row::Set[char*]", _("null char* pointer detected."));
 
     SetValue(param, ivByte, cstring, static_cast<int>(strlen(cstring)));
@@ -81,9 +81,9 @@ void RowImpl::Set(int param, const char* cstring)
 
 void RowImpl::Set(int param, const void* bindata, int len)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[void*]", _("The row is not initialized."));
-	if (bindata == 0)
+    if (bindata == nullptr)
 		throw LogicExceptionImpl("Row::Set[void*]", _("null char* pointer detected."));
 	if (len < 0)
 		throw LogicExceptionImpl("Row::Set[void*]", _("Length must be >= 0"));
@@ -94,7 +94,7 @@ void RowImpl::Set(int param, const void* bindata, int len)
 
 void RowImpl::Set(int param, const std::string& s)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[string]", _("The row is not initialized."));
 
     SetValue(param, ivString, const_cast<void*>(malloc(sizeof(&s))));
@@ -103,7 +103,7 @@ void RowImpl::Set(int param, const std::string& s)
 
 void RowImpl::Set(int param, int16_t value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[int16_t]", _("The row is not initialized."));
 											
 	SetValue(param, ivInt16, &value);
@@ -112,7 +112,7 @@ void RowImpl::Set(int param, int16_t value)
 
 void RowImpl::Set(int param, int32_t value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[int32_t]", _("The row is not initialized."));
 
 	SetValue(param, ivInt32, &value);
@@ -121,7 +121,7 @@ void RowImpl::Set(int param, int32_t value)
 
 void RowImpl::Set(int param, int64_t value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[int64_t]", _("The row is not initialized."));
 
 	SetValue(param, ivInt64, &value);
@@ -130,7 +130,7 @@ void RowImpl::Set(int param, int64_t value)
 
 void RowImpl::Set(int param, float value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[float]", _("The row is not initialized."));
 
 	SetValue(param, ivFloat, &value);
@@ -139,7 +139,7 @@ void RowImpl::Set(int param, float value)
 
 void RowImpl::Set(int param, double value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[double]", _("The row is not initialized."));
 
 	SetValue(param, ivDouble, &value);
@@ -148,7 +148,7 @@ void RowImpl::Set(int param, double value)
 
 void RowImpl::Set(int param, const IBPP::Timestamp& value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[Timestamp]", _("The row is not initialized."));
 
 	SetValue(param, ivTimestamp, &value);
@@ -157,7 +157,7 @@ void RowImpl::Set(int param, const IBPP::Timestamp& value)
 
 void RowImpl::Set(int param, const IBPP::Date& value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[Date]", _("The row is not initialized."));
 
 	if (mDialect == 1)
@@ -178,7 +178,7 @@ void RowImpl::Set(int param, const IBPP::Date& value)
 
 void RowImpl::Set(int param, const IBPP::Time& value)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[Time]", _("The row is not initialized."));
 	if (mDialect == 1)
 		throw LogicExceptionImpl("Row::Set[Time]", _("Requires use of a dialect 3 database."));
@@ -189,12 +189,12 @@ void RowImpl::Set(int param, const IBPP::Time& value)
 
 void RowImpl::Set(int param, const IBPP::Blob& blob)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[Blob]", _("The row is not initialized."));
-	if (mDatabase != 0 && blob->DatabasePtr() != mDatabase)
+    if (mDatabase != nullptr && blob->DatabasePtr() != mDatabase)
 		throw LogicExceptionImpl("Row::Set[Blob]",
 			_("IBlob and Row attached to different databases"));
-	if (mTransaction != 0 && blob->TransactionPtr() != mTransaction)
+    if (mTransaction != nullptr && blob->TransactionPtr() != mTransaction)
 		throw LogicExceptionImpl("Row::Set[Blob]",
 			_("IBlob and Row attached to different transactions"));
 
@@ -204,12 +204,12 @@ void RowImpl::Set(int param, const IBPP::Blob& blob)
 
 void RowImpl::Set(int param, const IBPP::Array& array)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[Array]", _("The row is not initialized."));
-	if (mDatabase != 0 && array->DatabasePtr() != mDatabase)
+    if (mDatabase != nullptr && array->DatabasePtr() != mDatabase)
 		throw LogicExceptionImpl("Row::Set[Array]",
 			_("IArray and Row attached to different databases"));
-	if (mTransaction != 0 && array->TransactionPtr() != mTransaction)
+    if (mTransaction != nullptr && array->TransactionPtr() != mTransaction)
 		throw LogicExceptionImpl("Row::Set[Array]",
 			_("IArray and Row attached to different transactions"));
 
@@ -219,7 +219,7 @@ void RowImpl::Set(int param, const IBPP::Array& array)
 
 void RowImpl::Set(int param, const IBPP::DBKey& key)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Set[DBKey]", _("The row is not initialized."));
 
     SetValue(param, ivDBKey, const_cast<void*>(malloc(sizeof(&key))));
@@ -239,7 +239,7 @@ void RowImpl::Set(int param, const IBPP::Value& value)
 
 bool RowImpl::IsNull(int column)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::IsNull", _("The row is not initialized."));
 	if (column < 1 || column > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::IsNull", _("Variable index out of range."));
@@ -250,129 +250,129 @@ bool RowImpl::IsNull(int column)
 
 bool RowImpl::Get(int column, bool& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	void* pvalue = GetValue(column, ivBool);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
         retvalue = (*reinterpret_cast<char*>(pvalue) == 0 ? false : true);
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, char* retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
-	if (retvalue == 0)
+    if (retvalue == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("Null pointer detected"));
 
 	int sqllen;
 	void* pvalue = GetValue(column, ivByte, &sqllen);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
 	{
 		memcpy(retvalue, pvalue, sqllen);
 		retvalue[sqllen] = '\0';
 	}
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, void* bindata, int& userlen)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
-	if (bindata == 0)
+    if (bindata == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("Null pointer detected"));
 	if (userlen < 0)
 		throw LogicExceptionImpl("Row::Get", _("Length must be >= 0"));
 
 	int sqllen;
 	void* pvalue = GetValue(column, ivByte, &sqllen);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
 	{
 		// userlen says how much bytes the user can accept
 		// let's shorten it, if there is less bytes available
 		if (sqllen < userlen) userlen = sqllen;
 		memcpy(bindata, pvalue, userlen);
 	}
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, std::string& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	void* pvalue = GetValue(column, ivString, &retvalue);
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, int16_t& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	void* pvalue = GetValue(column, ivInt16);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
         retvalue = *reinterpret_cast<int16_t*>(pvalue);
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, int32_t& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	void* pvalue = GetValue(column, ivInt32);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
         retvalue = *reinterpret_cast<int32_t*>(pvalue);
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, int64_t& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	void* pvalue = GetValue(column, ivInt64);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
         retvalue = *reinterpret_cast<int64_t*>(pvalue);
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, float& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	void* pvalue = GetValue(column, ivFloat);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
         retvalue = *reinterpret_cast<float*>(pvalue);
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, double& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	void* pvalue = GetValue(column, ivDouble);
-	if (pvalue != 0)
+    if (pvalue != nullptr)
         retvalue = *reinterpret_cast<double*>(pvalue);
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, IBPP::Timestamp& timestamp)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
     void* pvalue = GetValue(column, ivTimestamp, reinterpret_cast<void*>(&timestamp));
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, IBPP::Date& date)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	if (mDialect == 1)
@@ -381,50 +381,50 @@ bool RowImpl::Get(int column, IBPP::Date& date)
 		// fields which are actually ISC_TIMESTAMP.
 		IBPP::Timestamp timestamp;
         void* pvalue = GetValue(column, ivTimestamp, const_cast<void*>(malloc(sizeof(&timestamp))));
-		if (pvalue != 0) date = timestamp;
-		return pvalue == 0 ? true : false;
+        if (pvalue != nullptr) date = timestamp;
+        return pvalue == nullptr ? true : false;
 	}
 	else
 	{
         void* pvalue = GetValue(column, ivDate, const_cast<void*>(malloc(sizeof(&date))));
-		return pvalue == 0 ? true : false;
+        return pvalue == nullptr ? true : false;
 	}
 }
 
 bool RowImpl::Get(int column, IBPP::Time& time)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
     void* pvalue = GetValue(column, ivTime, const_cast<void*>(malloc(sizeof(&time))));
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, IBPP::Blob& retblob)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
     void* pvalue = GetValue(column, ivBlob, const_cast<void*>(malloc(sizeof((retblob.intf())))));
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, IBPP::DBKey& retkey)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
     void* pvalue = GetValue(column, ivDBKey, const_cast<void*>(malloc(sizeof(&retkey))));
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 bool RowImpl::Get(int column, IBPP::Array& retarray)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
     void* pvalue = GetValue(column, ivArray, const_cast<void*>(malloc(sizeof(retarray.intf()))));
-	return pvalue == 0 ? true : false;
+    return pvalue == nullptr ? true : false;
 }
 
 /*
@@ -441,7 +441,7 @@ const IBPP::Value RowImpl::Get(int column)
 
 bool RowImpl::IsNull(const std::string& name)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::IsNull", _("The row is not initialized."));
 
 	return IsNull(ColumnNum(name));
@@ -449,7 +449,7 @@ bool RowImpl::IsNull(const std::string& name)
 
 bool RowImpl::Get(const std::string& name, bool& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -457,7 +457,7 @@ bool RowImpl::Get(const std::string& name, bool& retvalue)
 
 bool RowImpl::Get(const std::string& name, char* retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get[char*]", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -465,7 +465,7 @@ bool RowImpl::Get(const std::string& name, char* retvalue)
 
 bool RowImpl::Get(const std::string& name, void* retvalue, int& count)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get[void*,int]", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue, count);
@@ -473,7 +473,7 @@ bool RowImpl::Get(const std::string& name, void* retvalue, int& count)
 
 bool RowImpl::Get(const std::string& name, std::string& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::GetString", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -481,7 +481,7 @@ bool RowImpl::Get(const std::string& name, std::string& retvalue)
 
 bool RowImpl::Get(const std::string& name, int16_t& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -489,7 +489,7 @@ bool RowImpl::Get(const std::string& name, int16_t& retvalue)
 
 bool RowImpl::Get(const std::string& name, int32_t& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -497,7 +497,7 @@ bool RowImpl::Get(const std::string& name, int32_t& retvalue)
 
 bool RowImpl::Get(const std::string& name, int64_t& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -505,7 +505,7 @@ bool RowImpl::Get(const std::string& name, int64_t& retvalue)
 
 bool RowImpl::Get(const std::string& name, float& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -513,7 +513,7 @@ bool RowImpl::Get(const std::string& name, float& retvalue)
 
 bool RowImpl::Get(const std::string& name, double& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -521,7 +521,7 @@ bool RowImpl::Get(const std::string& name, double& retvalue)
 
 bool RowImpl::Get(const std::string& name, IBPP::Timestamp& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -529,7 +529,7 @@ bool RowImpl::Get(const std::string& name, IBPP::Timestamp& retvalue)
 
 bool RowImpl::Get(const std::string& name, IBPP::Date& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -537,7 +537,7 @@ bool RowImpl::Get(const std::string& name, IBPP::Date& retvalue)
 
 bool RowImpl::Get(const std::string& name, IBPP::Time& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -545,7 +545,7 @@ bool RowImpl::Get(const std::string& name, IBPP::Time& retvalue)
 
 bool RowImpl::Get(const std::string&name, IBPP::Blob& retblob)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retblob);
@@ -553,7 +553,7 @@ bool RowImpl::Get(const std::string&name, IBPP::Blob& retblob)
 
 bool RowImpl::Get(const std::string& name, IBPP::DBKey& retvalue)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retvalue);
@@ -561,7 +561,7 @@ bool RowImpl::Get(const std::string& name, IBPP::DBKey& retvalue)
 
 bool RowImpl::Get(const std::string& name, IBPP::Array& retarray)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Get", _("The row is not initialized."));
 
 	return Get(ColumnNum(name), retarray);
@@ -579,7 +579,7 @@ const IBPP::Value RowImpl::Get(const std::string& name)
 
 int RowImpl::Columns()
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::Columns", _("The row is not initialized."));
 
 	return mDescrArea->sqld;
@@ -587,7 +587,7 @@ int RowImpl::Columns()
 
 int RowImpl::ColumnNum(const std::string& name)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnNum", _("The row is not initialized."));
 	if (name.empty())
 		throw LogicExceptionImpl("Row::ColumnNum", _("Column name <empty> not found."));
@@ -646,7 +646,7 @@ bad, but should be cleanly rewritten.
 
 const char* RowImpl::ColumnName(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnName", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumName", _("Variable index out of range."));
@@ -659,7 +659,7 @@ const char* RowImpl::ColumnName(int varnum)
 
 const char* RowImpl::ColumnAlias(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnAlias", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumnAlias", _("Variable index out of range."));
@@ -672,7 +672,7 @@ const char* RowImpl::ColumnAlias(int varnum)
 
 const char* RowImpl::ColumnTable(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnTable", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumnTable", _("Variable index out of range."));
@@ -685,7 +685,7 @@ const char* RowImpl::ColumnTable(int varnum)
 
 IBPP::SDT RowImpl::ColumnType(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnType", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumnType", _("Variable index out of range."));
@@ -716,7 +716,7 @@ IBPP::SDT RowImpl::ColumnType(int varnum)
 
 int RowImpl::ColumnSubtype(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnSubtype", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumnSubtype", _("Variable index out of range."));
@@ -727,7 +727,7 @@ int RowImpl::ColumnSubtype(int varnum)
 
 int RowImpl::ColumnSize(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnSize", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumnSize", _("Variable index out of range."));
@@ -738,7 +738,7 @@ int RowImpl::ColumnSize(int varnum)
 
 int RowImpl::ColumnScale(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnScale", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumnScale", _("Variable index out of range."));
@@ -749,7 +749,7 @@ int RowImpl::ColumnScale(int varnum)
 
 bool RowImpl::ColumnUpdated(int varnum)
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnUpdated", _("The row is not initialized."));
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("Row::ColumnUpdated", _("Variable index out of range."));
@@ -759,7 +759,7 @@ bool RowImpl::ColumnUpdated(int varnum)
 
 bool RowImpl::Updated()
 {
-	if (mDescrArea == 0)
+    if (mDescrArea == nullptr)
 		throw LogicExceptionImpl("Row::ColumnUpdated", _("The row is not initialized."));
 
 	for (int i = 0; i < mDescrArea->sqld; i++)
@@ -807,7 +807,7 @@ void RowImpl::SetValue(int varnum, IITYPE ivType, const void* value, int userlen
 {
 	if (varnum < 1 || varnum > mDescrArea->sqld)
 		throw LogicExceptionImpl("RowImpl::SetValue", _("Variable index out of range."));
-	if (value == 0)
+    if (value == nullptr)
 		throw LogicExceptionImpl("RowImpl::SetValue", _("Unexpected null pointer detected."));
 
 	int16_t len;
@@ -1052,7 +1052,7 @@ void* RowImpl::GetValue(int varnum, IITYPE ivType, void* retvalue)
 	XSQLVAR* var = &(mDescrArea->sqlvar[varnum-1]);
 
 	// When there is no value (SQL NULL)
-	if ((var->sqltype & 1) && *(var->sqlind) != 0) return 0;
+    if ((var->sqltype & 1) && *(var->sqlind) != 0) return nullptr;
 
 	switch (var->sqltype & ~1)
 	{
@@ -1070,7 +1070,7 @@ void* RowImpl::GetValue(int varnum, IITYPE ivType, void* retvalue)
 			{
 				// In case of ivByte, void* retvalue points to an int where we
 				// will store the len of the available data
-                if (retvalue != 0) *static_cast<int*>(malloc(sizeof(retvalue))) = var->sqllen;
+                if (retvalue != nullptr) *static_cast<int*>(malloc(sizeof(retvalue))) = var->sqllen;
 				value = var->sqldata;
 			}
 			else if (ivType == ivDBKey)
@@ -1108,7 +1108,7 @@ void* RowImpl::GetValue(int varnum, IITYPE ivType, void* retvalue)
 			{
 				// In case of ivByte, void* retvalue points to an int where we
 				// will store the len of the available data
-                if (retvalue != 0) *static_cast<int*>(malloc(sizeof(retvalue))) = static_cast<int>(*reinterpret_cast<int16_t*>(var->sqldata));
+                if (retvalue != nullptr) *static_cast<int*>(malloc(sizeof(retvalue))) = static_cast<int>(*reinterpret_cast<int16_t*>(var->sqldata));
 				value = var->sqldata+2;
 			}
 			else if (ivType == ivBool)
@@ -1330,12 +1330,12 @@ void* RowImpl::GetValue(int varnum, IITYPE ivType, void* retvalue)
 
 void RowImpl::Free()
 {
-	if (mDescrArea != 0)
+    if (mDescrArea != nullptr)
 	{
 		for (int i = 0; i < mDescrArea->sqln; i++)
 		{
 			XSQLVAR* var = &(mDescrArea->sqlvar[i]);
-			if (var->sqldata != 0)
+            if (var->sqldata != nullptr)
 			{
 				switch (var->sqltype & ~1)
 				{
@@ -1354,10 +1354,10 @@ void RowImpl::Free()
                     default : throw LogicExceptionImpl("RowImpl::Free", _("Found an unknown sqltype !"));
 				}
 			}
-			if (var->sqlind != 0) delete var->sqlind;
+            if (var->sqlind != nullptr) delete var->sqlind;
 		}
         delete [] reinterpret_cast<char*>(mDescrArea);
-		mDescrArea = 0;
+        mDescrArea = nullptr;
 	}
 
 	mNumerics.clear();
@@ -1370,8 +1370,8 @@ void RowImpl::Free()
 	mUpdated.clear();
 
 	mDialect = 0;
-	mDatabase = 0;
-	mTransaction = 0;
+    mDatabase = nullptr;
+    mTransaction = nullptr;
 }
 
 void RowImpl::Resize(int n)
@@ -1519,14 +1519,14 @@ RowImpl& RowImpl::operator=(const RowImpl& copied)
 }
 
 RowImpl::RowImpl(const RowImpl& copied)
-	: IBPP::IRow(), mRefCount(0), mDescrArea(0)
+    : IBPP::IRow(), mRefCount(0), mDescrArea(nullptr)
 {
 	// mRefCount and mDescrArea are set to 0 before using the assignment operator
 	*this = copied;		// The assignment operator does the real copy
 }
 
 RowImpl::RowImpl(int dialect, int n, DatabaseImpl* db, TransactionImpl* tr)
-	: mRefCount(0), mDescrArea(0)
+    : mRefCount(0), mDescrArea(nullptr)
 {
 	Resize(n);
 	mDialect = dialect;
