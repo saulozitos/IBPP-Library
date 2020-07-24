@@ -69,7 +69,7 @@ const size_t EventsImpl::MAXEVENTNAMELEN = 127;
 
 void EventsImpl::Add(const std::string& eventname, IBPP::EventInterface* objref)
 {
-	if (eventname.size() == 0)
+    if (eventname.empty())
 		throw LogicExceptionImpl("Events::Add", _("Zero length event names not permitted"));
 	if (eventname.size() > MAXEVENTNAMELEN)
 		throw LogicExceptionImpl("Events::Add", _("Event name is too long"));
@@ -114,7 +114,7 @@ void EventsImpl::Add(const std::string& eventname, IBPP::EventInterface* objref)
 
 void EventsImpl::Drop(const std::string& eventname)
 {
-	if (eventname.size() == 0)
+    if (eventname.empty())
 		throw LogicExceptionImpl("EventsImpl::Drop", _("Zero length event names not permitted"));
 	if (eventname.size() > MAXEVENTNAMELEN)
 		throw LogicExceptionImpl("EventsImpl::Drop", _("Event name is too long"));
@@ -173,7 +173,7 @@ void EventsImpl::Clear()
 void EventsImpl::Dispatch()
 {
 	// If no events registered, nothing to do of course.
-	if (mEventBuffer.size() == 0) return;
+    if (mEventBuffer.empty()) return;
 
 	// Let's fire the events actions for all the events which triggered, if any, and requeue.
 	FireActions();

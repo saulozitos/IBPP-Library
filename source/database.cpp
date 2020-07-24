@@ -173,23 +173,23 @@ void DatabaseImpl::Inactivate()
 		mEvents[i]->Clear();
 
 	// Let's detach from all Blobs
-	while (mBlobs.size() > 0)
+    while (!mBlobs.empty())
 		mBlobs.back()->DetachDatabaseImpl();
 
 	// Let's detach from all Arrays
-	while (mArrays.size() > 0)
+    while (!mArrays.empty())
 		mArrays.back()->DetachDatabaseImpl();
 
 	// Let's detach from all Statements
-	while (mStatements.size() > 0)
+    while (!mStatements.empty())
 		mStatements.back()->DetachDatabaseImpl();
 
 	// Let's detach from all Transactions
-	while (mTransactions.size() > 0)
+    while (!mTransactions.empty())
 		mTransactions.back()->DetachDatabaseImpl(this);
 
 	// Let's detach from all Events
-	while (mEvents.size() > 0)
+    while (!mEvents.empty())
 		mEvents.back()->DetachDatabaseImpl();
 }
 

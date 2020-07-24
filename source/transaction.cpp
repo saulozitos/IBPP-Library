@@ -369,7 +369,7 @@ TransactionImpl::~TransactionImpl()
 	// And during the deletion, there is a packing of the array through a
 	// copy of elements from the end to the beginning of the array.
 	try {
-		while (mBlobs.size() > 0)
+        while (!mBlobs.empty())
 			mBlobs.back()->DetachTransactionImpl();
 	} catch (...) { }
 
@@ -377,7 +377,7 @@ TransactionImpl::~TransactionImpl()
 	// No Array object can still maintain pointers to this
 	// Transaction which is disappearing.
 	try {
-		while (mArrays.size() > 0)
+        while (!mArrays.empty())
 			mArrays.back()->DetachTransactionImpl();
 	} catch (...) { }
 
@@ -385,7 +385,7 @@ TransactionImpl::~TransactionImpl()
 	// No Statement object can still maintain pointers to this
 	// Transaction which is disappearing.
 	try {
-		while (mStatements.size() > 0)
+        while (!mStatements.empty())
 			mStatements.back()->DetachTransactionImpl();
 	} catch (...) { }
 
@@ -393,7 +393,7 @@ TransactionImpl::~TransactionImpl()
 	// Transaction. No Database object can still maintain pointers to this
 	// Transaction which is disappearing.
 	try {
-		while (mDatabases.size() > 0)
+        while (!mDatabases.empty())
 		{
 			size_t i = mDatabases.size()-1;
 			DetachDatabaseImpl(mDatabases[i]);	// <-- remove link to database from mTPBs
