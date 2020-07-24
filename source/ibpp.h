@@ -873,20 +873,20 @@ namespace IBPP
 			const std::string& UserPassword)
 		{ return DatabaseFactory(ServerName, DatabaseName, UserName, UserPassword, "", "", ""); }
 
-	Transaction TransactionFactory(Database db, TAM am = amWrite,
-		TIL il = ilConcurrency, TLR lr = lrWait, TFF flags = TFF(0));
+    Transaction TransactionFactory(const Database &db, TAM am = amWrite,
+        TIL il = ilConcurrency, TLR lr = lrWait, TFF flags = TFF(0));
 
-	Statement StatementFactory(Database db, Transaction tr,
-		const std::string& sql);
+    Statement StatementFactory(const Database &db, const Transaction &tr,
+        const std::string& sql);
 
 	inline Statement StatementFactory(Database db, Transaction tr)
 		{ return StatementFactory(db, tr, ""); }
 
-	Blob BlobFactory(Database db, Transaction tr);
+    Blob BlobFactory(const Database &db, const Transaction &tr);
 	
-	Array ArrayFactory(Database db, Transaction tr);
+    Array ArrayFactory(const Database &db, const Transaction &tr);
 	
-	Events EventsFactory(Database db);
+    Events EventsFactory(const Database &db);
 
 	/* IBPP uses a self initialization system. Each time an object that may
 	 * require the usage of the Interbase client C-API library is used, the

@@ -225,7 +225,7 @@ GDS* GDS::Call()
 #endif
 #ifdef IBPP_UNIX
 /* TODO : perform a late-bind on unix --- not so important, well I think (OM) */
-#define IB_ENTRYPOINT(X) m_##X = reinterpret_cast<proto_##X*>(isc_##X)
+#define IB_ENTRYPOINT(X) m_##X = (proto_##X*)(isc_##X)
 #endif
 
 		IB_ENTRYPOINT(create_database);
@@ -283,7 +283,7 @@ namespace IBPP
 	bool CheckVersion(uint32_t AppVersion)
 	{
 		//(void)gds.Call(); 		// Just call it to trigger the initialization
-        return ((AppVersion & 0xFFFFFF00) == (IBPP::Version & 0xFFFFFF00)) ? true : false;
+        return (AppVersion & 0xFFFFFF00) == (IBPP::Version & 0xFFFFFF00);
 	}
 
 	int GDSVersion()
@@ -321,7 +321,7 @@ namespace IBPP
 								UserPassword, RoleName, CharSet, CreateParams);
 	}
 
-	Transaction TransactionFactory(Database db, TAM am,
+    Transaction TransactionFactory(const Database &db, TAM am,
 					TIL il, TLR lr, TFF flags)
 	{
 		(void)gds.Call();			// Triggers the initialization, if needed
@@ -329,7 +329,7 @@ namespace IBPP
 									am, il, lr, flags);
 	}
 
-	Statement StatementFactory(Database db, Transaction tr,
+    Statement StatementFactory(const Database &db, const Transaction &tr,
 		const std::string& sql)
 	{
 		(void)gds.Call();			// Triggers the initialization, if needed
@@ -338,21 +338,21 @@ namespace IBPP
 									sql);
 	}
 
-	Blob BlobFactory(Database db, Transaction tr)
+    Blob BlobFactory(const Database &db, const Transaction &tr)
 	{
 		(void)gds.Call();			// Triggers the initialization, if needed
 		return new BlobImpl(dynamic_cast<DatabaseImpl*>(db.intf()),
 							dynamic_cast<TransactionImpl*>(tr.intf()));
 	}
 
-	Array ArrayFactory(Database db, Transaction tr)
+    Array ArrayFactory(const Database &db, const Transaction &tr)
 	{
 		(void)gds.Call();			// Triggers the initialization, if needed
 		return new ArrayImpl(dynamic_cast<DatabaseImpl*>(db.intf()),
 							dynamic_cast<TransactionImpl*>(tr.intf()));
 	}
 
-	Events EventsFactory(Database db)
+    Events EventsFactory(const Database &db)
 	{
 		(void)gds.Call();			// Triggers the initialization, if needed
 		return new EventsImpl(dynamic_cast<DatabaseImpl*>(db.intf()));
