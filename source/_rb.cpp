@@ -155,7 +155,7 @@ bool RB::GetBool(char token)
 
 	value = (*gds.Call()->m_vax_integer)(p+1, 4);
 
-	return value == 0 ? false : true;
+    return value != 0;
 }
 
 int RB::GetString(char token, std::string& data)

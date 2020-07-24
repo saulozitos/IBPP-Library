@@ -276,7 +276,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-                    *reinterpret_cast<bool*>(dst) = (*reinterpret_cast<short*>(src) != 0) ? true : false;
+                    *reinterpret_cast<bool*>(dst) = *reinterpret_cast<short*>(src) != 0;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}
@@ -338,7 +338,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-                    *reinterpret_cast<bool*>(dst) = (*reinterpret_cast<long*>(src) != 0) ? true : false;
+                    *reinterpret_cast<bool*>(dst) = *reinterpret_cast<long*>(src) != 0;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}
@@ -403,7 +403,7 @@ void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 			{
 				for (int i = 0; i < mElemCount; i++)
 				{
-                    *reinterpret_cast<bool*>(dst) = (*reinterpret_cast<int64_t*>(src) != 0) ? true : false;
+                    *reinterpret_cast<bool*>(dst) = *reinterpret_cast<int64_t*>(src) != 0;
 					src += mElemSize;
 					dst += sizeof(bool);
 				}

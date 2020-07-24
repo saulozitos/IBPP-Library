@@ -259,9 +259,9 @@ void DatabaseImpl::Info(int* ODSMajor, int* ODSMinor,
     if (Buffers != nullptr) *Buffers = result.GetValue(isc_info_num_buffers);
     if (Sweep != nullptr) *Sweep = result.GetValue(isc_info_sweep_interval);
     if (Sync != nullptr)
-		*Sync = result.GetValue(isc_info_forced_writes) == 1 ? true : false;
+        *Sync = result.GetValue(isc_info_forced_writes) == 1;
     if (Reserve != nullptr)
-		*Reserve = result.GetValue(isc_info_no_reserve) == 1 ? false : true;
+        *Reserve = result.GetValue(isc_info_no_reserve) != 1;
 }
 
 void DatabaseImpl::Statistics(int* Fetches, int* Marks, int* Reads, int* Writes)
