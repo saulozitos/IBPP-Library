@@ -47,22 +47,22 @@ using namespace ibpp_internals;
 
 void IBPP::User::copyfrom(const IBPP::User& r)
 {
-	username = r.username;
-	password = r.password;
-	firstname = r.firstname;
-	middlename = r.middlename;
-	lastname = r.lastname;
-	userid = r.userid;
-	groupid = r.groupid;
+    username = r.username;
+    password = r.password;
+    firstname = r.firstname;
+    middlename = r.middlename;
+    lastname = r.lastname;
+    userid = r.userid;
+    groupid = r.groupid;
 }
 
 //	Public implementation
 
 void IBPP::User::clear()
 {
-	username.erase(); password.erase();
-	firstname.erase(); middlename.erase(); lastname.erase();
-	userid = groupid = 0;
+    username.erase(); password.erase();
+    firstname.erase(); middlename.erase(); lastname.erase();
+    userid = groupid = 0;
 }
 
 //

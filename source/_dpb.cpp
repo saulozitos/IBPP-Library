@@ -46,71 +46,71 @@ const int DPB::BUFFERINCR = 128;
 void DPB::Grow(int needed)
 {
     if (mBuffer == nullptr) ++needed;	// Initial alloc will require one more byte
-	if ((mSize + needed) > mAlloc)
-	{
-		// We need to grow the buffer. We use increments of BUFFERINCR bytes.
-		needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
-		char* newbuffer = new char[mAlloc + needed];
+    if ((mSize + needed) > mAlloc)
+    {
+        // We need to grow the buffer. We use increments of BUFFERINCR bytes.
+        needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
+        char* newbuffer = new char[mAlloc + needed];
         if (mBuffer == nullptr)
-		{
-			// Initial allocation, initialize the version tag
-			newbuffer[0] = isc_dpb_version1;
-			mSize = 1;
-		}
-		else
-		{
-			// Move the old buffer content to the new one
-			memcpy(newbuffer, mBuffer, mSize);
-			delete [] mBuffer;
-		}
-		mBuffer = newbuffer;
-		mAlloc += needed;
-	}
+        {
+            // Initial allocation, initialize the version tag
+            newbuffer[0] = isc_dpb_version1;
+            mSize = 1;
+        }
+        else
+        {
+            // Move the old buffer content to the new one
+            memcpy(newbuffer, mBuffer, mSize);
+            delete [] mBuffer;
+        }
+        mBuffer = newbuffer;
+        mAlloc += needed;
+    }
 }
 
 void DPB::Insert(char type, const char* data)
 {
     int len = static_cast<int>(strlen(data));
-	Grow(len + 2);
+    Grow(len + 2);
     mBuffer[mSize++] = type;
-	mBuffer[mSize++] = char(len);
+    mBuffer[mSize++] = char(len);
     strncpy(&mBuffer[mSize], data, len);
     mSize += len;
 }
 
 void DPB::Insert(char type, int16_t data)
 {
-	Grow(2 + 2);
+    Grow(2 + 2);
     mBuffer[mSize++] = type;
-	mBuffer[mSize++] = char(2);
+    mBuffer[mSize++] = char(2);
     *reinterpret_cast<int16_t*>(&mBuffer[mSize]) = int16_t((*gds.Call()->m_vax_integer)(reinterpret_cast<char*>(&data), 2));
     mSize += 2;
 }
 
 void DPB::Insert(char type, bool data)
 {
-	Grow(2 + 1);
+    Grow(2 + 1);
     mBuffer[mSize++] = type;
-	mBuffer[mSize++] = char(1);
+    mBuffer[mSize++] = char(1);
     mBuffer[mSize++] = char(data ? 1 : 0);
 }
 
 void DPB::Insert(char type, char data)
 {
-	Grow(2 + 1);
+    Grow(2 + 1);
     mBuffer[mSize++] = type;
-	mBuffer[mSize++] = char(1);
+    mBuffer[mSize++] = char(1);
     mBuffer[mSize++] = data;
 }
 
 void DPB::Reset()
 {
-	if (mAlloc != 0)
+    if (mAlloc != 0)
     {
-    	delete [] mBuffer;
+        delete [] mBuffer;
         mBuffer = nullptr;
         mSize = 0;
-		mAlloc = 0;
+        mAlloc = 0;
     }
 }
 

@@ -44,104 +44,104 @@ using namespace ibpp_internals;
 void IBPP::Date::Today()
 {
     time_t systime = time(nullptr);
-	tm* loctime = localtime(&systime);
+    tm* loctime = localtime(&systime);
 
-	if (! IBPP::itod(&mDate, loctime->tm_year + 1900,
-		loctime->tm_mon + 1, loctime->tm_mday))
-			throw LogicExceptionImpl("Date::Today", _("Out of range"));
+    if (! IBPP::itod(&mDate, loctime->tm_year + 1900,
+                     loctime->tm_mon + 1, loctime->tm_mday))
+        throw LogicExceptionImpl("Date::Today", _("Out of range"));
 }
 
 void IBPP::Date::SetDate(int dt)
 {
     if (! IBPP::dtoi(dt, nullptr, nullptr, nullptr))
-		throw LogicExceptionImpl("Date::SetDate", _("Out of range"));
-	mDate = dt;
+        throw LogicExceptionImpl("Date::SetDate", _("Out of range"));
+    mDate = dt;
 }
 
 void IBPP::Date::SetDate(int year, int month, int day)
 {
-	if (! IBPP::itod(&mDate, year, month, day))
-		throw LogicExceptionImpl("Date::SetDate", _("Out of range"));
+    if (! IBPP::itod(&mDate, year, month, day))
+        throw LogicExceptionImpl("Date::SetDate", _("Out of range"));
 }
 
 void IBPP::Date::GetDate(int& year, int& month, int& day) const
 {
-	if (! IBPP::dtoi(mDate, &year, &month, &day))
-		throw LogicExceptionImpl("Date::GetDate", _("Out of range"));
+    if (! IBPP::dtoi(mDate, &year, &month, &day))
+        throw LogicExceptionImpl("Date::GetDate", _("Out of range"));
 }
 
 int IBPP::Date::Year() const
 {
-	int year;
+    int year;
     if (! IBPP::dtoi(mDate, &year, nullptr, nullptr))
-		throw LogicExceptionImpl("Date::Year", _("Out of range"));
-	return year;
+        throw LogicExceptionImpl("Date::Year", _("Out of range"));
+    return year;
 }
 
 int IBPP::Date::Month() const
 {
-	int month;
+    int month;
     if (! IBPP::dtoi(mDate, nullptr, &month, nullptr))
-		throw LogicExceptionImpl("Date::Month", _("Out of range"));
-	return month;
+        throw LogicExceptionImpl("Date::Month", _("Out of range"));
+    return month;
 }
 
 int IBPP::Date::Day() const
 {
-	int day;
+    int day;
     if (! IBPP::dtoi(mDate, nullptr, nullptr, &day))
-		throw LogicExceptionImpl("Date::Day", _("Out of range"));
-	return day;
+        throw LogicExceptionImpl("Date::Day", _("Out of range"));
+    return day;
 }
 
 void IBPP::Date::Add(int days)
 {
-	int newdate = mDate + days;		// days can be signed
+    int newdate = mDate + days;		// days can be signed
     if (! IBPP::dtoi(newdate, nullptr, nullptr, nullptr))
-		throw LogicExceptionImpl("Date::Add()", _("Out of range"));
-	mDate = newdate;
+        throw LogicExceptionImpl("Date::Add()", _("Out of range"));
+    mDate = newdate;
 }
 
 void IBPP::Date::StartOfMonth()
 {
-	int year, month;
+    int year, month;
     if (! IBPP::dtoi(mDate, &year, &month, nullptr))
-		throw LogicExceptionImpl("Date::StartOfMonth()", _("Out of range"));
-	if (! IBPP::itod(&mDate, year, month, 1))		// First of same month
-		throw LogicExceptionImpl("Date::StartOfMonth()", _("Out of range"));
+        throw LogicExceptionImpl("Date::StartOfMonth()", _("Out of range"));
+    if (! IBPP::itod(&mDate, year, month, 1))		// First of same month
+        throw LogicExceptionImpl("Date::StartOfMonth()", _("Out of range"));
 }
 
 void IBPP::Date::EndOfMonth()
 {
-	int year, month;
+    int year, month;
     if (! IBPP::dtoi(mDate, &year, &month, nullptr))
-		throw LogicExceptionImpl("Date::EndOfMonth()", _("Out of range"));
-	if (++month > 12) { month = 1; year++; }
-	if (! IBPP::itod(&mDate, year, month, 1))	// First of next month
-		throw LogicExceptionImpl("Date::EndOfMonth()", _("Out of range"));
-	mDate--;	// Last day of original month, all weird cases accounted for
+        throw LogicExceptionImpl("Date::EndOfMonth()", _("Out of range"));
+    if (++month > 12) { month = 1; year++; }
+    if (! IBPP::itod(&mDate, year, month, 1))	// First of next month
+        throw LogicExceptionImpl("Date::EndOfMonth()", _("Out of range"));
+    mDate--;	// Last day of original month, all weird cases accounted for
 }
 
 IBPP::Date::Date(int year, int month, int day)
 {
-	SetDate(year, month, day);
+    SetDate(year, month, day);
 }
 
 IBPP::Date::Date(const IBPP::Date& copied)
 {
-	mDate = copied.mDate;
+    mDate = copied.mDate;
 }
 
 IBPP::Date& IBPP::Date::operator=(const IBPP::Timestamp& assigned)
 {
-	mDate = assigned.GetDate();
-	return *this;
+    mDate = assigned.GetDate();
+    return *this;
 }
 
 IBPP::Date& IBPP::Date::operator=(const IBPP::Date& assigned)
 {
-	mDate = assigned.mDate;
-	return *this;
+    mDate = assigned.mDate;
+    return *this;
 }
 
 // The following date calculations were inspired by web pages found on
@@ -158,14 +158,14 @@ bool IBPP::dtoi (int date, int *y, int *m, int *d)
     int RataDie, Z, H, A, B, C;
     int year, month, day;
 
-	// Validity control.
-	if (date < IBPP::MinDate || date > IBPP::MaxDate)
-		return false;
+    // Validity control.
+    if (date < IBPP::MinDate || date > IBPP::MaxDate)
+        return false;
 
-	// The "Rata Die" is the date specified as the number of days elapsed since
-	// 31 Dec of year 0. So 1 Jan 0001 is 1.
+    // The "Rata Die" is the date specified as the number of days elapsed since
+    // 31 Dec of year 0. So 1 Jan 0001 is 1.
 
-	RataDie = date + ibpp_internals::consts::Dec31_1899;	// Because IBPP sets the '0' on 31 Dec 1899.
+    RataDie = date + ibpp_internals::consts::Dec31_1899;	// Because IBPP sets the '0' on 31 Dec 1899.
 
     Z = RataDie + 306;
     H = 100*Z - 25;
@@ -181,7 +181,7 @@ bool IBPP::dtoi (int date, int *y, int *m, int *d)
     if (m != nullptr) *m = static_cast<int>(month);
     if (d != nullptr) *d = static_cast<int>(day);
 
-	return true;
+    return true;
 }
 
 //	Take a date from its components year, month, day and convert it to the
@@ -190,20 +190,20 @@ bool IBPP::dtoi (int date, int *y, int *m, int *d)
 bool IBPP::itod (int *pdate, int year, int month, int day)
 {
     int RataDie, result;
-	int y, m, d;
+    int y, m, d;
 
-	d = day;	m = month;		y = year;
+    d = day;	m = month;		y = year;
     if (m < 3) { m += 12; y -= 1; }
     RataDie = d + (153*m - 457) / 5 + 365*y + y/4 - y/100 + y/400 - 306;
 
-	result = RataDie - ibpp_internals::consts::Dec31_1899;   // Because IBPP sets the '0' on 31 Dec 1899
+    result = RataDie - ibpp_internals::consts::Dec31_1899;   // Because IBPP sets the '0' on 31 Dec 1899
 
-	// Validity control
-	if (result < IBPP::MinDate || result > IBPP::MaxDate)
-		return false;
+    // Validity control
+    if (result < IBPP::MinDate || result > IBPP::MaxDate)
+        return false;
 
-	*pdate = result;
-	return true;
+    *pdate = result;
+    return true;
 }
 
 //	Eof

@@ -45,117 +45,117 @@ using namespace ibpp_internals;
 
 void ArrayImpl::Describe(const std::string& table, const std::string& column)
 {
-	//if (mIdAssigned)
-	//	throw LogicExceptionImpl("Array::Lookup", _("Array already in use."));
+    //if (mIdAssigned)
+    //	throw LogicExceptionImpl("Array::Lookup", _("Array already in use."));
     if (mDatabase == nullptr)
-		throw LogicExceptionImpl("Array::Lookup", _("No Database is attached."));
+        throw LogicExceptionImpl("Array::Lookup", _("No Database is attached."));
     if (mTransaction == nullptr)
-		throw LogicExceptionImpl("Array::Lookup", _("No Transaction is attached."));
+        throw LogicExceptionImpl("Array::Lookup", _("No Transaction is attached."));
 
-	ResetId();	// Re-use this array object if was previously assigned
+    ResetId();	// Re-use this array object if was previously assigned
 
-	IBS status;
-	(*gds.Call()->m_array_lookup_bounds)(status.Self(), mDatabase->GetHandlePtr(),
-		mTransaction->GetHandlePtr(), const_cast<char*>(table.c_str()),
-			const_cast<char*>(column.c_str()), &mDesc);
-	if (status.Errors())
-		throw SQLExceptionImpl(status, "Array::Lookup",
-			_("isc_array_lookup_bounds failed."));
+    IBS status;
+    (*gds.Call()->m_array_lookup_bounds)(status.Self(), mDatabase->GetHandlePtr(),
+                                         mTransaction->GetHandlePtr(), const_cast<char*>(table.c_str()),
+                                         const_cast<char*>(column.c_str()), &mDesc);
+    if (status.Errors())
+        throw SQLExceptionImpl(status, "Array::Lookup",
+                               _("isc_array_lookup_bounds failed."));
 
-	AllocArrayBuffer();
+    AllocArrayBuffer();
 
-	mDescribed = true;
+    mDescribed = true;
 }
 
 void ArrayImpl::SetBounds(int dim, int low, int high)
 {
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::SetBounds", _("Array description not set."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::SetBounds", _("Array description not set."));
     if (mDatabase == nullptr)
-		throw LogicExceptionImpl("Array::SetBounds", _("No Database is attached."));
+        throw LogicExceptionImpl("Array::SetBounds", _("No Database is attached."));
     if (mTransaction == nullptr)
-		throw LogicExceptionImpl("Array::SetBounds", _("No Transaction is attached."));
-	if (dim < 0 || dim > mDesc.array_desc_dimensions-1)
-		throw LogicExceptionImpl("Array::SetBounds", _("Invalid dimension."));
-	if (low > high ||
-		low < mDesc.array_desc_bounds[dim].array_bound_lower ||
-		low > mDesc.array_desc_bounds[dim].array_bound_upper ||
-		high > mDesc.array_desc_bounds[dim].array_bound_upper ||
-		high < mDesc.array_desc_bounds[dim].array_bound_lower)
-		throw LogicExceptionImpl("Array::SetBounds",
-			_("Invalid bounds. You can only narrow the bounds."));
+        throw LogicExceptionImpl("Array::SetBounds", _("No Transaction is attached."));
+    if (dim < 0 || dim > mDesc.array_desc_dimensions-1)
+        throw LogicExceptionImpl("Array::SetBounds", _("Invalid dimension."));
+    if (low > high ||
+            low < mDesc.array_desc_bounds[dim].array_bound_lower ||
+            low > mDesc.array_desc_bounds[dim].array_bound_upper ||
+            high > mDesc.array_desc_bounds[dim].array_bound_upper ||
+            high < mDesc.array_desc_bounds[dim].array_bound_lower)
+        throw LogicExceptionImpl("Array::SetBounds",
+                                 _("Invalid bounds. You can only narrow the bounds."));
 
-	mDesc.array_desc_bounds[dim].array_bound_lower = short(low);
-	mDesc.array_desc_bounds[dim].array_bound_upper = short(high);
+    mDesc.array_desc_bounds[dim].array_bound_lower = short(low);
+    mDesc.array_desc_bounds[dim].array_bound_upper = short(high);
 
-	AllocArrayBuffer();
+    AllocArrayBuffer();
 }
 
 IBPP::SDT ArrayImpl::ElementType()
 {
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::ElementType",
-			_("Array description not set."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::ElementType",
+                                 _("Array description not set."));
 
-	IBPP::SDT value;
-	switch (mDesc.array_desc_dtype)
-	{
-		case blr_text :			value = IBPP::sdString;		break;
-		case blr_varying : 		value = IBPP::sdString;		break;
-		case blr_cstring : 		value = IBPP::sdString;		break;
-		case blr_short :		value = IBPP::sdSmallint;	break;
-		case blr_long :			value = IBPP::sdInteger;	break;
-		case blr_int64 :		value = IBPP::sdLargeint;	break;
-		case blr_float :		value = IBPP::sdFloat;		break;
-		case blr_double :		value = IBPP::sdDouble;		break;
-		case blr_timestamp :	value = IBPP::sdTimestamp;	break;
-		case blr_sql_date :		value = IBPP::sdDate;		break;
-		case blr_sql_time :		value = IBPP::sdTime;		break;
-		default : throw LogicExceptionImpl("Array::ElementType",
-						_("Found an unknown sqltype !"));
-	}
+    IBPP::SDT value;
+    switch (mDesc.array_desc_dtype)
+    {
+    case blr_text :			value = IBPP::sdString;		break;
+    case blr_varying : 		value = IBPP::sdString;		break;
+    case blr_cstring : 		value = IBPP::sdString;		break;
+    case blr_short :		value = IBPP::sdSmallint;	break;
+    case blr_long :			value = IBPP::sdInteger;	break;
+    case blr_int64 :		value = IBPP::sdLargeint;	break;
+    case blr_float :		value = IBPP::sdFloat;		break;
+    case blr_double :		value = IBPP::sdDouble;		break;
+    case blr_timestamp :	value = IBPP::sdTimestamp;	break;
+    case blr_sql_date :		value = IBPP::sdDate;		break;
+    case blr_sql_time :		value = IBPP::sdTime;		break;
+    default : throw LogicExceptionImpl("Array::ElementType",
+                                       _("Found an unknown sqltype !"));
+    }
 
-	return value;
+    return value;
 }
 
 int ArrayImpl::ElementSize()
 {
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::ElementSize",
-			_("Array description not set."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::ElementSize",
+                                 _("Array description not set."));
 
-	return mDesc.array_desc_length;
+    return mDesc.array_desc_length;
 }
 
 int ArrayImpl::ElementScale()
 {
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::ElementScale",
-			_("Array description not set."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::ElementScale",
+                                 _("Array description not set."));
 
-	return mDesc.array_desc_scale;
+    return mDesc.array_desc_scale;
 }
 
 int ArrayImpl::Dimensions()
 {
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::Dimensions",
-			_("Array description not set."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::Dimensions",
+                                 _("Array description not set."));
 
-	return mDesc.array_desc_dimensions;
+    return mDesc.array_desc_dimensions;
 }
 
 void ArrayImpl::Bounds(int dim, int* low, int* high)
 {
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::Bounds", _("Array description not set."));
-	if (dim < 0 || dim > mDesc.array_desc_dimensions-1)
-		throw LogicExceptionImpl("Array::Bounds", _("Invalid dimension."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::Bounds", _("Array description not set."));
+    if (dim < 0 || dim > mDesc.array_desc_dimensions-1)
+        throw LogicExceptionImpl("Array::Bounds", _("Invalid dimension."));
     if (low == nullptr || high == nullptr)
-		throw LogicExceptionImpl("Array::Bounds", _("Null reference detected."));
+        throw LogicExceptionImpl("Array::Bounds", _("Null reference detected."));
 
-	*low =  mDesc.array_desc_bounds[dim].array_bound_lower;
-	*high = mDesc.array_desc_bounds[dim].array_bound_upper;
+    *low =  mDesc.array_desc_bounds[dim].array_bound_lower;
+    *high = mDesc.array_desc_bounds[dim].array_bound_upper;
 }
 
 /*
@@ -192,819 +192,819 @@ We have no idea if this is fixed or not in Interbase 6.5 though.
 
 void ArrayImpl::ReadTo(IBPP::ADT adtype, void* data, int datacount)
 {
-	if (! mIdAssigned)
-		throw LogicExceptionImpl("Array::ReadTo", _("Array Id not read from column."));
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::ReadTo", _("Array description not set."));
+    if (! mIdAssigned)
+        throw LogicExceptionImpl("Array::ReadTo", _("Array Id not read from column."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::ReadTo", _("Array description not set."));
     if (mDatabase == nullptr)
-		throw LogicExceptionImpl("Array::ReadTo", _("No Database is attached."));
+        throw LogicExceptionImpl("Array::ReadTo", _("No Database is attached."));
     if (mTransaction == nullptr)
-		throw LogicExceptionImpl("Array::ReadTo", _("No Transaction is attached."));
-	if (datacount != mElemCount)
-		throw LogicExceptionImpl("Array::ReadTo", _("Wrong count of array elements"));
+        throw LogicExceptionImpl("Array::ReadTo", _("No Transaction is attached."));
+    if (datacount != mElemCount)
+        throw LogicExceptionImpl("Array::ReadTo", _("Wrong count of array elements"));
 
-	IBS status;
-	ISC_LONG lenbuf = mBufferSize;
-	(*gds.Call()->m_array_get_slice)(status.Self(), mDatabase->GetHandlePtr(),
-		mTransaction->GetHandlePtr(), &mId, &mDesc, mBuffer, &lenbuf);
-	if (status.Errors())
-		throw SQLExceptionImpl(status, "Array::ReadTo", _("isc_array_get_slice failed."));
-	if (lenbuf != mBufferSize)
-		throw SQLExceptionImpl(status, "Array::ReadTo", _("Internal buffer size discrepancy."));
+    IBS status;
+    ISC_LONG lenbuf = mBufferSize;
+    (*gds.Call()->m_array_get_slice)(status.Self(), mDatabase->GetHandlePtr(),
+                                     mTransaction->GetHandlePtr(), &mId, &mDesc, mBuffer, &lenbuf);
+    if (status.Errors())
+        throw SQLExceptionImpl(status, "Array::ReadTo", _("isc_array_get_slice failed."));
+    if (lenbuf != mBufferSize)
+        throw SQLExceptionImpl(status, "Array::ReadTo", _("Internal buffer size discrepancy."));
 
-	// Now, convert the types and copy values to the user array...
-	int len;
+    // Now, convert the types and copy values to the user array...
+    int len;
     char* src = reinterpret_cast<char*>(mBuffer);
     char* dst = reinterpret_cast<char*>(data);
 
-	switch (mDesc.array_desc_dtype)
-	{
-		case blr_text :
-			if (adtype == IBPP::adString)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-					strncpy(dst, src, mElemSize);
-					dst[mElemSize] = '\0';
-					src += mElemSize;
-					dst += (mElemSize + 1);
-				}
-			}
-			else if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-					if (*src == 't' || *src == 'T' || *src == 'y' || *src == 'Y' ||	*src == '1')
-                        *reinterpret_cast<bool*>(dst) = true;
-                    else *reinterpret_cast<bool*>(dst) = false;
-					src += mElemSize;
-					dst += sizeof(bool);
-				}
-			}
-			else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
-			break;
+    switch (mDesc.array_desc_dtype)
+    {
+    case blr_text :
+        if (adtype == IBPP::adString)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                strncpy(dst, src, mElemSize);
+                dst[mElemSize] = '\0';
+                src += mElemSize;
+                dst += (mElemSize + 1);
+            }
+        }
+        else if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*src == 't' || *src == 'T' || *src == 'y' || *src == 'Y' ||	*src == '1')
+                    *reinterpret_cast<bool*>(dst) = true;
+                else *reinterpret_cast<bool*>(dst) = false;
+                src += mElemSize;
+                dst += sizeof(bool);
+            }
+        }
+        else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
+        break;
 
-		case blr_varying :
-			if (adtype == IBPP::adString)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    len = static_cast<int>(strlen(src));
-					if (len > mElemSize-2) len = mElemSize-2;
-					strncpy(dst, src, len);
-					dst[len] = '\0';
-					src += mElemSize;
-					dst += (mElemSize - 2 + 1);
-				}
-			}
-			else if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-					if (*src == 't' || *src == 'T' || *src == 'y' || *src == 'Y' ||	*src == '1')
-                        *reinterpret_cast<bool*>(dst) = true;
-                    else *reinterpret_cast<bool*>(dst) = false;
-					src += mElemSize;
-					dst += sizeof(bool);
-				}
-			}
-			else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
-			break;
+    case blr_varying :
+        if (adtype == IBPP::adString)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                len = static_cast<int>(strlen(src));
+                if (len > mElemSize-2) len = mElemSize-2;
+                strncpy(dst, src, len);
+                dst[len] = '\0';
+                src += mElemSize;
+                dst += (mElemSize - 2 + 1);
+            }
+        }
+        else if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*src == 't' || *src == 'T' || *src == 'y' || *src == 'Y' ||	*src == '1')
+                    *reinterpret_cast<bool*>(dst) = true;
+                else *reinterpret_cast<bool*>(dst) = false;
+                src += mElemSize;
+                dst += sizeof(bool);
+            }
+        }
+        else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
+        break;
 
-		case blr_short :
-			if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<bool*>(dst) = *reinterpret_cast<short*>(src) != 0;
-					src += mElemSize;
-					dst += sizeof(bool);
-				}
-			}
-			else if (adtype == IBPP::adInt16)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<short*>(dst) = *reinterpret_cast<short*>(src);
-					src += mElemSize;
-					dst += sizeof(short);
-				}
-			}
-			else if (adtype == IBPP::adInt32)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int*>(dst) = static_cast<int>(*reinterpret_cast<short*>(src));
-					src += mElemSize;
-					dst += sizeof(int);
-				}
-			}
-			else if (adtype == IBPP::adInt64)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(*reinterpret_cast<short*>(src));
-					src += mElemSize;
-					dst += sizeof(int64_t);
-				}
-			}
-			else if (adtype == IBPP::adFloat)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double divisor = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<float*>(dst) = static_cast<float>(*reinterpret_cast<short*>(src) / divisor);
-					src += mElemSize;
-					dst += sizeof(float);
-				}
-			}
-			else if (adtype == IBPP::adDouble)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double divisor = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<short*>(src) / divisor);
-					src += mElemSize;
-					dst += sizeof(double);
-				}
-			}
-			else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
-			break;
+    case blr_short :
+        if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<bool*>(dst) = *reinterpret_cast<short*>(src) != 0;
+                src += mElemSize;
+                dst += sizeof(bool);
+            }
+        }
+        else if (adtype == IBPP::adInt16)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<short*>(dst) = *reinterpret_cast<short*>(src);
+                src += mElemSize;
+                dst += sizeof(short);
+            }
+        }
+        else if (adtype == IBPP::adInt32)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int*>(dst) = static_cast<int>(*reinterpret_cast<short*>(src));
+                src += mElemSize;
+                dst += sizeof(int);
+            }
+        }
+        else if (adtype == IBPP::adInt64)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(*reinterpret_cast<short*>(src));
+                src += mElemSize;
+                dst += sizeof(int64_t);
+            }
+        }
+        else if (adtype == IBPP::adFloat)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double divisor = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<float*>(dst) = static_cast<float>(*reinterpret_cast<short*>(src) / divisor);
+                src += mElemSize;
+                dst += sizeof(float);
+            }
+        }
+        else if (adtype == IBPP::adDouble)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double divisor = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<short*>(src) / divisor);
+                src += mElemSize;
+                dst += sizeof(double);
+            }
+        }
+        else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
+        break;
 
-		case blr_long :
-			if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<bool*>(dst) = *reinterpret_cast<long*>(src) != 0;
-					src += mElemSize;
-					dst += sizeof(bool);
-				}
-			}
-			else if (adtype == IBPP::adInt16)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    if (*reinterpret_cast<long*>(src) < consts::min16 || *reinterpret_cast<long*>(src) > consts::max16)
-						throw LogicExceptionImpl("Array::ReadTo",
-							_("Out of range numeric conversion !"));
-                    *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<long*>(src));
-					src += mElemSize;
-					dst += sizeof(short);
-				}
-			}
-			else if (adtype == IBPP::adInt32)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<long*>(src);
-					src += mElemSize;
-					dst += sizeof(long);
-				}
-			}
-			else if (adtype == IBPP::adInt64)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(*reinterpret_cast<long*>(src));
-					src += mElemSize;
-					dst += sizeof(int64_t);
-				}
-			}
-			else if (adtype == IBPP::adFloat)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double divisor = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<float*>(dst) = static_cast<float>((*reinterpret_cast<long*>(src) / divisor));
-					src += mElemSize;
-					dst += sizeof(float);
-				}
-			}
-			else if (adtype == IBPP::adDouble)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double divisor = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<long*>(src) / divisor);
-					src += mElemSize;
-					dst += sizeof(double);
-				}
-			}
-			else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
-			break;
+    case blr_long :
+        if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<bool*>(dst) = *reinterpret_cast<long*>(src) != 0;
+                src += mElemSize;
+                dst += sizeof(bool);
+            }
+        }
+        else if (adtype == IBPP::adInt16)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*reinterpret_cast<long*>(src) < consts::min16 || *reinterpret_cast<long*>(src) > consts::max16)
+                    throw LogicExceptionImpl("Array::ReadTo",
+                                             _("Out of range numeric conversion !"));
+                *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<long*>(src));
+                src += mElemSize;
+                dst += sizeof(short);
+            }
+        }
+        else if (adtype == IBPP::adInt32)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<long*>(dst) = *reinterpret_cast<long*>(src);
+                src += mElemSize;
+                dst += sizeof(long);
+            }
+        }
+        else if (adtype == IBPP::adInt64)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(*reinterpret_cast<long*>(src));
+                src += mElemSize;
+                dst += sizeof(int64_t);
+            }
+        }
+        else if (adtype == IBPP::adFloat)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double divisor = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<float*>(dst) = static_cast<float>((*reinterpret_cast<long*>(src) / divisor));
+                src += mElemSize;
+                dst += sizeof(float);
+            }
+        }
+        else if (adtype == IBPP::adDouble)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double divisor = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<long*>(src) / divisor);
+                src += mElemSize;
+                dst += sizeof(double);
+            }
+        }
+        else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
+        break;
 
-		case blr_int64 :
-			if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<bool*>(dst) = *reinterpret_cast<int64_t*>(src) != 0;
-					src += mElemSize;
-					dst += sizeof(bool);
-				}
-			}
-			else if (adtype == IBPP::adInt16)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    if (*reinterpret_cast<int64_t*>(src) < consts::min16 || *reinterpret_cast<int64_t*>(src) > consts::max16)
-						throw LogicExceptionImpl("Array::ReadTo",
-							_("Out of range numeric conversion !"));
-                    *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<int64_t*>(src));
-					src += mElemSize;
-					dst += sizeof(short);
-				}
-			}
-			else if (adtype == IBPP::adInt32)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    if (*reinterpret_cast<int64_t*>(src) < consts::min32 || *reinterpret_cast<int64_t*>(src) > consts::max32)
-						throw LogicExceptionImpl("Array::ReadTo",
-							_("Out of range numeric conversion !"));
-                    *reinterpret_cast<long*>(dst) = static_cast<long>(*reinterpret_cast<int64_t*>(src));
-					src += mElemSize;
-					dst += sizeof(long);
-				}
-			}
-			else if (adtype == IBPP::adInt64)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<int64_t*>(src);
-					src += mElemSize;
-					dst += sizeof(int64_t);
-				}
-			}
-			else if (adtype == IBPP::adFloat)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double divisor = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<float*>(dst) = static_cast<float>(*reinterpret_cast<int64_t*>(src) / divisor);
-					src += mElemSize;
-					dst += sizeof(float);
-				}
-			}
-			else if (adtype == IBPP::adDouble)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double divisor = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<int64_t*>(src) / divisor);
-					src += mElemSize;
-					dst += sizeof(double);
-				}
-			}
-			else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
-			break;
+    case blr_int64 :
+        if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<bool*>(dst) = *reinterpret_cast<int64_t*>(src) != 0;
+                src += mElemSize;
+                dst += sizeof(bool);
+            }
+        }
+        else if (adtype == IBPP::adInt16)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*reinterpret_cast<int64_t*>(src) < consts::min16 || *reinterpret_cast<int64_t*>(src) > consts::max16)
+                    throw LogicExceptionImpl("Array::ReadTo",
+                                             _("Out of range numeric conversion !"));
+                *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<int64_t*>(src));
+                src += mElemSize;
+                dst += sizeof(short);
+            }
+        }
+        else if (adtype == IBPP::adInt32)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*reinterpret_cast<int64_t*>(src) < consts::min32 || *reinterpret_cast<int64_t*>(src) > consts::max32)
+                    throw LogicExceptionImpl("Array::ReadTo",
+                                             _("Out of range numeric conversion !"));
+                *reinterpret_cast<long*>(dst) = static_cast<long>(*reinterpret_cast<int64_t*>(src));
+                src += mElemSize;
+                dst += sizeof(long);
+            }
+        }
+        else if (adtype == IBPP::adInt64)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<int64_t*>(src);
+                src += mElemSize;
+                dst += sizeof(int64_t);
+            }
+        }
+        else if (adtype == IBPP::adFloat)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double divisor = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<float*>(dst) = static_cast<float>(*reinterpret_cast<int64_t*>(src) / divisor);
+                src += mElemSize;
+                dst += sizeof(float);
+            }
+        }
+        else if (adtype == IBPP::adDouble)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double divisor = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<int64_t*>(src) / divisor);
+                src += mElemSize;
+                dst += sizeof(double);
+            }
+        }
+        else throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
+        break;
 
-		case blr_float :
-			if (adtype != IBPP::adFloat || mDesc.array_desc_scale != 0)
-				throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                *reinterpret_cast<float*>(dst) = *reinterpret_cast<float*>(src);
-				src += mElemSize;
-				dst += sizeof(float);
-			}
-			break;
+    case blr_float :
+        if (adtype != IBPP::adFloat || mDesc.array_desc_scale != 0)
+            throw LogicExceptionImpl("Array::ReadTo", _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            *reinterpret_cast<float*>(dst) = *reinterpret_cast<float*>(src);
+            src += mElemSize;
+            dst += sizeof(float);
+        }
+        break;
 
-		case blr_double :
-			if (adtype != IBPP::adDouble) throw LogicExceptionImpl("Array::ReadTo",
-										_("Incompatible types."));
-			if (mDesc.array_desc_scale != 0)
-			{
-				// Round to scale of NUMERIC(x,y)
-				double divisor = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<double*>(src) / divisor);
-					src += mElemSize;
-					dst += sizeof(double);
-				}
-			}
-			else
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<double*>(dst) = *reinterpret_cast<double*>(src);
-					src += mElemSize;
-					dst += sizeof(double);
-				}
-			}
-			break;
+    case blr_double :
+        if (adtype != IBPP::adDouble) throw LogicExceptionImpl("Array::ReadTo",
+                                                               _("Incompatible types."));
+        if (mDesc.array_desc_scale != 0)
+        {
+            // Round to scale of NUMERIC(x,y)
+            double divisor = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<double*>(dst) = static_cast<double>(*reinterpret_cast<double*>(src) / divisor);
+                src += mElemSize;
+                dst += sizeof(double);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<double*>(dst) = *reinterpret_cast<double*>(src);
+                src += mElemSize;
+                dst += sizeof(double);
+            }
+        }
+        break;
 
-		case blr_timestamp :
-			if (adtype != IBPP::adTimestamp) throw LogicExceptionImpl("Array::ReadTo",
-												_("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                decodeTimestamp(*reinterpret_cast<IBPP::Timestamp*>(dst), *reinterpret_cast<ISC_TIMESTAMP*>(src));
-				src += mElemSize;
-				dst += sizeof(IBPP::Timestamp);
-			}
-			break;
+    case blr_timestamp :
+        if (adtype != IBPP::adTimestamp) throw LogicExceptionImpl("Array::ReadTo",
+                                                                  _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            decodeTimestamp(*reinterpret_cast<IBPP::Timestamp*>(dst), *reinterpret_cast<ISC_TIMESTAMP*>(src));
+            src += mElemSize;
+            dst += sizeof(IBPP::Timestamp);
+        }
+        break;
 
-		case blr_sql_date :
-			if (adtype != IBPP::adDate) throw LogicExceptionImpl("Array::ReadTo",
-												_("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                decodeDate(*reinterpret_cast<IBPP::Date*>(dst), *reinterpret_cast<ISC_DATE*>(src));
-				src += mElemSize;
-				dst += sizeof(IBPP::Date);
-			}
-			break;
+    case blr_sql_date :
+        if (adtype != IBPP::adDate) throw LogicExceptionImpl("Array::ReadTo",
+                                                             _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            decodeDate(*reinterpret_cast<IBPP::Date*>(dst), *reinterpret_cast<ISC_DATE*>(src));
+            src += mElemSize;
+            dst += sizeof(IBPP::Date);
+        }
+        break;
 
-		case blr_sql_time :
-			if (adtype != IBPP::adTime) throw LogicExceptionImpl("Array::ReadTo",
-												_("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                decodeTime(*reinterpret_cast<IBPP::Time*>(dst), *reinterpret_cast<ISC_TIME*>(src));
-				src += mElemSize;
-				dst += sizeof(IBPP::Time);
-			}
-			break;
+    case blr_sql_time :
+        if (adtype != IBPP::adTime) throw LogicExceptionImpl("Array::ReadTo",
+                                                             _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            decodeTime(*reinterpret_cast<IBPP::Time*>(dst), *reinterpret_cast<ISC_TIME*>(src));
+            src += mElemSize;
+            dst += sizeof(IBPP::Time);
+        }
+        break;
 
-		default :
-			throw LogicExceptionImpl("Array::ReadTo", _("Unknown sql type."));
-	}
+    default :
+        throw LogicExceptionImpl("Array::ReadTo", _("Unknown sql type."));
+    }
 }
 
 void ArrayImpl::WriteFrom(IBPP::ADT adtype, const void* data, int datacount)
 {
-	if (! mDescribed)
-		throw LogicExceptionImpl("Array::WriteFrom", _("Array description not set."));
+    if (! mDescribed)
+        throw LogicExceptionImpl("Array::WriteFrom", _("Array description not set."));
     if (mDatabase == nullptr)
-		throw LogicExceptionImpl("Array::WriteFrom", _("No Database is attached."));
+        throw LogicExceptionImpl("Array::WriteFrom", _("No Database is attached."));
     if (mTransaction == nullptr)
-		throw LogicExceptionImpl("Array::WriteFrom", _("No Transaction is attached."));
-	if (datacount != mElemCount)
-		throw LogicExceptionImpl("Array::ReadTo", _("Wrong count of array elements"));
+        throw LogicExceptionImpl("Array::WriteFrom", _("No Transaction is attached."));
+    if (datacount != mElemCount)
+        throw LogicExceptionImpl("Array::ReadTo", _("Wrong count of array elements"));
 
-	// Read user data and convert types to the mBuffer
-	int len;
+    // Read user data and convert types to the mBuffer
+    int len;
     char* src = reinterpret_cast<char*>(malloc(sizeof(data)));
     char* dst = reinterpret_cast<char*>(mBuffer);
 
     switch (mDesc.array_desc_dtype)
-	{
-		case blr_text :
-			if (adtype == IBPP::adString)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    len = static_cast<int>(strlen(src));
-					if (len > mElemSize) len = mElemSize;
-					strncpy(dst, src, len);
-					while (len < mElemSize) dst[len++] = ' ';
-					src += (mElemSize + 1);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *dst = *reinterpret_cast<bool*>(src) ? 'T' : 'F';
-					len = 1;
-					while (len < mElemSize) dst[len++] = ' ';
-					src += sizeof(bool);
-					dst += mElemSize;
-				}
-			}
-			else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
-			break;
+    {
+    case blr_text :
+        if (adtype == IBPP::adString)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                len = static_cast<int>(strlen(src));
+                if (len > mElemSize) len = mElemSize;
+                strncpy(dst, src, len);
+                while (len < mElemSize) dst[len++] = ' ';
+                src += (mElemSize + 1);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *dst = *reinterpret_cast<bool*>(src) ? 'T' : 'F';
+                len = 1;
+                while (len < mElemSize) dst[len++] = ' ';
+                src += sizeof(bool);
+                dst += mElemSize;
+            }
+        }
+        else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
+        break;
 
-		case blr_varying :
-			if (adtype == IBPP::adString)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    len = static_cast<int>(strlen(src));
-					if (len > mElemSize-2) len = mElemSize-2;
-					strncpy(dst, src, len);
-					dst[len] = '\0';
-					src += (mElemSize - 2 + 1);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<short*>(dst) = static_cast<short>(1);
-                    dst[2] = *reinterpret_cast<bool*>(src) ? 'T' : 'F';
-					src += sizeof(bool);
-					dst += mElemSize;
-				}
-			}
-			else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
-			break;
+    case blr_varying :
+        if (adtype == IBPP::adString)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                len = static_cast<int>(strlen(src));
+                if (len > mElemSize-2) len = mElemSize-2;
+                strncpy(dst, src, len);
+                dst[len] = '\0';
+                src += (mElemSize - 2 + 1);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<short*>(dst) = static_cast<short>(1);
+                dst[2] = *reinterpret_cast<bool*>(src) ? 'T' : 'F';
+                src += sizeof(bool);
+                dst += mElemSize;
+            }
+        }
+        else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
+        break;
 
-		case blr_short :
-			if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<bool*>(src) ? 1 : 0);
-					src += sizeof(bool);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt16)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<short*>(dst) = *reinterpret_cast<short*>(src);
-					src += sizeof(short);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt32)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    if (*reinterpret_cast<long*>(src) < consts::min16 || *reinterpret_cast<long*>(src) > consts::max16)
-						throw LogicExceptionImpl("Array::WriteFrom",
-							_("Out of range numeric conversion !"));
-                    *reinterpret_cast<short*>(dst) = static_cast<short>(*reinterpret_cast<int*>(src));
-					src += sizeof(int);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt64)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    if (*reinterpret_cast<int64_t*>(src) < consts::min16 || *reinterpret_cast<int64_t*>(src) > consts::max16)
-						throw LogicExceptionImpl("Array::WriteFrom",
-							_("Out of range numeric conversion !"));
-                    *reinterpret_cast<short*>(dst) = static_cast<short>(*reinterpret_cast<int64_t*>(src));
-					src += sizeof(int64_t);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adFloat)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double multiplier = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<short*>(dst) = static_cast<short>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
-					src += sizeof(float);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adDouble)
-			{
-				// This SQL_SHORT is a NUMERIC(x,y), scale it !
-				double multiplier = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<short*>(dst) = static_cast<short>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
-					src += sizeof(double);
-					dst += mElemSize;
-				}
-			}
-			else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
-			break;
+    case blr_short :
+        if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<short*>(dst) = short(*reinterpret_cast<bool*>(src) ? 1 : 0);
+                src += sizeof(bool);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt16)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<short*>(dst) = *reinterpret_cast<short*>(src);
+                src += sizeof(short);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt32)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*reinterpret_cast<long*>(src) < consts::min16 || *reinterpret_cast<long*>(src) > consts::max16)
+                    throw LogicExceptionImpl("Array::WriteFrom",
+                                             _("Out of range numeric conversion !"));
+                *reinterpret_cast<short*>(dst) = static_cast<short>(*reinterpret_cast<int*>(src));
+                src += sizeof(int);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt64)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*reinterpret_cast<int64_t*>(src) < consts::min16 || *reinterpret_cast<int64_t*>(src) > consts::max16)
+                    throw LogicExceptionImpl("Array::WriteFrom",
+                                             _("Out of range numeric conversion !"));
+                *reinterpret_cast<short*>(dst) = static_cast<short>(*reinterpret_cast<int64_t*>(src));
+                src += sizeof(int64_t);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adFloat)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double multiplier = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<short*>(dst) = static_cast<short>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
+                src += sizeof(float);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adDouble)
+        {
+            // This SQL_SHORT is a NUMERIC(x,y), scale it !
+            double multiplier = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<short*>(dst) = static_cast<short>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
+                src += sizeof(double);
+                dst += mElemSize;
+            }
+        }
+        else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
+        break;
 
-		case blr_long :
-			if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<bool*>(src) ? 1 : 0;
-					src += sizeof(bool);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt16)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<short*>(src);
-					src += sizeof(short);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt32)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<long*>(dst) = *reinterpret_cast<long*>(src);
-					src += sizeof(long);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt64)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    if (*reinterpret_cast<int64_t*>(src) < consts::min32 || *reinterpret_cast<int64_t*>(src) > consts::max32)
-						throw LogicExceptionImpl("Array::WriteFrom",
-							_("Out of range numeric conversion !"));
-                    *reinterpret_cast<long*>(dst) = static_cast<long>(*reinterpret_cast<int64_t*>(src));
-					src += sizeof(int64_t);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adFloat)
-			{
-				// This SQL_INT is a NUMERIC(x,y), scale it !
-				double multiplier = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<long*>(dst) = static_cast<long>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
-					src += sizeof(float);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adDouble)
-			{
-				// This SQL_INT is a NUMERIC(x,y), scale it !
-				double multiplier = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<long*>(dst) = static_cast<long>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
-					src += sizeof(double);
-					dst += mElemSize;
-				}
-			}
-			else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
-			break;
+    case blr_long :
+        if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<long*>(dst) = *reinterpret_cast<bool*>(src) ? 1 : 0;
+                src += sizeof(bool);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt16)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<long*>(dst) = *reinterpret_cast<short*>(src);
+                src += sizeof(short);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt32)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<long*>(dst) = *reinterpret_cast<long*>(src);
+                src += sizeof(long);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt64)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                if (*reinterpret_cast<int64_t*>(src) < consts::min32 || *reinterpret_cast<int64_t*>(src) > consts::max32)
+                    throw LogicExceptionImpl("Array::WriteFrom",
+                                             _("Out of range numeric conversion !"));
+                *reinterpret_cast<long*>(dst) = static_cast<long>(*reinterpret_cast<int64_t*>(src));
+                src += sizeof(int64_t);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adFloat)
+        {
+            // This SQL_INT is a NUMERIC(x,y), scale it !
+            double multiplier = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<long*>(dst) = static_cast<long>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
+                src += sizeof(float);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adDouble)
+        {
+            // This SQL_INT is a NUMERIC(x,y), scale it !
+            double multiplier = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<long*>(dst) = static_cast<long>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
+                src += sizeof(double);
+                dst += mElemSize;
+            }
+        }
+        else throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
+        break;
 
-		case blr_int64 :
-			if (adtype == IBPP::adBool)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<bool*>(src) ? 1 : 0;
-					src += sizeof(bool);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt16)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<short*>(src);
-					src += sizeof(short);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt32)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<long*>(src);
-					src += sizeof(long);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adInt64)
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<int64_t*>(src);
-					src += sizeof(int64_t);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adFloat)
-			{
-				// This SQL_INT is a NUMERIC(x,y), scale it !
-				double multiplier = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) =
+    case blr_int64 :
+        if (adtype == IBPP::adBool)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<bool*>(src) ? 1 : 0;
+                src += sizeof(bool);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt16)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<short*>(src);
+                src += sizeof(short);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt32)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<long*>(src);
+                src += sizeof(long);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adInt64)
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = *reinterpret_cast<int64_t*>(src);
+                src += sizeof(int64_t);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adFloat)
+        {
+            // This SQL_INT is a NUMERIC(x,y), scale it !
+            double multiplier = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) =
                         static_cast<int64_t>(floor(*reinterpret_cast<float*>(src) * multiplier + 0.5));
-					src += sizeof(float);
-					dst += mElemSize;
-				}
-			}
-			else if (adtype == IBPP::adDouble)
-			{
-				// This SQL_INT is a NUMERIC(x,y), scale it !
-				double multiplier = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
-					src += sizeof(double);
-					dst += mElemSize;
-				}
-			}
-			else
-				throw LogicExceptionImpl("Array::WriteFrom",
-                    _("Incompatible types (blr_int64 and ADT %d)."), static_cast<int>(adtype));
-			break;
+                src += sizeof(float);
+                dst += mElemSize;
+            }
+        }
+        else if (adtype == IBPP::adDouble)
+        {
+            // This SQL_INT is a NUMERIC(x,y), scale it !
+            double multiplier = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<int64_t*>(dst) = static_cast<int64_t>(floor(*reinterpret_cast<double*>(src) * multiplier + 0.5));
+                src += sizeof(double);
+                dst += mElemSize;
+            }
+        }
+        else
+            throw LogicExceptionImpl("Array::WriteFrom",
+                                     _("Incompatible types (blr_int64 and ADT %d)."), static_cast<int>(adtype));
+        break;
 
-		case blr_float :
-			if (adtype != IBPP::adFloat || mDesc.array_desc_scale != 0)
-				throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                *reinterpret_cast<float*>(dst) = *reinterpret_cast<float*>(src);
-				src += sizeof(float);
-				dst += mElemSize;
-			}
-			break;
+    case blr_float :
+        if (adtype != IBPP::adFloat || mDesc.array_desc_scale != 0)
+            throw LogicExceptionImpl("Array::WriteFrom", _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            *reinterpret_cast<float*>(dst) = *reinterpret_cast<float*>(src);
+            src += sizeof(float);
+            dst += mElemSize;
+        }
+        break;
 
-		case blr_double :
-			if (adtype != IBPP::adDouble) throw LogicExceptionImpl("Array::WriteFrom",
-										_("Incompatible types."));
-			if (mDesc.array_desc_scale != 0)
-			{
-				// Round to scale of NUMERIC(x,y)
-				double multiplier = consts::dscales[-mDesc.array_desc_scale];
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<double*>(dst) = floor(*reinterpret_cast<double*>(src) * multiplier + 0.5) / multiplier;
-					src += sizeof(double);
-					dst += mElemSize;
-				}
-			}
-			else
-			{
-				for (int i = 0; i < mElemCount; i++)
-				{
-                    *reinterpret_cast<double*>(dst) = *reinterpret_cast<double*>(src);
-					src += sizeof(double);
-					dst += mElemSize;
-				}
-			}
-			break;
+    case blr_double :
+        if (adtype != IBPP::adDouble) throw LogicExceptionImpl("Array::WriteFrom",
+                                                               _("Incompatible types."));
+        if (mDesc.array_desc_scale != 0)
+        {
+            // Round to scale of NUMERIC(x,y)
+            double multiplier = consts::dscales[-mDesc.array_desc_scale];
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<double*>(dst) = floor(*reinterpret_cast<double*>(src) * multiplier + 0.5) / multiplier;
+                src += sizeof(double);
+                dst += mElemSize;
+            }
+        }
+        else
+        {
+            for (int i = 0; i < mElemCount; i++)
+            {
+                *reinterpret_cast<double*>(dst) = *reinterpret_cast<double*>(src);
+                src += sizeof(double);
+                dst += mElemSize;
+            }
+        }
+        break;
 
-		case blr_timestamp :
-			if (adtype != IBPP::adTimestamp) throw LogicExceptionImpl("Array::ReadTo",
-												_("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                encodeTimestamp(*reinterpret_cast<ISC_TIMESTAMP*>(dst), *reinterpret_cast<IBPP::Timestamp*>(src));
-				src += sizeof(IBPP::Timestamp);
-				dst += mElemSize;
-			}
-			break;
+    case blr_timestamp :
+        if (adtype != IBPP::adTimestamp) throw LogicExceptionImpl("Array::ReadTo",
+                                                                  _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            encodeTimestamp(*reinterpret_cast<ISC_TIMESTAMP*>(dst), *reinterpret_cast<IBPP::Timestamp*>(src));
+            src += sizeof(IBPP::Timestamp);
+            dst += mElemSize;
+        }
+        break;
 
-		case blr_sql_date :
-			if (adtype != IBPP::adDate) throw LogicExceptionImpl("Array::ReadTo",
-												_("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                encodeDate(*reinterpret_cast<ISC_DATE*>(dst), *reinterpret_cast<IBPP::Date*>(src));
-				src += sizeof(IBPP::Date);
-				dst += mElemSize;
-			}
-			break;
+    case blr_sql_date :
+        if (adtype != IBPP::adDate) throw LogicExceptionImpl("Array::ReadTo",
+                                                             _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            encodeDate(*reinterpret_cast<ISC_DATE*>(dst), *reinterpret_cast<IBPP::Date*>(src));
+            src += sizeof(IBPP::Date);
+            dst += mElemSize;
+        }
+        break;
 
-		case blr_sql_time :
-			if (adtype != IBPP::adTime) throw LogicExceptionImpl("Array::ReadTo",
-												_("Incompatible types."));
-			for (int i = 0; i < mElemCount; i++)
-			{
-                encodeTime(*reinterpret_cast<ISC_TIME*>(dst), *reinterpret_cast<IBPP::Time*>(src));
-				src += sizeof(IBPP::Time);
-				dst += mElemSize;
-			}
-			break;
+    case blr_sql_time :
+        if (adtype != IBPP::adTime) throw LogicExceptionImpl("Array::ReadTo",
+                                                             _("Incompatible types."));
+        for (int i = 0; i < mElemCount; i++)
+        {
+            encodeTime(*reinterpret_cast<ISC_TIME*>(dst), *reinterpret_cast<IBPP::Time*>(src));
+            src += sizeof(IBPP::Time);
+            dst += mElemSize;
+        }
+        break;
 
-		default :
-			throw LogicExceptionImpl("Array::WriteFrom", _("Unknown sql type."));
-	}
+    default :
+        throw LogicExceptionImpl("Array::WriteFrom", _("Unknown sql type."));
+    }
 
-	IBS status;
-	ISC_LONG lenbuf = mBufferSize;
-	(*gds.Call()->m_array_put_slice)(status.Self(), mDatabase->GetHandlePtr(),
-		mTransaction->GetHandlePtr(), &mId, &mDesc, mBuffer, &lenbuf);
-	if (status.Errors())
-		throw SQLExceptionImpl(status, "Array::WriteFrom", _("isc_array_put_slice failed."));
-	if (lenbuf != mBufferSize)
-		throw SQLExceptionImpl(status, "Array::WriteFrom", _("Internal buffer size discrepancy."));
+    IBS status;
+    ISC_LONG lenbuf = mBufferSize;
+    (*gds.Call()->m_array_put_slice)(status.Self(), mDatabase->GetHandlePtr(),
+                                     mTransaction->GetHandlePtr(), &mId, &mDesc, mBuffer, &lenbuf);
+    if (status.Errors())
+        throw SQLExceptionImpl(status, "Array::WriteFrom", _("isc_array_put_slice failed."));
+    if (lenbuf != mBufferSize)
+        throw SQLExceptionImpl(status, "Array::WriteFrom", _("Internal buffer size discrepancy."));
 }
 
 IBPP::Database ArrayImpl::DatabasePtr() const
 {
     if (mDatabase == nullptr) throw LogicExceptionImpl("Array::DatabasePtr",
-			_("No Database is attached."));
-	return mDatabase;
+                                                       _("No Database is attached."));
+    return mDatabase;
 }
 
 IBPP::Transaction ArrayImpl::TransactionPtr() const
 {
     if (mTransaction == nullptr) throw LogicExceptionImpl("Array::TransactionPtr",
-			_("No Transaction is attached."));
-	return mTransaction;
+                                                          _("No Transaction is attached."));
+    return mTransaction;
 }
 
 IBPP::IArray* ArrayImpl::AddRef()
 {
-	ASSERTION(mRefCount >= 0);
-	++mRefCount;
-	return this;
+    ASSERTION(mRefCount >= 0);
+    ++mRefCount;
+    return this;
 }
 
 void ArrayImpl::Release()
 {
-	// Release cannot throw, except in DEBUG builds on assertion
-	ASSERTION(mRefCount >= 0);
-	--mRefCount;
-	try { if (mRefCount <= 0) delete this; }
-		catch (...) { }
+    // Release cannot throw, except in DEBUG builds on assertion
+    ASSERTION(mRefCount >= 0);
+    --mRefCount;
+    try { if (mRefCount <= 0) delete this; }
+    catch (...) { }
 }
 
 //	(((((((( OBJECT INTERNAL METHODS ))))))))
 
 void ArrayImpl::Init()
 {
-	ResetId();
-	mDescribed = false;
+    ResetId();
+    mDescribed = false;
     mDatabase = nullptr;
     mTransaction = nullptr;
     mBuffer = nullptr;
-	mBufferSize = 0;
+    mBufferSize = 0;
 }
 
 void ArrayImpl::SetId(ISC_QUAD* quad)
 {
     if (quad == nullptr)
-		throw LogicExceptionImpl("ArrayImpl::SetId", _("Null Id reference detected."));
+        throw LogicExceptionImpl("ArrayImpl::SetId", _("Null Id reference detected."));
 
-	memcpy(&mId, quad, sizeof(mId));
-	mIdAssigned = true;
+    memcpy(&mId, quad, sizeof(mId));
+    mIdAssigned = true;
 }
 
 void ArrayImpl::GetId(ISC_QUAD* quad)
 {
     if (quad == nullptr)
-		throw LogicExceptionImpl("ArrayImpl::GetId", _("Null Id reference detected."));
+        throw LogicExceptionImpl("ArrayImpl::GetId", _("Null Id reference detected."));
 
-	memcpy(quad, &mId, sizeof(mId));
+    memcpy(quad, &mId, sizeof(mId));
 }
 
 void ArrayImpl::ResetId()
 {
-	memset(&mId, 0, sizeof(mId));
-	mIdAssigned = false;
+    memset(&mId, 0, sizeof(mId));
+    mIdAssigned = false;
 }
 
 void ArrayImpl::AllocArrayBuffer()
 {
-	// Clean previous buffer if any
+    // Clean previous buffer if any
     if (mBuffer != nullptr) delete [] reinterpret_cast<char*>(mBuffer);
     mBuffer = nullptr;
 
-	// Computes total number of elements in the array or slice
-	mElemCount = 1;
-	for (int i = 0; i < mDesc.array_desc_dimensions; i++)
-	{
-		mElemCount = mElemCount *
-			(mDesc.array_desc_bounds[i].array_bound_upper -
-				mDesc.array_desc_bounds[i].array_bound_lower + 1);
-	}
+    // Computes total number of elements in the array or slice
+    mElemCount = 1;
+    for (int i = 0; i < mDesc.array_desc_dimensions; i++)
+    {
+        mElemCount = mElemCount *
+                (mDesc.array_desc_bounds[i].array_bound_upper -
+                 mDesc.array_desc_bounds[i].array_bound_lower + 1);
+    }
 
-	// Allocates a buffer for this count of elements
-	mElemSize = mDesc.array_desc_length;
-	if (mDesc.array_desc_dtype == blr_varying) mElemSize += 2;
-	else if (mDesc.array_desc_dtype == blr_cstring) mElemSize += 1;
-	mBufferSize = mElemSize * mElemCount;
+    // Allocates a buffer for this count of elements
+    mElemSize = mDesc.array_desc_length;
+    if (mDesc.array_desc_dtype == blr_varying) mElemSize += 2;
+    else if (mDesc.array_desc_dtype == blr_cstring) mElemSize += 1;
+    mBufferSize = mElemSize * mElemCount;
     mBuffer = reinterpret_cast<void*>(new char[mBufferSize]);
 }
 
 void ArrayImpl::AttachDatabaseImpl(DatabaseImpl* database)
 {
     if (database == nullptr) throw LogicExceptionImpl("Array::AttachDatabase",
-			_("Can't attach a 0 Database object."));
+                                                      _("Can't attach a 0 Database object."));
 
     if (mDatabase != nullptr) mDatabase->DetachArrayImpl(this);
-	mDatabase = database;
-	mDatabase->AttachArrayImpl(this);
+    mDatabase = database;
+    mDatabase->AttachArrayImpl(this);
 }
 
 void ArrayImpl::AttachTransactionImpl(TransactionImpl* transaction)
 {
     if (transaction == nullptr) throw LogicExceptionImpl("Array::AttachTransaction",
-			_("Can't attach a 0 Transaction object."));
+                                                         _("Can't attach a 0 Transaction object."));
 
     if (mTransaction != nullptr) mTransaction->DetachArrayImpl(this);
-	mTransaction = transaction;
-	mTransaction->AttachArrayImpl(this);
+    mTransaction = transaction;
+    mTransaction->AttachArrayImpl(this);
 }
 
 void ArrayImpl::DetachDatabaseImpl()
 {
     if (mDatabase == nullptr) return;
 
-	mDatabase->DetachArrayImpl(this);
+    mDatabase->DetachArrayImpl(this);
     mDatabase = nullptr;
 }
 
@@ -1012,26 +1012,26 @@ void ArrayImpl::DetachTransactionImpl()
 {
     if (mTransaction == nullptr) return;
 
-	mTransaction->DetachArrayImpl(this);
+    mTransaction->DetachArrayImpl(this);
     mTransaction = nullptr;
 }
 
 ArrayImpl::ArrayImpl(DatabaseImpl* database, TransactionImpl* transaction)
-	: mRefCount(0)
+    : mRefCount(0)
 {
-	Init();
-	AttachDatabaseImpl(database);
+    Init();
+    AttachDatabaseImpl(database);
     if (transaction != nullptr) AttachTransactionImpl(transaction);
 }
 
 ArrayImpl::~ArrayImpl()
 {
     try { if (mTransaction != nullptr) mTransaction->DetachArrayImpl(this); }
-		catch (...) {}
+    catch (...) {}
     try { if (mDatabase != nullptr) mDatabase->DetachArrayImpl(this); }
-		catch (...) {}
+    catch (...) {}
     try { if (mBuffer != nullptr) delete [] reinterpret_cast<char*>(mBuffer); }
-		catch (...) {}
+    catch (...) {}
 }
 
 //

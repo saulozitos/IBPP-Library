@@ -44,26 +44,26 @@ using namespace ibpp_internals;
 void IBPP::Time::Now()
 {
     time_t systime = time(nullptr);
-	tm* loctime = localtime(&systime);
-	IBPP::itot(&mTime, loctime->tm_hour, loctime->tm_min, loctime->tm_sec, 0);
+    tm* loctime = localtime(&systime);
+    IBPP::itot(&mTime, loctime->tm_hour, loctime->tm_min, loctime->tm_sec, 0);
 }
 
 void IBPP::Time::SetTime(int tm)
 {
-	if (tm < 0 || tm > 863999999)
-		throw LogicExceptionImpl("Time::SetTime", _("Invalid time value"));
-	mTime = tm;
+    if (tm < 0 || tm > 863999999)
+        throw LogicExceptionImpl("Time::SetTime", _("Invalid time value"));
+    mTime = tm;
 }
 
 void IBPP::Time::SetTime(int hour, int minute, int second, int tenthousandths)
 {
-	if (hour < 0 || hour > 23 ||
-		minute < 0 || minute > 59 ||
-			second < 0 || second > 59 ||
-				tenthousandths < 0 || tenthousandths > 9999)
-					throw LogicExceptionImpl("Time::SetTime",
-						_("Invalid hour, minute, second values"));
-	IBPP::itot(&mTime, hour, minute, second, tenthousandths);
+    if (hour < 0 || hour > 23 ||
+            minute < 0 || minute > 59 ||
+            second < 0 || second > 59 ||
+            tenthousandths < 0 || tenthousandths > 9999)
+        throw LogicExceptionImpl("Time::SetTime",
+                                 _("Invalid hour, minute, second values"));
+    IBPP::itot(&mTime, hour, minute, second, tenthousandths);
 }
 
 void IBPP::Time::GetTime(int& hour, int& minute, int& second) const
@@ -73,57 +73,57 @@ void IBPP::Time::GetTime(int& hour, int& minute, int& second) const
 
 void IBPP::Time::GetTime(int& hour, int& minute, int& second, int& tenthousandths) const
 {
-	IBPP::ttoi(mTime, &hour, &minute, &second, &tenthousandths);
+    IBPP::ttoi(mTime, &hour, &minute, &second, &tenthousandths);
 }
 
 int IBPP::Time::Hours() const
 {
-	int hours;
+    int hours;
     IBPP::ttoi(mTime, &hours, nullptr, nullptr, nullptr);
-	return hours;
+    return hours;
 }
 
 int IBPP::Time::Minutes() const
 {
-	int minutes;
+    int minutes;
     IBPP::ttoi(mTime, nullptr, &minutes, nullptr, nullptr);
-	return minutes;
+    return minutes;
 }
 
 int IBPP::Time::Seconds() const
 {
-	int seconds;
+    int seconds;
     IBPP::ttoi(mTime, nullptr, nullptr, &seconds, nullptr);
-	return seconds;
+    return seconds;
 }
 
 int IBPP::Time::SubSeconds() const	// Actually tenthousandths of seconds
 {
-	int tenthousandths;
+    int tenthousandths;
     IBPP::ttoi(mTime, nullptr, nullptr, nullptr, &tenthousandths);
-	return tenthousandths;
+    return tenthousandths;
 }
 
 IBPP::Time::Time(int hour, int minute, int second, int tenthousandths)
 {
-	SetTime(hour, minute, second, tenthousandths);
+    SetTime(hour, minute, second, tenthousandths);
 }
 
 IBPP::Time::Time(const IBPP::Time& copied)
 {
-	mTime = copied.mTime;
+    mTime = copied.mTime;
 }
 
 IBPP::Time& IBPP::Time::operator=(const IBPP::Timestamp& assigned)
 {
-	mTime = assigned.GetTime();
-	return *this;
+    mTime = assigned.GetTime();
+    return *this;
 }
 
 IBPP::Time& IBPP::Time::operator=(const IBPP::Time& assigned)
 {
-	mTime = assigned.mTime;
-	return *this;
+    mTime = assigned.mTime;
+    return *this;
 }
 
 //	Time calculations. Internal format is the number of seconds elapsed since
@@ -131,7 +131,7 @@ IBPP::Time& IBPP::Time::operator=(const IBPP::Time& assigned)
 
 void IBPP::ttoi(int itime, int *h, int *m, int *s, int* t)
 {
-	int hh, mm, ss, tt;
+    int hh, mm, ss, tt;
 
     hh = static_cast<int>(itime / 36000000);
     itime = itime - hh * 36000000;
@@ -145,15 +145,15 @@ void IBPP::ttoi(int itime, int *h, int *m, int *s, int* t)
     if (s != nullptr) *s = ss;
     if (t != nullptr) *t = tt;
 
-	return;
+    return;
 }
 
 //	Get the internal time format, given hour, minute, second.
 
 void IBPP::itot (int *ptime, int hour, int minute, int second, int tenthousandths)
 {
-	*ptime = hour * 36000000 + minute * 600000 + second * 10000 + tenthousandths;
-	return;
+    *ptime = hour * 36000000 + minute * 600000 + second * 10000 + tenthousandths;
+    return;
 }
 
 namespace ibpp_internals
@@ -168,15 +168,15 @@ namespace ibpp_internals
 
 void encodeDate(ISC_DATE& isc_dt, const IBPP::Date& dt)
 {
-	// There simply has a shift of 15019 between the native Firebird
-	// date model and the IBPP model.
+    // There simply has a shift of 15019 between the native Firebird
+    // date model and the IBPP model.
     isc_dt = static_cast<ISC_DATE>(dt.GetDate() + 15019);
 }
 
 void decodeDate(IBPP::Date& dt, const ISC_DATE& isc_dt)
 {
-	// There simply has a shift of 15019 between the native Firebird
-	// date model and the IBPP model.
+    // There simply has a shift of 15019 between the native Firebird
+    // date model and the IBPP model.
     dt.SetDate(static_cast<int>(isc_dt) - 15019);
 }
 
@@ -192,14 +192,14 @@ void decodeTime(IBPP::Time& tm, const ISC_TIME& isc_tm)
 
 void encodeTimestamp(ISC_TIMESTAMP& isc_ts, const IBPP::Timestamp& ts)
 {
-	encodeDate(isc_ts.timestamp_date, ts);
-	encodeTime(isc_ts.timestamp_time, ts);
+    encodeDate(isc_ts.timestamp_date, ts);
+    encodeTime(isc_ts.timestamp_time, ts);
 }
 
 void decodeTimestamp(IBPP::Timestamp& ts, const ISC_TIMESTAMP& isc_ts)
 {
-	decodeDate(ts, isc_ts.timestamp_date);
-	decodeTime(ts, isc_ts.timestamp_time);
+    decodeDate(ts, isc_ts.timestamp_date);
+    decodeTime(ts, isc_ts.timestamp_time);
 }
 
 }

@@ -46,48 +46,48 @@ int IBS::SqlCode() const
 
 const char* IBS::ErrorMessage() const
 {
-	char msg[1024];
-	ISC_LONG sqlcode;
+    char msg[1024];
+    ISC_LONG sqlcode;
 
-	if (! mMessage.empty()) return mMessage.c_str();	// If message compiled, returns it
+    if (! mMessage.empty()) return mMessage.c_str();	// If message compiled, returns it
 
-	// Compiles the message (SQL part)
-	std::ostringstream message;
-	sqlcode = (*gds.Call()->m_sqlcode)(mVector);
-	if (sqlcode != -999)
-	{
+    // Compiles the message (SQL part)
+    std::ostringstream message;
+    sqlcode = (*gds.Call()->m_sqlcode)(mVector);
+    if (sqlcode != -999)
+    {
         (*gds.Call()->m_sql_interprete)(static_cast<short>(sqlcode), msg, sizeof(msg));
-		message<< _("SQL Message : ")<< sqlcode<< "\n"<< msg<< "\n\n";
-	}
+        message<< _("SQL Message : ")<< sqlcode<< "\n"<< msg<< "\n\n";
+    }
 
-	message<< _("Engine Code    : ")<< EngineCode()<< "\n";
+    message<< _("Engine Code    : ")<< EngineCode()<< "\n";
 
-	// Compiles the message (Engine part)
-	ISC_STATUS* error = &mVector[0];
-	try { (*gds.Call()->m_interprete)(msg, &error); }
-	catch(...) { msg[0] = '\0'; }
-	message<< _("Engine Message :")<< "\n"<< msg;
-	try
-	{
-		while ((*gds.Call()->m_interprete)(msg, &error))
-			message<< "\n"<< msg;
-	}
-	catch (...) { }
+    // Compiles the message (Engine part)
+    ISC_STATUS* error = &mVector[0];
+    try { (*gds.Call()->m_interprete)(msg, &error); }
+    catch(...) { msg[0] = '\0'; }
+    message<< _("Engine Message :")<< "\n"<< msg;
+    try
+    {
+        while ((*gds.Call()->m_interprete)(msg, &error))
+            message<< "\n"<< msg;
+    }
+    catch (...) { }
 
-	message<< "\n";
-	mMessage = message.str();
-	return mMessage.c_str();
+    message<< "\n";
+    mMessage = message.str();
+    return mMessage.c_str();
 }
 
 void IBS::Reset()
 {
-	for (int i = 0; i < 20; i++) mVector[i] = 0;
-	mMessage.erase();
+    for (long &i : mVector) mVector[i] = 0;
+    mMessage.erase();
 }
 
 IBS::IBS()
 {
-	Reset();
+    Reset();
 }
 
 IBS::~IBS()
@@ -99,7 +99,7 @@ IBS::~IBS()
 
 IBS::IBS(IBS& copied)
 {
-	memcpy(mVector, copied.mVector, sizeof(mVector));
+    memcpy(mVector, copied.mVector, sizeof(mVector));
 }
 
 //

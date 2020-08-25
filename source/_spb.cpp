@@ -45,87 +45,87 @@ const int SPB::BUFFERINCR = 128;
 
 void SPB::Grow(int needed)
 {
-	if ((mSize + needed) > mAlloc)
-	{
-		// We need to grow the buffer. We use increments of BUFFERINCR bytes.
-		needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
-		char* newbuffer = new char[mAlloc + needed];
+    if ((mSize + needed) > mAlloc)
+    {
+        // We need to grow the buffer. We use increments of BUFFERINCR bytes.
+        needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
+        char* newbuffer = new char[mAlloc + needed];
         if (mBuffer != nullptr)
-		{
-			// Move the old buffer content to the new one
-			memcpy(newbuffer, mBuffer, mSize);
-			delete [] mBuffer;
-		}
-		mBuffer = newbuffer;
-		mAlloc += needed;
-	}
+        {
+            // Move the old buffer content to the new one
+            memcpy(newbuffer, mBuffer, mSize);
+            delete [] mBuffer;
+        }
+        mBuffer = newbuffer;
+        mAlloc += needed;
+    }
 }
 
 void SPB::Insert(char opcode)
 {
-	Grow(1);
-	mBuffer[mSize++] = opcode;
+    Grow(1);
+    mBuffer[mSize++] = opcode;
 }
 
 void SPB::InsertString(char type, int lenwidth, const char* data)
 {
     int16_t len = static_cast<int16_t>(strlen(data));
 
-	Grow(1 + lenwidth + len);
-	mBuffer[mSize++] = type;
-	switch (lenwidth)
-	{
-		case 1 :	mBuffer[mSize] = char(len); mSize++; break;
-        case 2 :	*reinterpret_cast<int16_t*>(&mBuffer[mSize]) = int16_t((*gds.Call()->m_vax_integer)(reinterpret_cast<char*>(&len), 2));
-					mSize += 2; break;
-		default :	throw LogicExceptionImpl("IISPB::IISPB", _("Invalid length parameter"));
-	}
-	strncpy(&mBuffer[mSize], data, len);
-	mSize += len;
+    Grow(1 + lenwidth + len);
+    mBuffer[mSize++] = type;
+    switch (lenwidth)
+    {
+    case 1 :	mBuffer[mSize] = char(len); mSize++; break;
+    case 2 :	*reinterpret_cast<int16_t*>(&mBuffer[mSize]) = int16_t((*gds.Call()->m_vax_integer)(reinterpret_cast<char*>(&len), 2));
+        mSize += 2; break;
+    default :	throw LogicExceptionImpl("IISPB::IISPB", _("Invalid length parameter"));
+    }
+    strncpy(&mBuffer[mSize], data, len);
+    mSize += len;
 }
 
 void SPB::InsertByte(char type, char data)
 {
-	Grow(1 + 1);
-	mBuffer[mSize++] = type;
-	mBuffer[mSize++] = data;
+    Grow(1 + 1);
+    mBuffer[mSize++] = type;
+    mBuffer[mSize++] = data;
 }
 
 void SPB::InsertQuad(char type, int32_t data)
 {
-	Grow(1 + 4);
-	mBuffer[mSize++] = type;
+    Grow(1 + 4);
+    mBuffer[mSize++] = type;
     *reinterpret_cast<int32_t*>(&mBuffer[mSize]) = int32_t((*gds.Call()->m_vax_integer)(reinterpret_cast<char*>(&data), 4));
-	mSize += 4;
+    mSize += 4;
 }
 
 void SPB::Reset()
 {
     if (mBuffer != nullptr)
-	{
-		delete [] mBuffer;
+    {
+        delete [] mBuffer;
         mBuffer = nullptr;
-		mSize = 0;
-		mAlloc = 0;
+        mSize = 0;
+        mAlloc = 0;
     }
 }
 
 /*
 void SPB::Insert(char type, short data)
 {
-	Grow(1 + 3);
-	mBuffer[mSize++] = type;
-	mBuffer[mSize++] = char(2);
-	*(short*)&mBuffer[mSize] = data;
-	mSize += 2;
+    Grow(1 + 3);
+    mBuffer[mSize++] = type;
+    mBuffer[mSize++] = char(2);
+    *(short*)&mBuffer[mSize] = data;
+    mSize += 2;
 }
 
 void SPB::Insert(char type, bool data)
 {
-	Grow(1 + 2);
-	mBuffer[mSize++] = type;
-	mBuffer[mSize++] = char(1);
-	mBuffer[mSize++] = char(data ? 1 : 0);
+    Grow(1 + 2);
+    mBuffer[mSize++] = type;
+    mBuffer[mSize++] = char(1);
+    mBuffer[mSize++] = char(data ? 1 : 0);
 }
 */
 

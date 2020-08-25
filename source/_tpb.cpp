@@ -45,52 +45,52 @@ const int TPB::BUFFERINCR = 128;
 void TPB::Grow(int needed)
 {
     if (mBuffer == nullptr) ++needed;	// Initial alloc will require one more byte
-	if ((mSize + needed) > mAlloc)
-	{
-		// We need to grow the buffer. We use increments of BUFFERINCR bytes.
-		needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
-		char* newbuffer = new char[mAlloc + needed];
+    if ((mSize + needed) > mAlloc)
+    {
+        // We need to grow the buffer. We use increments of BUFFERINCR bytes.
+        needed = (needed / BUFFERINCR + 1) * BUFFERINCR;
+        char* newbuffer = new char[mAlloc + needed];
         if (mBuffer == nullptr)
-		{
-			// Initial allocation, initialize the version tag
-			newbuffer[0] = isc_tpb_version3;
-			mSize = 1;
-		}
-		else
-		{
-			// Move the old buffer content to the new one
-			memcpy(newbuffer, mBuffer, mSize);
-			delete [] mBuffer;
-		}
-		mBuffer = newbuffer;
-		mAlloc += needed;
-	}
+        {
+            // Initial allocation, initialize the version tag
+            newbuffer[0] = isc_tpb_version3;
+            mSize = 1;
+        }
+        else
+        {
+            // Move the old buffer content to the new one
+            memcpy(newbuffer, mBuffer, mSize);
+            delete [] mBuffer;
+        }
+        mBuffer = newbuffer;
+        mAlloc += needed;
+    }
 }
 
 void TPB::Insert(char item)
 {
-	Grow(1);
-	mBuffer[mSize++] = item;
+    Grow(1);
+    mBuffer[mSize++] = item;
 }
 
 void TPB::Insert(const std::string& data)
 {
     int len = static_cast<int>(data.length());
-	Grow(1 + len);
+    Grow(1 + len);
     mBuffer[mSize++] = static_cast<char>(len);
-	strncpy(&mBuffer[mSize], data.c_str(), len);
-	mSize += len;
+    strncpy(&mBuffer[mSize], data.c_str(), len);
+    mSize += len;
 }
 
 void TPB::Reset()
 {
-	if (mSize != 0)
-	{
-		delete [] mBuffer;
+    if (mSize != 0)
+    {
+        delete [] mBuffer;
         mBuffer = nullptr;
-		mSize = 0;
-		mAlloc = 0;
-	}
+        mSize = 0;
+        mAlloc = 0;
+    }
 }
 
 //
